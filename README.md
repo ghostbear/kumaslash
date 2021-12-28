@@ -7,5 +7,5 @@
 
 ## Docker
 ```
-docker run --env TOKEN=<YOUR_TOKEN> --env GUILD_ID=<YOUR_GUILD_ID> -d kumaslash:latest
+docker run --env TOKEN=<YOUR_TOKEN> --env GUILD_ID=<YOUR_GUILD_ID> -d ghcr.io/ghostbear/kumaslash:latest
 ```
