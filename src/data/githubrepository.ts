@@ -1,5 +1,5 @@
-import axios from "axios"
-import { Extension } from "../models"
+import axios, { AxiosResponse } from "axios"
+import { Extension, Release } from "../models"
 
 const HOUR_IN_MILLIS = 60 * 60 * 1000
 
@@ -37,4 +37,33 @@ export class GitHubRepository {
 		return EXTENSIONS_DOWNLOAD_URL + extension.apk
 	}
 
+	async getRelease(type: string, preview: boolean): Promise<Release> {
+		let data!: Promise<AxiosResponse<any, any>>
+		switch (type) {
+		case "tachiyomi":
+			if (preview) {
+				data = axios.get("https://api.github.com/repos/tachiyomiorg/tachiyomi-preview/releases/latest")
+			} else {
+				data = axios.get("https://api.github.com/repos/tachiyomiorg/tachiyomi/releases/latest")
+			}
+			break
+		case "tachiyomi-sy":
+			if (preview) {
+				data = axios.get("https://api.github.com/repos/jobobby04/TachiyomiSYPreview/releases/latest")
+			} else {
+				data = axios.get("https://api.github.com/repos/jobobby04/TachiyomiSY/releases/latest")
+			}
+			break
+		case "tachiyomi-j2k":
+			data = axios.get("https://api.github.com/repos/Jays2Kings/tachiyomiJ2K/releases/latest")
+			break
+		case "neko":
+			data = axios.get("https://api.github.com/repos/CarlosEsco/Neko/releases/latest")
+			break
+		default: 
+			throw "This shouldn't happend"
+		}
+		
+		return (await data).data
+	}
 }
