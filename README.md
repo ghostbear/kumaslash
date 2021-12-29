@@ -20,16 +20,6 @@ Get download link by `TYPE`
 /download type:<TYPE>
 ```
 
-### Release
-Get download link by `TYPE` and `PREVIEW`. And can only be used by specific `ROLES`
-
-`TYPE` - `TACHIYOMI` / `TACHIYOMI-SY` / `TACHIYOMI-J2K` / `NEKO`
-
-`PREVIEW` - `TRUE` / `FALSE` - If should get preview link instead (gets stable if `TYPE` doesn't support it)
-
-```
-/release type:<TYPE> preview:<PREVIEW>
-```
 
 ## NPM
 1. Copy and rename `.env.example` to `.env`

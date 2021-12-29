@@ -122,15 +122,14 @@ export class TachiyomiJ2K extends Flavour {
 	name: string = "tachiyomi-j2k"
 
 	async createMesseage(options?: { preview?: true | undefined; }): Promise<Message> {
-		const isPreview = options?.preview ?? false
-		const release = await this.getRelease(options)
+		const release = await this.getRelease()
 		const assets = release.assets.find((value) => value.name.includes(".apk"))!
 		return {
 			content: this.generateContent({
 				title: release.name,
 			}),
 			components: [
-				this.generateMessageActionRow(isPreview, release, assets)
+				this.generateMessageActionRow(false, release, assets)
 			],
 			ephemeral: true
 		}
@@ -141,7 +140,6 @@ export class Neko extends Flavour {
 	name: string = "neko"
 
 	async createMesseage(options?: { preview?: true | undefined; }): Promise<Message> {
-		const isPreview = options?.preview ?? false
 		const release = await this.getRelease(options)
 		const assets = release.assets.find((value) => value.name.includes(".apk"))!
 		return {
@@ -149,7 +147,7 @@ export class Neko extends Flavour {
 				title: "Neko " + release.name,
 			}),
 			components: [
-				this.generateMessageActionRow(isPreview, release, assets)
+				this.generateMessageActionRow(false, release, assets)
 			],
 			ephemeral: true
 		}

@@ -29,30 +29,6 @@ abstract class ReleaseCommand {
 		this.flavours.set("neko", new Neko())
 	}
 
-  @Slash("release")
-  @Permission(false)
-  @Permission({ id: process.env.SUPPORT_ID!, type: "ROLE", permission: true })
-	async release(
-    @SlashChoice("Neko", "neko")
-    @SlashChoice("Tachiyomi J2K", "tachiyomi-j2k")
-    @SlashChoice("Tachiyomi Sy", "tachiyomi-sy")
-    @SlashChoice("Tachiyomi", "tachiyomi")
-    @SlashOption("type", {
-    	description: "Which version do you want to download",
-    })
-    	type: string,
-    @SlashOption("preview", { 
-    	type: "BOOLEAN", 
-    	description: "Fetches preview of release if supported"
-    })
-    	preview: boolean,
-    	interaction: CommandInteraction
-	) {
-		await interaction.deferReply({ ephemeral: true })
-		const message = await this.flavours.get(type)!.createMesseage(preview ? { preview: true } : {})
-		interaction.editReply(message)
-	}
-
   @Slash("download")
   async download(
     @SlashChoice("Neko", "neko")
