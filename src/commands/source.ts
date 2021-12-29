@@ -1,6 +1,6 @@
 import { CommandInteraction, MessageActionRow, MessageButton } from "discord.js"
 import { Discord, Slash, SlashOption } from "discordx"
-import { GitHubRepository } from "../data/githubrepository"
+import { GitHubRepository } from "../data/github-repository"
 
 @Discord()
 abstract class SourceCommand {
