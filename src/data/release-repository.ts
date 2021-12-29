@@ -24,7 +24,7 @@ export abstract class ARelease {
   	if (!isPreview && this.lastUpdated[0] + HOUR_IN_MILLIS < now) {
   		this.release[0] = await this.repository.getRelease(this.name, false)
   	}
-  	if (isPreview && this.lastUpdated[1] + HOUR_IN_MILLIS < now) {
+  	if (isPreview && this.isPreviewSupported && this.lastUpdated[1] + HOUR_IN_MILLIS < now) {
   		this.release[1] = await this.repository.getRelease(this.name, true)
   	}
   	return isPreview ? this.release[1]! : this.release[0]!

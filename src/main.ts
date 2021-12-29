@@ -7,7 +7,7 @@ dotenv.config()
 
 async function start() {
 	const client = new Client({
-		botId: "test",
+		botId: "kumaslash",
 		intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
 		botGuilds: [process.env.GUILD_ID!],
 	})
