@@ -16,3 +16,17 @@ export interface Source {
     baseUrl: string
 }
 
+export interface Repository {
+    stable: Release
+    preview: Release | undefined
+}
+
+export interface Release {
+    name: string,
+    assets: Assets[]
+}
+
+export interface Assets {
+    name: string
+    browser_download_url: string
+}

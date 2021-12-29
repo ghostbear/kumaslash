@@ -1,14 +1,13 @@
 import { CommandInteraction, MessageActionRow, MessageButton } from "discord.js"
 import { Discord, Slash, SlashOption } from "discordx"
 import { GitHubRepository } from "../data/githubrepository"
-import { Extension } from "../models"
 
 @Discord()
 abstract class SourceCommand {
 
 	repository = new GitHubRepository()
 
-  @Slash("source")
+  	@Slash("source")
 	async hello(
     @SlashOption("id", { type: "STRING" })
     	id: string,

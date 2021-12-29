@@ -1,8 +1,8 @@
 import "reflect-metadata"
 import { Client } from "discordx"
-import { Intents, Interaction } from "discord.js"
+import { Intents } from "discord.js"
 import dotenv from "dotenv"
-import { dirname, importx } from "@discordx/importer"
+import { importx } from "@discordx/importer"
 dotenv.config()
 
 async function start() {
