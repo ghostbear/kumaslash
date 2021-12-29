@@ -7,7 +7,7 @@ abstract class SourceCommand {
 
 	repository = new GitHubRepository()
 
-  	@Slash("source")
+  @Slash("source")
 	async hello(
     @SlashOption("id", { type: "STRING" })
     	id: string,

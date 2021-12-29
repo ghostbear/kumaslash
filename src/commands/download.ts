@@ -1,6 +1,7 @@
-import { ButtonInteraction, CommandInteraction, MessageActionRow, MessageButton } from "discord.js"
+import { ButtonInteraction, CommandInteraction, InteractionReplyOptions, MessageActionRow, MessageButton, MessagePayload } from "discord.js"
 import { ButtonComponent, Discord, Slash, SlashChoice, SlashOption } from "discordx"
 import { GitHubRepository } from "../data/githubrepository"
+import { Assets, Release } from "../models"
 
 @Discord()
 abstract class DownloadCommand {
@@ -23,19 +24,12 @@ abstract class DownloadCommand {
 		if (onlyStableReleases.includes(type)) {
 			const release = await this.repository.getRelease(type, false)
 			const assest = release.assets.find((value) => value.name.includes(".apk"))
-			interaction.editReply({
-				content: `${release.name}`,
-				components: [
-					new MessageActionRow()
-						.addComponents(
-							new MessageButton()
-								.setLabel(assest?.name ?? "")
-								.setStyle("LINK")
-								.setEmoji("📦")
-								.setURL(assest?.browser_download_url ?? "")
-						)	
-				]
-			})
+      const message = this.createReleaseMessage(
+        release.name,
+        "📦",
+        assest!
+      )
+      interaction.editReply(message)
 			return
 		}
 
@@ -65,20 +59,12 @@ abstract class DownloadCommand {
   async tachiyomiStable(interaction: ButtonInteraction) {
   	const release = await this.repository.getRelease("tachiyomi", false)
   	const assest = release.assets.find((value) => /^tachiyomi-v\d+\.\d+\.\d+.apk/.test(value.name))
-  	interaction.reply({
-  		content: `${release.name}`,
-  		components: [
-  			new MessageActionRow()
-  				.addComponents(
-  					new MessageButton()
-  						.setLabel(assest?.name ?? "")
-  						.setStyle("LINK")
-  						.setEmoji("📦")
-  						.setURL(assest?.browser_download_url ?? "")
-  				)	
-  		],
-  		ephemeral: true
-  	})
+  	const message = this.createReleaseMessage(
+  		release.name,
+  		"📦",
+  		assest!
+  	)
+  	interaction.reply(message)
   }
 
   @ButtonComponent("tachiyomi-preview")
@@ -87,40 +73,24 @@ abstract class DownloadCommand {
   ) {
   	const release = await this.repository.getRelease("tachiyomi", true)
   	const assest = release.assets.find((value) => /^tachiyomi-r\d{4,}.apk/.test(value.name))
-  	interaction.reply({
-  		content: `${release.name}`,
-  		components: [
-  			new MessageActionRow()
-  				.addComponents(
-  					new MessageButton()
-  						.setLabel(assest?.name ?? "")
-  						.setStyle("LINK")
-  						.setEmoji("🔥")
-  						.setURL(assest?.browser_download_url ?? "")
-  				)	
-  		],
-  		ephemeral: true
-  	})
+  	const message = this.createReleaseMessage(
+  		release.name,
+  		"🔥",
+  		assest!
+  	)
+  	interaction.reply(message)
   }
 
   @ButtonComponent("tachiyomi-sy-stable")
   async tachiyomiSyStable(interaction: ButtonInteraction) {
   	const release = await this.repository.getRelease("tachiyomi-sy", false)
   	const assest = release.assets.find((value) => value.name.includes(".apk"))
-  	interaction.reply({
-  		content: `${release.name}`,
-  		components: [
-  			new MessageActionRow()
-  				.addComponents(
-  					new MessageButton()
-  						.setLabel(assest?.name ?? "")
-  						.setStyle("LINK")
-  						.setEmoji("📦")
-  						.setURL(assest?.browser_download_url ?? "")
-  				)	
-  		],
-  		ephemeral: true
-  	})
+    const message = this.createReleaseMessage(
+  		release.name,
+  		"📦",
+  		assest!
+  	)
+  	interaction.reply(message)
   }
 
   @ButtonComponent("tachiyomi-sy-preview")
@@ -129,19 +99,32 @@ abstract class DownloadCommand {
   ) {
   	const release = await this.repository.getRelease("tachiyomi-sy", true)
   	const assest = release.assets.find((value) => value.name.includes(".apk"))
-  	interaction.reply({
-  		content: `${release.name}`,
+  	const message = this.createReleaseMessage(
+  		release.name,
+  		"🔥",
+  		assest!
+  	)
+  	interaction.reply(message)
+  }
+
+  createReleaseMessage(
+  	message: string, 
+  	emoji: string, 
+  	assets: Assets
+  ): string | InteractionReplyOptions | MessagePayload {
+  	return {
+  		content: message,
   		components: [
   			new MessageActionRow()
   				.addComponents(
   					new MessageButton()
-  						.setLabel(assest?.name ?? "")
+  						.setLabel(assets.name)
   						.setStyle("LINK")
-  						.setEmoji("🔥")
-  						.setURL(assest?.browser_download_url ?? "")
+  						.setEmoji(emoji)
+  						.setURL(assets.browser_download_url)
   				)	
   		],
   		ephemeral: true
-  	})
+  	}
   }
 }
