@@ -10,8 +10,8 @@ abstract class SourceCommand {
   @Slash("source")
 	async hello(
     @SlashOption("id", { type: "STRING" })
-    	id: string,
-    	interaction: CommandInteraction
+    id: string,
+    interaction: CommandInteraction
 	) {
 		const extension = await this.repository.findExtension(id)
 

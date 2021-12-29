@@ -1,12 +1,11 @@
 import { InteractionReplyOptions, MessageActionRow, MessageButton, MessagePayload } from "discord.js"
+import { HOUR_IN_MILLIS } from "../constants"
 import { Assets, Release } from "../models"
 import { GitHubRepository } from "./github-repository"
 
-type Message = string |InteractionReplyOptions | MessagePayload;
+type Message = string | InteractionReplyOptions | MessagePayload;
 
-const HOUR_IN_MILLIS = 60 * 60 * 1000
-
-export abstract class ARelease {
+export abstract class Flavour {
 
   abstract name: string
 
@@ -72,7 +71,7 @@ export abstract class ARelease {
 
 }
 
-export class Tachiyomi extends ARelease {
+export class Tachiyomi extends Flavour {
 	
 	name: string = "tachiyomi"
 
@@ -97,7 +96,7 @@ export class Tachiyomi extends ARelease {
 
 }
 
-export class TachiyomiSy extends ARelease {
+export class TachiyomiSy extends Flavour {
 	name: string = "tachiyomi-sy"
 
 	isPreviewSupported: boolean = true
@@ -119,7 +118,7 @@ export class TachiyomiSy extends ARelease {
 	}
 }
 
-export class TachiyomiJ2K extends ARelease {
+export class TachiyomiJ2K extends Flavour {
 	name: string = "tachiyomi-j2k"
 
 	async createMesseage(options?: { preview?: true | undefined; }): Promise<Message> {
@@ -138,7 +137,7 @@ export class TachiyomiJ2K extends ARelease {
 	}
 }
 
-export class Neko extends ARelease {
+export class Neko extends Flavour {
 	name: string = "neko"
 
 	async createMesseage(options?: { preview?: true | undefined; }): Promise<Message> {

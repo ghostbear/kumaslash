@@ -12,7 +12,7 @@ import {
 	SlashChoice,
 	SlashOption,
 } from "discordx"
-import { ARelease, Neko, Tachiyomi, TachiyomiJ2K, TachiyomiSy } from "../data/release-repository"
+import { Flavour, Neko, Tachiyomi, TachiyomiJ2K, TachiyomiSy } from "../data/flavour-repository"
 import { toTitleCase } from "../utils/string"
 import dotenv from "dotenv"
 dotenv.config()
@@ -20,13 +20,13 @@ dotenv.config()
 @Discord()
 abstract class ReleaseCommand {
 	  
-	releases = new Map<string, ARelease>()
+	flavours = new Map<string, Flavour>()
 
 	constructor() {
-		this.releases.set("tachiyomi", new Tachiyomi())
-		this.releases.set("tachiyomi-sy", new TachiyomiSy())
-		this.releases.set("tachiyomi-j2k", new TachiyomiJ2K())
-		this.releases.set("neko", new Neko())
+		this.flavours.set("tachiyomi", new Tachiyomi())
+		this.flavours.set("tachiyomi-sy", new TachiyomiSy())
+		this.flavours.set("tachiyomi-j2k", new TachiyomiJ2K())
+		this.flavours.set("neko", new Neko())
 	}
 
   @Slash("release")
@@ -49,7 +49,7 @@ abstract class ReleaseCommand {
     	interaction: CommandInteraction
 	) {
 		await interaction.deferReply({ ephemeral: true })
-		const message = await this.releases.get(type)!.createMesseage(preview ? { preview: true } : {})
+		const message = await this.flavours.get(type)!.createMesseage(preview ? { preview: true } : {})
 		interaction.editReply(message)
 	}
 
@@ -69,7 +69,7 @@ abstract class ReleaseCommand {
 
   	const onlyStableReleases = ["tachiyomi-j2k", "neko"]
   	if (onlyStableReleases.includes(type)) {
-  		const message = await this.releases.get(type)!.createMesseage()
+  		const message = await this.flavours.get(type)!.createMesseage()
   		interaction.editReply(message)
   		return
   	}
@@ -98,25 +98,25 @@ abstract class ReleaseCommand {
 
   @ButtonComponent("tachiyomi-stable")
   async tachiyomiStable(interaction: ButtonInteraction) {
-  	const message = await this.releases.get("tachiyomi")!.createMesseage()
+  	const message = await this.flavours.get("tachiyomi")!.createMesseage()
   	interaction.reply(message)
   }
 
   @ButtonComponent("tachiyomi-preview")
   async tachiyomiPreview(interaction: ButtonInteraction) {
-  	const message = await this.releases.get("tachiyomi")!.createMesseage({ preview: true })
+  	const message = await this.flavours.get("tachiyomi")!.createMesseage({ preview: true })
   	interaction.reply(message)
   }
 
   @ButtonComponent("tachiyomi-sy-stable")
   async tachiyomiSyStable(interaction: ButtonInteraction) {
-  	const message = await this.releases.get("tachiyomi-sy")!.createMesseage()
+  	const message = await this.flavours.get("tachiyomi-sy")!.createMesseage()
   	interaction.reply(message)
   }
 
   @ButtonComponent("tachiyomi-sy-preview")
   async tachiyomiSyPreview(interaction: ButtonInteraction) {
-  	const message = await this.releases.get("tachiyomi-sy")!.createMesseage({ preview: true })
+  	const message = await this.flavours.get("tachiyomi-sy")!.createMesseage({ preview: true })
   	interaction.reply(message)
   }
 }

@@ -1,19 +1,27 @@
 import "reflect-metadata"
 import { Client } from "discordx"
 import { Intents } from "discord.js"
-import dotenv from "dotenv"
 import { importx } from "@discordx/importer"
+import dotenv from "dotenv"
 dotenv.config()
 
 async function start() {
+	const TOKEN = process.env.TOKEN
+	if (TOKEN == undefined) {
+		throw "TOKEN is missing from enviroment variables"
+	}
+
+	const GUILD_ID = process.env.GUILD_ID
 	const client = new Client({
 		botId: "kumaslash",
 		intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
-		botGuilds: [process.env.GUILD_ID!],
+		botGuilds: GUILD_ID ? [GUILD_ID] : [],
 	})
 
 	client.once("ready", async () => {
-		await client.clearApplicationCommands(process.env.GUILD_ID!)
+		if (GUILD_ID){
+		  await client.clearApplicationCommands(GUILD_ID)
+		}
 		await client.initApplicationCommands()
 		await client.initApplicationPermissions()
 	})
@@ -24,7 +32,7 @@ async function start() {
 	})
 
 	await importx(__dirname + "/{events,commands}/**/*.{ts,js}")
-	await client.login(process.env.TOKEN ?? "")
+	await client.login(TOKEN)
 }
 
 start()

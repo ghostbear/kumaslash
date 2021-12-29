@@ -1,10 +1,6 @@
 import axios, { AxiosResponse } from "axios"
+import { HOUR_IN_MILLIS } from "../constants"
 import { Extension, Release } from "../models"
-
-const HOUR_IN_MILLIS = 60 * 60 * 1000
-
-const EXTENSIONS_URL = "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/index.json"
-const EXTENSIONS_DOWNLOAD_URL = "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/apk/"
 
 export class GitHubRepository {
 	lastUpdated: number = 0
@@ -17,7 +13,7 @@ export class GitHubRepository {
 	async getExtensions(): Promise<Array<Extension>> {
 		const now = Date.now()
 		if (this.lastUpdated + HOUR_IN_MILLIS < now) {
-			this.extensions = (await axios.get(EXTENSIONS_URL)).data
+			this.extensions = (await axios.get("https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/index.json")).data
 			this.lastUpdated = now
 		}
 		return this.extensions
@@ -34,7 +30,7 @@ export class GitHubRepository {
 	}
 
 	getDownloadUrl(extension: Extension): string {
-		return EXTENSIONS_DOWNLOAD_URL + extension.apk
+		return "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/apk/" + extension.apk
 	}
 
 	async getRelease(type: string, preview: boolean): Promise<Release> {
