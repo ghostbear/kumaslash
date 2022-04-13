@@ -13,9 +13,17 @@
 
 ## Docker 
 
+## GitHub Release
 ```shell
-docker build .
 docker run  \
   --env BOT_TOKEN=<YOUR_TOKEN> \
-  -d <image_name>:latest
+  -d ghcr.io/ghostbear/kumaslash:latest
+```
+
+## Building
+```shell
+docker build -t kumaslash:latest .
+docker run  \
+  --env BOT_TOKEN=<YOUR_TOKEN> \
+  -d kumaslash:latest
 ```
