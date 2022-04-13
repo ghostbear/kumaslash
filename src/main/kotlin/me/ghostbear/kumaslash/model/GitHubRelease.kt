@@ -55,8 +55,8 @@ fun GitHubRelease.toMessage(isPreview: Boolean = false): InteractionResponseModi
         content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
     }
 
-    components = (components ?: mutableListOf())
-    components!!.add(
+    components = components ?: mutableListOf()
+    components?.add(
         ActionRowBuilder().apply {
             linkButton(assets.first().browserDownloadUrl) {
                 label = "Download"
@@ -75,8 +75,7 @@ fun GitHubRelease.updateMessage(isPreview: Boolean = false): UpdateMessageIntera
         content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
     }
 
-    components = (components ?: mutableListOf())
-    components!!.add(
+    components.add(
         ActionRowBuilder().apply {
             linkButton(assets.first().browserDownloadUrl) {
                 label = "Download"
