@@ -5,6 +5,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
+import me.ghostbear.kumaslash.commands.registerDownloadCommand
 
 import me.ghostbear.kumaslash.commands.registerPingCommand
 import me.ghostbear.kumaslash.commands.registerSourceCommand
@@ -21,6 +22,7 @@ suspend fun main(args: Array<String>) {
 
     kord.registerPingCommand()
     kord.registerSourceCommand()
+    kord.registerDownloadCommand()
 
     kord.login()
 }
