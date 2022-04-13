@@ -1,14 +1,11 @@
 package me.ghostbear.kumaslash.model
 
-import dev.kord.common.entity.ButtonStyle
 import dev.kord.rest.builder.component.ActionRowBuilder
-import dev.kord.rest.builder.component.ButtonBuilder
-import dev.kord.rest.builder.component.MessageComponentBuilder
 import dev.kord.rest.builder.message.modify.InteractionResponseModifyBuilder
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Extension (
+data class Extension(
     val name: String,
     val pkg: String,
     val apk: String,

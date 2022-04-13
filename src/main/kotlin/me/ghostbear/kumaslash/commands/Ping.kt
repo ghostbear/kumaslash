@@ -22,5 +22,4 @@ suspend fun Kord.registerPingCommand() {
             content = "Pong"
         }
     }
-
 }

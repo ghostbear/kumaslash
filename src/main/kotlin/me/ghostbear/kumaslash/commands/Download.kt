@@ -3,16 +3,14 @@ package me.ghostbear.kumaslash.commands
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Choice
 import dev.kord.core.Kord
-import dev.kord.core.behavior.edit
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.behavior.interaction.updatePublicMessage
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
 import dev.kord.rest.builder.component.ActionRowBuilder
-import dev.kord.rest.builder.interaction.boolean
 import dev.kord.rest.builder.interaction.string
-import io.ktor.client.request.*
+import io.ktor.client.request.get
 import me.ghostbear.kumaslash.client
 import me.ghostbear.kumaslash.model.GitHubRelease
 import me.ghostbear.kumaslash.model.toMessage
@@ -99,12 +97,9 @@ suspend fun Kord.registerDownloadCommand() {
             try {
                 val release: GitHubRelease = client.get(repo!!.url)
                 interaction.updatePublicMessage(release.updateMessage(isPreview))
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-
         }
     }
-
 }

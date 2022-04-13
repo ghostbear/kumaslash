@@ -5,8 +5,9 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
 import dev.kord.rest.builder.interaction.string
-import io.ktor.client.request.*
-import io.ktor.http.*
+import io.ktor.client.request.get
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -21,16 +22,15 @@ private const val NAME = "source"
 private const val DESCRIPTION = "Return source"
 
 val extensions: Flow<List<Extension>> = flow {
-
     while (true) {
-        val raw = client.get<String>("https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/index.min.json") {
-            contentType(ContentType.Application.Json)
-        }
+        val raw =
+            client.get<String>("https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/index.min.json") {
+                contentType(ContentType.Application.Json)
+            }
 
         emit(Json.decodeFromString(raw))
         delay(3600000)
     }
-
 }
 
 suspend fun Kord.registerSourceCommand() {
@@ -62,6 +62,4 @@ suspend fun Kord.registerSourceCommand() {
             response.respond { content = "Not found" }
         }
     }
-
 }
-

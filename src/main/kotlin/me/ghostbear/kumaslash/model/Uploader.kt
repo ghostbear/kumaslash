@@ -1,6 +1,5 @@
 package me.ghostbear.kumaslash.model
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
