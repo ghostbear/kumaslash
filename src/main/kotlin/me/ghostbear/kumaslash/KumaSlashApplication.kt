@@ -6,9 +6,10 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import kotlinx.serialization.json.Json
-import me.ghostbear.kumaslash.commands.registerDownloadCommand
-import me.ghostbear.kumaslash.commands.registerPingCommand
-import me.ghostbear.kumaslash.commands.registerSourceCommand
+import me.ghostbear.kumaslash.commands.Command
+import me.ghostbear.kumaslash.commands.download.DownloadCommand
+import me.ghostbear.kumaslash.commands.source.SourceCommand
+import me.ghostbear.kumaslash.commands.ping.PingCommand
 
 val client = HttpClient(CIO) {
     install(JsonFeature) {
@@ -19,12 +20,19 @@ val client = HttpClient(CIO) {
         )
     }
 }
+
+val commands: List<Command> = listOf(
+    PingCommand(),
+    DownloadCommand(),
+    SourceCommand()
+)
+
 suspend fun main(args: Array<String>) {
     val kord = Kord(args[0])
 
-    kord.registerPingCommand()
-    kord.registerSourceCommand()
-    kord.registerDownloadCommand()
+    commands.forEach { command ->
+        command.register()(kord)
+    }
 
     kord.login()
 }

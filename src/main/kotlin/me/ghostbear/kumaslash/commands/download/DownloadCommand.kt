@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands
+package me.ghostbear.kumaslash.commands.download
 
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Choice
@@ -16,12 +16,50 @@ import dev.kord.rest.builder.interaction.string
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
 import me.ghostbear.kumaslash.client
+import me.ghostbear.kumaslash.commands.Command
 import me.ghostbear.kumaslash.model.GitHubRelease
 import me.ghostbear.kumaslash.model.toMessage
 import me.ghostbear.kumaslash.model.updateMessage
 
-private const val NAME = "release"
-private const val DESCRIPTION = "Returns download"
+class DownloadCommand : Command {
+    override val name: String = "download"
+    override val description: String = "Get download link Tachiyomi or supported forks"
+
+    override fun register(): suspend Kord.() -> Unit = {
+        createGlobalChatInputCommand(name, description) {
+            string("repository", "The type of Tachiyomi you want") {
+                required = true
+                choices = RepositoryChoices.choices
+            }
+        }
+
+        on<GuildChatInputCommandInteractionCreateEvent> {
+            val command = interaction.command
+            if (command.rootName != name) return@on
+
+            val repository = command.strings["repository"]!!
+            val repositoryChoices = RepositoryChoices.fromType(repository)
+
+            if (repositoryChoices == RepositoryChoices.UNKNOWN) return@on
+
+            val action = Repository.action(repositoryChoices)
+            action.message(interaction, ReleaseType.NONE)
+        }
+
+        on<ButtonInteractionCreateEvent> {
+            val customId = interaction.component.customId ?: return@on
+            val repositoryChoices = RepositoryChoices.fromCustomId(customId)
+            val releaseType = ReleaseType.fromCustomId(customId)
+            if (repositoryChoices == RepositoryChoices.UNKNOWN || releaseType == ReleaseType.NONE) {
+                interaction.message.delete()
+                return@on
+            }
+
+            val action = Repository.action(repositoryChoices)
+            action.message(interaction, releaseType)
+        }
+    }
+}
 
 enum class RepositoryChoices(val displayName: String, val value: String) {
     NEKO("Neko", "neko"),
@@ -228,43 +266,4 @@ suspend inline fun <reified T> Release.getRelease(releaseType: ReleaseType = Rel
         else -> throw Exception("Release should implement Stable and/or Preview")
     }
     return client.get(url)
-}
-
-suspend fun Kord.registerDownloadCommand() {
-
-    createGlobalChatInputCommand(
-        NAME,
-        DESCRIPTION
-    ) {
-        string("repository", "The type of Tachiyomi you want") {
-            required = true
-            choices = RepositoryChoices.choices
-        }
-    }
-
-    on<GuildChatInputCommandInteractionCreateEvent> {
-        val command = interaction.command
-        if (command.rootName != NAME) return@on
-
-        val repository = command.strings["repository"]!!
-        val repositoryChoices = RepositoryChoices.fromType(repository)
-
-        if (repositoryChoices == RepositoryChoices.UNKNOWN) return@on
-
-        val action = Repository.action(repositoryChoices)
-        action.message(interaction, ReleaseType.NONE)
-    }
-
-    on<ButtonInteractionCreateEvent> {
-        val customId = interaction.component.customId ?: return@on
-        val repositoryChoices = RepositoryChoices.fromCustomId(customId)
-        val releaseType = ReleaseType.fromCustomId(customId)
-        if (repositoryChoices == RepositoryChoices.UNKNOWN || releaseType == ReleaseType.NONE) {
-            interaction.message.delete()
-            return@on
-        }
-
-        val action = Repository.action(repositoryChoices)
-        action.message(interaction, releaseType)
-    }
 }
