@@ -22,19 +22,19 @@ class PingCommand : Command {
             if (interaction.command.rootName != name) return@on
 
             val response = interaction.deferPublicResponse()
-            val timedValue = measureTimedValue {
+            val (value, duration) = measureTimedValue {
                 response.respond {
                     content = "Pong"
                 }
             }
 
-            timedValue.value.message.edit {
-                content = "Pong took ${timedValue.duration}"
+            value.message.edit {
+                content = "Pong took $duration"
             }
 
             delay(1000)
 
-            timedValue.value.message.delete()
+            value.message.delete()
         }
     }
 }
