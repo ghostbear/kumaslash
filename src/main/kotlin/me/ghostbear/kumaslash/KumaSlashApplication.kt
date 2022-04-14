@@ -8,8 +8,8 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import kotlinx.serialization.json.Json
 import me.ghostbear.kumaslash.commands.Command
 import me.ghostbear.kumaslash.commands.download.DownloadCommand
-import me.ghostbear.kumaslash.commands.source.SourceCommand
 import me.ghostbear.kumaslash.commands.ping.PingCommand
+import me.ghostbear.kumaslash.commands.source.SourceCommand
 
 val client = HttpClient(CIO) {
     install(JsonFeature) {

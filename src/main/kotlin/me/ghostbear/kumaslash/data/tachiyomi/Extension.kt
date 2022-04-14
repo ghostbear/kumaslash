@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.model
+package me.ghostbear.kumaslash.data.tachiyomi
 
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.modify.InteractionResponseModifyBuilder

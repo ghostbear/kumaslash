@@ -6,9 +6,9 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.on
 import kotlinx.coroutines.delay
+import me.ghostbear.kumaslash.commands.Command
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTimedValue
-import me.ghostbear.kumaslash.commands.Command
 
 class PingCommand : Command {
     override val name: String = "ping"

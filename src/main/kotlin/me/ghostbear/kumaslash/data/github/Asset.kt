@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.model
+package me.ghostbear.kumaslash.data.github
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

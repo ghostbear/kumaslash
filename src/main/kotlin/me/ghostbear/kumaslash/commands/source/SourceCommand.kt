@@ -16,8 +16,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import me.ghostbear.kumaslash.client
 import me.ghostbear.kumaslash.commands.Command
-import me.ghostbear.kumaslash.model.Extension
-import me.ghostbear.kumaslash.model.toMessage
+import me.ghostbear.kumaslash.data.tachiyomi.Extension
+import me.ghostbear.kumaslash.data.tachiyomi.toMessage
 
 class SourceCommand : Command {
     override val name: String = "source"

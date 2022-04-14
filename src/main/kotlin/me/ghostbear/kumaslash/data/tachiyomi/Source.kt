@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.model
+package me.ghostbear.kumaslash.data.tachiyomi
 
 import kotlinx.serialization.Serializable
 

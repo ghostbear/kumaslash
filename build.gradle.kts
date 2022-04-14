@@ -29,6 +29,10 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
 }
 
+sourceSets {
+    this
+}
+
 application {
     mainClass.set("KumaSlashApplicationKt")
 }
