@@ -19,6 +19,8 @@ dependencies {
     implementation(libs.kord.core)
 
     implementation(libs.kotlinx.serialization)
+
+    implementation(libs.slf4j.simple)
 }
 
 tasks.test {
