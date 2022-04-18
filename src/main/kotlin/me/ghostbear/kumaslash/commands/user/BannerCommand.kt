@@ -7,6 +7,8 @@ import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEve
 import dev.kord.rest.Image
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.UserBuilder
+import dev.kord.rest.builder.message.modify.embed
+import kotlinx.coroutines.delay
 import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.SlashCommand
 
@@ -31,8 +33,22 @@ class BannerCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEv
             kord
         )
 
-        response.respond {
-            content = user.bannerUrl?.let { "$it?size=4096" } ?: "Not found"
+        val bannerUrl = user.bannerUrl
+        if (bannerUrl != null) {
+            response.respond {
+                embed {
+                    image = "$bannerUrl?size=4096"
+                    footer {
+                        text = "Banner for ${user.username}"
+                    }
+                }
+            }
+        } else {
+            response.respond {
+                content = "Not found"
+            }
+            delay(1000)
+            response.delete()
         }
     }
 }

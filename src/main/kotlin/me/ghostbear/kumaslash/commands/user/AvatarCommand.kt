@@ -11,6 +11,8 @@ import dev.kord.rest.Image
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.UserBuilder
+import dev.kord.rest.builder.message.create.embed
+import dev.kord.rest.builder.message.modify.embed
 import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.SlashCommand
@@ -30,7 +32,12 @@ class AvatarCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEv
             val targetId = customId.replace("server_avatar_", "")
             val user = kord.getUser(Snowflake(targetId.toLong()))?.asMember(interaction.message.getGuild().id) ?: return@on
             interaction.updatePublicMessage {
-                content = user.memberAvatar?.toUrl(Image.Size.Size512)
+                embed {
+                    image = user.memberAvatar?.toUrl(Image.Size.Size512)
+                    footer {
+                        text = "Avatar for ${user.username}"
+                    }
+                }
                 components = components.apply {
                     add(createActionRow(user.id))
                 }
@@ -40,7 +47,12 @@ class AvatarCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEv
             val targetId = customId.replace("global_avatar_", "")
             val user = kord.getUser(Snowflake(targetId.toLong())) ?: return@on
             interaction.updatePublicMessage {
-                content = user.avatar?.toUrl(Image.Size.Size512)
+                embed {
+                    image = user.avatar?.toUrl(Image.Size.Size512)
+                    footer {
+                        text = "Avatar for ${user.username}"
+                    }
+                }
                 components = components.apply {
                     add(createActionRow(user.id, AvatarType.GLOBAL))
                 }
@@ -55,8 +67,15 @@ class AvatarCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEv
         val target = command.users["target"]!!
 
         response.respond {
-            val memberAvatar = target.asMember(interaction.guildId).memberAvatar?.toUrl(Image.Size.Size512)
-            content = memberAvatar ?: target.avatar?.toUrl(Image.Size.Size512)
+            val member = target.asMember(interaction.guildId)
+            val memberAvatar = member.memberAvatar?.toUrl(Image.Size.Size512)
+            val targetAvatar = target.avatar?.toUrl(Image.Size.Size512)
+            embed {
+                image = memberAvatar ?: targetAvatar
+                footer {
+                    text = "Avatar for ${member.username}"
+                }
+            }
             if (memberAvatar != null) {
                 components = (components ?: mutableListOf()).apply {
                     add(createActionRow(target.id))
