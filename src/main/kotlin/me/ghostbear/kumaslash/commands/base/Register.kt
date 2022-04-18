@@ -1,8 +1,8 @@
-package me.ghostbear.kumaslash.commands
+package me.ghostbear.kumaslash.commands.base
 
 import dev.kord.core.Kord
 
-interface Command {
+interface Register {
 
     val name: String
     val description: String

@@ -2,7 +2,6 @@ package me.ghostbear.kumaslash.commands.download
 
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Choice
-import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.DeferredPublicMessageInteractionResponseBehavior
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.behavior.interaction.updatePublicMessage
@@ -11,13 +10,15 @@ import dev.kord.core.entity.interaction.ButtonInteraction
 import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
-import dev.kord.core.on
 import dev.kord.rest.builder.component.ActionRowBuilder
-import dev.kord.rest.builder.interaction.string
+import dev.kord.rest.builder.interaction.OptionsBuilder
+import dev.kord.rest.builder.interaction.StringChoiceBuilder
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
 import me.ghostbear.kumaslash.client
-import me.ghostbear.kumaslash.commands.Command
+import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
+import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
+import me.ghostbear.kumaslash.commands.base.SlashCommand
 import me.ghostbear.kumaslash.data.github.GitHubRelease
 import me.ghostbear.kumaslash.data.github.toMessage
 import me.ghostbear.kumaslash.data.github.updateMessage
@@ -166,46 +167,44 @@ enum class Repository(
     }
 }
 
-class DownloadCommand : Command {
+class DownloadCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent, OnButtonInteractionCreateEvent {
     override val name: String = "download"
     override val description: String = "Get download link Tachiyomi or supported forks"
+    override val parameters: MutableList<OptionsBuilder> = mutableListOf(
+        StringChoiceBuilder("repository", "The type of Tachiyomi you want").apply {
+            required = true
+            choices = Repository.choices
+        }
+    )
 
-    override fun register(): suspend Kord.() -> Unit = {
-        createGlobalChatInputCommand(name, description) {
-            string("repository", "The type of Tachiyomi you want") {
-                required = true
-                choices = Repository.choices
-            }
+    override fun onButtonInteractionCreateEvent(): suspend ButtonInteractionCreateEvent.() -> Unit = on@{
+        val customId = interaction.component.customId ?: return@on
+        if (!listOf("stable", "preview").any { customId.endsWith(it) }) return@on
+
+        val context = Context()
+        context.strategy = DisplayStrategy()
+
+        val repository = Repository.parseCustomId(customId)
+
+        context.executeStrategy(interaction, repository)
+    }
+
+    override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = on@{
+        val command = interaction.command
+        if (command.rootName != name) return@on
+
+        val context = Context()
+
+        val choice = command.strings["repository"]!!
+        val repository = Repository.parseChoice(choice)
+
+        when (repository) {
+            Repository.NEKO,
+            Repository.TACHIYOMI_J2K -> context.strategy = DisplayStrategy()
+            Repository.TACHIYOMI_SY,
+            Repository.TACHIYOMI -> context.strategy = ChoiceStrategy()
         }
 
-        on<GuildChatInputCommandInteractionCreateEvent> {
-            val command = interaction.command
-            if (command.rootName != name) return@on
-
-            val context = Context()
-
-            val choice = command.strings["repository"]!!
-            val repository = Repository.parseChoice(choice)
-
-            when (repository) {
-                Repository.NEKO,
-                Repository.TACHIYOMI_J2K -> context.strategy = DisplayStrategy()
-                Repository.TACHIYOMI_SY,
-                Repository.TACHIYOMI -> context.strategy = ChoiceStrategy()
-            }
-
-            context.executeStrategy(interaction, repository)
-        }
-
-        on<ButtonInteractionCreateEvent> {
-            val customId = interaction.component.customId ?: return@on
-
-            val context = Context()
-            context.strategy = DisplayStrategy()
-
-            val repository = Repository.parseCustomId(customId)
-
-            context.executeStrategy(interaction, repository)
-        }
+        context.executeStrategy(interaction, repository)
     }
 }
