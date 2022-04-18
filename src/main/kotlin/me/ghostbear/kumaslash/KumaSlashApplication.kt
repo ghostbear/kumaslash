@@ -5,6 +5,7 @@ import dev.kord.core.entity.application.ApplicationCommand
 import dev.kord.core.entity.interaction.SubCommand
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
+import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
 import dev.kord.core.kordLogger
 import dev.kord.core.on
 import io.ktor.client.HttpClient
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.json.Json
 import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
+import me.ghostbear.kumaslash.commands.base.OnModalSubmitInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.SlashCommandGroup
 import me.ghostbear.kumaslash.commands.download.DownloadCommand
 import me.ghostbear.kumaslash.commands.ping.PingCommand
@@ -114,6 +116,21 @@ suspend fun main(args: Array<String>) {
             .forEach { command ->
                 if (command is OnButtonInteractionCreateEvent) {
                     command.onButtonInteractionCreateEvent().invoke(this)
+                }
+            }
+    }
+
+    kord.on<ModalSubmitInteractionCreateEvent> {
+        commands
+            .flatMap {
+                if (it is SlashCommandGroup) {
+                    return@flatMap it.subcommands
+                }
+                return@flatMap listOf(it)
+            }
+            .forEach { command ->
+                if (command is OnModalSubmitInteractionCreateEvent) {
+                    command.onModalSubmitInteractionCreateEvent().invoke(this)
                 }
             }
     }
