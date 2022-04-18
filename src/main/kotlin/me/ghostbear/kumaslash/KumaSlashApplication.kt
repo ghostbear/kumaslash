@@ -25,6 +25,7 @@ import me.ghostbear.kumaslash.commands.base.SlashCommandGroup
 import me.ghostbear.kumaslash.commands.download.DownloadCommand
 import me.ghostbear.kumaslash.commands.ping.PingCommand
 import me.ghostbear.kumaslash.commands.source.SourceCommand
+import me.ghostbear.kumaslash.commands.steps.StepsCommand
 import me.ghostbear.kumaslash.commands.user.UserCommand
 
 val client = HttpClient(CIO) {
@@ -52,7 +53,8 @@ val commands = mutableListOf(
     PingCommand(),
     UserCommand(),
     DownloadCommand(),
-    SourceCommand()
+    SourceCommand(),
+    StepsCommand()
 )
 
 suspend fun main(args: Array<String>) {
