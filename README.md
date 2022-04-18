@@ -4,6 +4,10 @@
 - `/ping`
 - `/source id:`
 - `/release type:`
+- `/user`
+  - `avatar target:`
+  - `banner target:`
+- `/steps`
 
 **Scopes**
 - application.commands
