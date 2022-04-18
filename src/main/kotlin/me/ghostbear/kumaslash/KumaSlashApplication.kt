@@ -5,6 +5,7 @@ import dev.kord.core.entity.application.ApplicationCommand
 import dev.kord.core.entity.interaction.SubCommand
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
+import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
 import dev.kord.core.kordLogger
 import dev.kord.core.on
@@ -14,9 +15,12 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.json.Json
+import me.ghostbear.kumaslash.commands.base.MessageCommand
 import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
+import me.ghostbear.kumaslash.commands.base.OnGuildMessageCommandInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnModalSubmitInteractionCreateEvent
+import me.ghostbear.kumaslash.commands.base.SlashCommand
 import me.ghostbear.kumaslash.commands.base.SlashCommandGroup
 import me.ghostbear.kumaslash.commands.download.DownloadCommand
 import me.ghostbear.kumaslash.commands.ping.PingCommand
@@ -84,25 +88,37 @@ suspend fun main(args: Array<String>) {
 
     kord.on<GuildChatInputCommandInteractionCreateEvent> {
         val interactionCommand = interaction.command
-        commands
-            .forEach { command ->
-                if (interactionCommand is SubCommand) {
-                    if (command !is SlashCommandGroup) return@forEach
-                    command.subcommands.forEach subcommands@{ subcommand ->
-                        if (interactionCommand.name != subcommand.name) return@subcommands
-                        if (subcommand is OnGuildChatInputCommandInteractionCreateEvent) {
-                            subcommand.onGuildChatInputCommandInteractionCreateEvent().invoke(this)
-                            return@subcommands
-                        }
+        commands.forEach { command ->
+            if (interactionCommand is SubCommand) {
+                if (command !is SlashCommandGroup) return@forEach
+                command.subcommands.forEach subcommands@{ subcommand ->
+                    if (interactionCommand.name != subcommand.name) return@subcommands
+                    if (subcommand is OnGuildChatInputCommandInteractionCreateEvent) {
+                        subcommand.onGuildChatInputCommandInteractionCreateEvent().invoke(this)
+                        return@subcommands
                     }
-                    return@forEach
                 }
+                return@forEach
+            }
 
+            if (command is SlashCommand) {
                 if (command is OnGuildChatInputCommandInteractionCreateEvent) {
                     if (interaction.command.rootName != command.name) return@forEach
                     command.onGuildChatInputCommandInteractionCreateEvent().invoke(this)
                 }
             }
+        }
+    }
+
+    kord.on<GuildMessageCommandInteractionCreateEvent> {
+        commands.forEach { command ->
+            if (command is MessageCommand) {
+                if (command is OnGuildMessageCommandInteractionCreateEvent) {
+                    if (interaction.invokedCommandName != command.name) return@forEach
+                    command.onGuildMessageCommandInteractionCreateEvent().invoke(this)
+                }
+            }
+        }
     }
 
     kord.on<ButtonInteractionCreateEvent> {
