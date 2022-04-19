@@ -115,7 +115,7 @@ class RequestStepsCommand : MessageCommand(), OnGuildMessageCommandInteractionCr
 
     override fun onButtonInteractionCreateEvent(): suspend ButtonInteractionCreateEvent.() -> Unit = on@{
         val customId = interaction.component.customId ?: return@on
-        if (!listOf("command-steps-request").any { customId.endsWith(it) }) return@on
+        if (customId != "command-steps-request") return@on
 
         interaction.modal("Answer the following questions", "command-steps-modal") {
             actionRow {
