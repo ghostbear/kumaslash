@@ -25,6 +25,7 @@ import me.ghostbear.kumaslash.commands.base.SlashCommandGroup
 import me.ghostbear.kumaslash.commands.download.DownloadCommand
 import me.ghostbear.kumaslash.commands.ping.PingCommand
 import me.ghostbear.kumaslash.commands.source.SourceCommand
+import me.ghostbear.kumaslash.commands.steps.RequestStepsCommand
 import me.ghostbear.kumaslash.commands.steps.StepsCommand
 import me.ghostbear.kumaslash.commands.user.UserCommand
 
@@ -54,7 +55,8 @@ val commands = mutableListOf(
     UserCommand(),
     DownloadCommand(),
     SourceCommand(),
-    StepsCommand()
+    StepsCommand(),
+    RequestStepsCommand(),
 )
 
 suspend fun main(args: Array<String>) {

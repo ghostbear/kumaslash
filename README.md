@@ -1,6 +1,6 @@
 # KumaSlash
 
-**Commands**
+**Slash Commands**
 - `/ping`
 - `/source id:`
 - `/release type:`
@@ -8,6 +8,9 @@
   - `avatar target:`
   - `banner target:`
 - `/steps`
+
+**Message Commands**
+- `Request Steps`
 
 **Scopes**
 - application.commands
