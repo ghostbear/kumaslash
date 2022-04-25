@@ -102,7 +102,7 @@ suspend fun main(args: Array<String>) {
     }
 
     kord.on<GuildChatInputCommandInteractionCreateEvent> {
-        if (ignoreRole != null && interaction.user.roleIds.any { ignoreRole.contains(it) }) {
+        if (ignoreRole != null && interaction.user.roleIds.any { roleId -> ignoreRole.any { it.value == roleId.value } }) {
             return@on
         }
 
@@ -130,6 +130,9 @@ suspend fun main(args: Array<String>) {
     }
 
     kord.on<GuildMessageCommandInteractionCreateEvent> {
+        if (ignoreRole != null && interaction.user.roleIds.any { roleId -> ignoreRole.any { it.value == roleId.value } }) {
+            return@on
+        }
         commands.forEach { command ->
             if (command is MessageCommand) {
                 if (command is OnGuildMessageCommandInteractionCreateEvent) {
@@ -141,6 +144,12 @@ suspend fun main(args: Array<String>) {
     }
 
     kord.on<ButtonInteractionCreateEvent> {
+        if (ignoreRole != null && interaction.user.asMember(interaction.getChannel().data.guildId.value!!).roleIds.any { roleId ->
+            ignoreRole.any { it.value == roleId.value }
+        }
+        ) {
+            return@on
+        }
         commands
             .flatMap {
                 if (it is SlashCommandGroup) {
@@ -156,6 +165,9 @@ suspend fun main(args: Array<String>) {
     }
 
     kord.on<ModalSubmitInteractionCreateEvent> {
+        if (ignoreRole != null && interaction.user.asMember(interaction.message?.getGuild()?.id!!).roleIds.any { roleId -> ignoreRole.any { it.value == roleId.value } }) {
+            return@on
+        }
         commands
             .flatMap {
                 if (it is SlashCommandGroup) {
