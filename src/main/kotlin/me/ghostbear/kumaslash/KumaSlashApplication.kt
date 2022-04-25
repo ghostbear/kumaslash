@@ -1,5 +1,6 @@
 package me.ghostbear.kumaslash
 
+import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
 import dev.kord.core.entity.application.ApplicationCommand
 import dev.kord.core.entity.interaction.SubCommand
@@ -62,6 +63,16 @@ val commands = mutableListOf(
 suspend fun main(args: Array<String>) {
     val kord = Kord(args[0])
 
+    var ignoreRole: List<Snowflake>? = null
+    if (args.size > 1) {
+        try {
+            ignoreRole = args[1].split(",").map { Snowflake(it.toLong()) }
+            kordLogger.info { "These roles will be ignored: $ignoreRole" }
+        } catch (e: Exception) {
+            kordLogger.error(e) { "Failed to parse ignore roles" }
+        }
+    }
+
     try {
         kordLogger.info("Master, I'm starting to clean the ballroom nya~")
         kord.globalCommands.collectLatest(clean)
@@ -91,6 +102,10 @@ suspend fun main(args: Array<String>) {
     }
 
     kord.on<GuildChatInputCommandInteractionCreateEvent> {
+        if (ignoreRole != null && interaction.user.roleIds.any { ignoreRole.contains(it) }) {
+            return@on
+        }
+
         val interactionCommand = interaction.command
         commands.forEach { command ->
             if (interactionCommand is SubCommand) {

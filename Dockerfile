@@ -13,5 +13,5 @@ WORKDIR /kumaslash
 USER root
 RUN rm -rf /build
 USER gradle
-CMD java -jar application.jar $(echo $BOT_TOKEN)
+CMD java -jar application.jar $(echo $BOT_TOKEN) $(echo $IGNORE_ROLES)
 

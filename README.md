@@ -42,6 +42,26 @@ docker run  \
   -d kumaslash:latest
 ```
 
+### Additional options
+
+#### Ignore roles
+
+You can add roles that the bot will ignore by adding `--env IGNORE_ROLES=<IGNORE_ROLES>`, `<IGNORE_ROLES>` is a string where you add the role ids you want to ignore.
+
+**Example**
+
+`123456789` will add ignore the role `123456789`
+
+You can also ignore multiple roles by adding `,` between them, like this `123456789,987654321` this will ignore the roles `123456789` and `987654321`
+
+```shell
+docker run  \
+  --env BOT_TOKEN=<YOUR_TOKEN> \
+  --env IGNORE_ROLES=<IGNORE_ROLES> \
+  -d ghcr.io/ghostbear/kumaslash:latest
+  
+```
+
 ## Developing
 
 If you choose to develop a feature or fix a bug it's highly recommended that you use Intellij IDEA Community Edition as your code editor. 
@@ -50,14 +70,14 @@ If you choose to develop a feature or fix a bug it's highly recommended that you
 1. Build the JAR 
    - `./gradlew build`
 2. Run the JAR
-   - `java -jar build/libs/kumaslash-*.jar <BOT_TOKEN>`
+   - `java -jar build/libs/kumaslash-*.jar <BOT_TOKEN> <IGNORE_ROLES>`
 
 ### Intellij IDEA
 1. Open Run/Debug Configuration `Run -> Edit Configurations...`
 2. Add new JAR Application `+ -> JAR Application`
 3. (Optional) Set the name field to a name, like your bots name
 4. Set the Path to JAR to the JAR file in the build folder `Folder -> Find the JAR`
-5. Set Program variables to your `BOT_TOKEN`
+5. Set Program variables to your `BOT_TOKEN` and/or `<IGNORE_ROLES>`
 6. Under Before launch add the build task from Gradle
    1. Press `+` then `Run Gradle task`
    2. Set the Gradle project to `kumaslash`
