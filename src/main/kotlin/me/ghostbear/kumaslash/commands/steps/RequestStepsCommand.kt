@@ -5,16 +5,19 @@ import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.TextInputStyle
 import dev.kord.core.behavior.interaction.modal
 import dev.kord.core.behavior.interaction.respondPublic
-import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
+import dev.kord.core.kordLogger
+import dev.kord.rest.Image
 import dev.kord.rest.builder.component.ActionRowBuilder
+import dev.kord.rest.builder.message.create.embed
 import dev.kord.rest.builder.message.modify.embed
 import me.ghostbear.kumaslash.commands.base.MessageCommand
 import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnGuildMessageCommandInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnModalSubmitInteractionCreateEvent
+import me.ghostbear.kumaslash.commands.user.toUrl
 
 class RequestStepsCommand :
     MessageCommand(),
@@ -26,7 +29,9 @@ class RequestStepsCommand :
 
     override fun onGuildMessageCommandInteractionCreateEvent(): suspend GuildMessageCommandInteractionCreateEvent.() -> Unit = on@{
         interaction.respondPublic {
-            content = "${interaction.user.mention}, please follow the Troubleshooting link below, if that doesn't solve your issues, please click the Help button."
+            val mention = interaction.getTarget().author?.mention
+            kordLogger.info { mention }
+            content = "${interaction.target.asMessage().getAuthorAsMember()?.mention}, please follow the Troubleshooting link below, if that doesn't solve your issues, please click the Help button."
             components.add(
                 ActionRowBuilder().apply {
                     interactionButton(ButtonStyle.Primary, "command-steps-request") {
@@ -85,8 +90,7 @@ class RequestStepsCommand :
 
     override fun onModalSubmitInteractionCreateEvent(): suspend ModalSubmitInteractionCreateEvent.() -> Unit = on@{
         if (!interaction.textInputs.keys.all { it.startsWith("command-step-") }) return@on
-        val response = interaction.deferPublicResponse()
-        response.respond {
+        interaction.respondPublic {
             embed {
                 color = Color(47, 49, 54)
                 field {
@@ -110,7 +114,7 @@ class RequestStepsCommand :
                     value = "${interaction.textInputs["command-step-issue"]!!.value}"
                 }
                 footer {
-                    icon = interaction.user.avatar?.url.toString()
+                    icon = interaction.user.avatar?.toUrl(Image.Size.Size32)
                     text = "Answered by ${interaction.user.username}"
                 }
             }
