@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "me.ghostbear"
-version = "1.3.1"
+version = "1.3.2"
 
 dependencies {
     testImplementation(kotlin("test"))
