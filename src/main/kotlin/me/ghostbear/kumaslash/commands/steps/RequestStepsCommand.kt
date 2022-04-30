@@ -12,10 +12,10 @@ import dev.kord.core.kordLogger
 import dev.kord.rest.Image
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.create.embed
-import me.ghostbear.kumaslash.commands.base.MessageCommand
-import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.OnGuildMessageCommandInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.OnModalSubmitInteractionCreateEvent
+import me.ghostbear.core.MessageCommand
+import me.ghostbear.core.OnButtonInteractionCreateEvent
+import me.ghostbear.core.OnGuildMessageCommandInteractionCreateEvent
+import me.ghostbear.core.OnModalSubmitInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.user.toUrl
 
 class RequestStepsCommand :

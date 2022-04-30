@@ -7,3 +7,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "kumaslash"
 include("data")
+include("core")

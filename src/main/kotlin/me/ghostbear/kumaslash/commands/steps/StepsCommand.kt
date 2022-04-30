@@ -7,11 +7,14 @@ import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
 import dev.kord.rest.builder.message.modify.embed
-import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.OnModalSubmitInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.SlashCommand
+import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
+import me.ghostbear.core.OnModalSubmitInteractionCreateEvent
+import me.ghostbear.core.SlashCommand
 
-class StepsCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent, OnModalSubmitInteractionCreateEvent {
+class StepsCommand :
+    SlashCommand(),
+    OnGuildChatInputCommandInteractionCreateEvent,
+    OnModalSubmitInteractionCreateEvent {
     override val name: String = "steps"
     override val description: String = "Answer these questions to receive better support."
 

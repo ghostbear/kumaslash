@@ -13,9 +13,9 @@ import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.UserBuilder
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.rest.builder.message.modify.embed
-import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.SlashCommand
+import me.ghostbear.core.OnButtonInteractionCreateEvent
+import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
+import me.ghostbear.core.SlashCommand
 
 class AvatarCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent, OnButtonInteractionCreateEvent {
     override val name: String = "avatar"

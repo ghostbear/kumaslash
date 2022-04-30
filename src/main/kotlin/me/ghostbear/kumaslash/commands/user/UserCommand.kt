@@ -1,7 +1,7 @@
 package me.ghostbear.kumaslash.commands.user
 
-import me.ghostbear.kumaslash.commands.base.SlashCommand
-import me.ghostbear.kumaslash.commands.base.SlashCommandGroup
+import me.ghostbear.core.SlashCommand
+import me.ghostbear.core.SlashCommandGroup
 
 class UserCommand : SlashCommandGroup() {
     override val name: String = "user"

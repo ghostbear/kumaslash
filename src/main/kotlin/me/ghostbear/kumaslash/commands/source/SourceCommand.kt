@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
+import me.ghostbear.core.SlashCommand
 import me.ghostbear.data.tachiyomi.Extension
 import me.ghostbear.data.tachiyomi.toMessage
 import me.ghostbear.kumaslash.client
-import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.SlashCommand
 
 class SourceCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "source"

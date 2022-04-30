@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands.base
+package me.ghostbear.core
 
 import dev.kord.core.Kord
 

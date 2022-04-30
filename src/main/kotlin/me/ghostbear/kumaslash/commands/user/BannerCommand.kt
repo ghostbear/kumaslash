@@ -9,8 +9,8 @@ import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.UserBuilder
 import dev.kord.rest.builder.message.modify.embed
 import kotlinx.coroutines.delay
-import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.kumaslash.commands.base.SlashCommand
+import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
+import me.ghostbear.core.SlashCommand
 
 class BannerCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "banner"
