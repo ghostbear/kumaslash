@@ -68,22 +68,16 @@ If you choose to develop a feature or fix a bug it's highly recommended that you
 
 ### Running
 1. Build the JAR 
-   - `./gradlew build`
+   - `./gradlew installDist`
 2. Run the JAR
-   - `java -jar build/libs/kumaslash-*.jar <BOT_TOKEN> <IGNORE_ROLES>`
+   - `java -jar ./app/build/install/app/bin/app <BOT_TOKEN> <IGNORE_ROLES>`
 
 ### Intellij IDEA
 1. Open Run/Debug Configuration `Run -> Edit Configurations...`
-2. Add new JAR Application `+ -> JAR Application`
-3. (Optional) Set the name field to a name, like your bots name
-4. Set the Path to JAR to the JAR file in the build folder `Folder -> Find the JAR`
-5. Set Program variables to your `BOT_TOKEN` and/or `<IGNORE_ROLES>`
-6. Under Before launch add the build task from Gradle
-   1. Press `+` then `Run Gradle task`
-   2. Set the Gradle project to `kumaslash`
-   3. Set the task to `build`
-   4. Press `OK`
-7. Press `Apply` and `OK`
+2. Click on the Run template for your operative system
+3. Duplicate the Run template by either pressing Copy Configuration or press `CTRL + D`
+4. Add Script options to your `BOT_TOKEN` and/or `<IGNORE_ROLES>`
+6. Press `Apply` and `OK`
 
 Now select the newly created Run/Debug Configuration profile from the dropdown and press the Run button
 
