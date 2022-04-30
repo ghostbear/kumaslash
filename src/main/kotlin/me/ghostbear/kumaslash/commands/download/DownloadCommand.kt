@@ -2,6 +2,7 @@ package me.ghostbear.kumaslash.commands.download
 
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Choice
+import dev.kord.common.entity.optional.Optional
 import dev.kord.core.behavior.interaction.response.DeferredPublicMessageInteractionResponseBehavior
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.behavior.interaction.updatePublicMessage
@@ -13,6 +14,7 @@ import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEve
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.StringChoiceBuilder
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
 import me.ghostbear.kumaslash.client
@@ -51,7 +53,7 @@ class DisplayStrategy : Strategy {
     override suspend fun execute(interaction: ActionInteraction, repository: Repository) {
         var response: DeferredPublicMessageInteractionResponseBehavior? = null
         try {
-            val release: GitHubRelease = client.get(repository.url)
+            val release: GitHubRelease = client.get(repository.url).body()
             when (interaction) {
                 is ChatInputCommandInteraction -> {
                     response = interaction.deferPublicResponse()
@@ -105,7 +107,7 @@ enum class Repository(
     TACHIYOMI(
         owner = "tachiyomiorg",
         repo = "tachiyomi",
-        choice = Choice.StringChoice("Tachiyomi", "tachiyomi")
+        choice = Choice.StringChoice("Tachiyomi", Optional.invoke(), "tachiyomi")
     ),
     TACHIYOMI_PREVIEW(
         owner = "tachiyomiorg",
@@ -115,17 +117,17 @@ enum class Repository(
     NEKO(
         owner = "CarlosEsco",
         repo = "Neko",
-        choice = Choice.StringChoice("Neko", "neko")
+        choice = Choice.StringChoice("Neko", Optional.invoke(), "neko")
     ),
     TACHIYOMI_J2K(
         owner = "Jays2Kings",
         repo = "tachiyomiJ2K",
-        choice = Choice.StringChoice("Tachiyomi J2K", "j2k")
+        choice = Choice.StringChoice("Tachiyomi J2K", Optional.invoke(), "j2k")
     ),
     TACHIYOMI_SY(
         owner = "jobobby04",
         repo = "TachiyomiSY",
-        choice = Choice.StringChoice("Tachiyomi SY", "sy")
+        choice = Choice.StringChoice("Tachiyomi SY", Optional.invoke(), "sy")
     ),
     TACHIYOMI_SY_PREVIEW(
         owner = "jobobby04",

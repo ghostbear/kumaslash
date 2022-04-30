@@ -12,7 +12,6 @@ import dev.kord.core.kordLogger
 import dev.kord.rest.Image
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.create.embed
-import dev.kord.rest.builder.message.modify.embed
 import me.ghostbear.kumaslash.commands.base.MessageCommand
 import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnGuildMessageCommandInteractionCreateEvent

@@ -5,6 +5,8 @@ import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEve
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.StringChoiceBuilder
 import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.coroutines.delay
@@ -52,11 +54,11 @@ class SourceCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEv
 val extensions: Flow<List<Extension>> = flow {
     while (true) {
         val raw =
-            client.get<String>("https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/index.min.json") {
+            client.get("https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/index.min.json") {
                 contentType(ContentType.Application.Json)
             }
 
-        emit(Json.decodeFromString(raw))
+        emit(Json.decodeFromString(raw.bodyAsText()))
         delay(3600000)
     }
 }

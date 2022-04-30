@@ -12,8 +12,8 @@ import dev.kord.core.kordLogger
 import dev.kord.core.on
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.json.Json
 import me.ghostbear.kumaslash.commands.base.MessageCommand
@@ -31,8 +31,8 @@ import me.ghostbear.kumaslash.commands.steps.StepsCommand
 import me.ghostbear.kumaslash.commands.user.UserCommand
 
 val client = HttpClient(CIO) {
-    install(JsonFeature) {
-        serializer = KotlinxSerializer(
+    install(ContentNegotiation) {
+        json(
             Json {
                 ignoreUnknownKeys = true
             }
