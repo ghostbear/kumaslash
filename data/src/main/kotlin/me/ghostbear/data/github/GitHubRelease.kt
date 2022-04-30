@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.data.github
+package me.ghostbear.data.github
 
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.create.UpdateMessageInteractionResponseCreateBuilder

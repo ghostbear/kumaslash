@@ -17,7 +17,7 @@ version = "1.3.3"
 dependencies {
     testImplementation(kotlin("test"))
     implementation(libs.kord.core)
-
+    implementation(project(":data"))
     implementation(libs.kotlinx.serialization)
 
     implementation(libs.slf4j.simple)

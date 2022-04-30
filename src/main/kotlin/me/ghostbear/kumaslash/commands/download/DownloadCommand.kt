@@ -17,13 +17,13 @@ import dev.kord.rest.builder.interaction.StringChoiceBuilder
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
+import me.ghostbear.data.github.GitHubRelease
+import me.ghostbear.data.github.toMessage
+import me.ghostbear.data.github.updateMessage
 import me.ghostbear.kumaslash.client
 import me.ghostbear.kumaslash.commands.base.OnButtonInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.base.SlashCommand
-import me.ghostbear.kumaslash.data.github.GitHubRelease
-import me.ghostbear.kumaslash.data.github.toMessage
-import me.ghostbear.kumaslash.data.github.updateMessage
 
 interface Strategy {
     suspend fun execute(interaction: ActionInteraction, repository: Repository)
