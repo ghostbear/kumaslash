@@ -2,23 +2,28 @@
 
 **Slash Commands**
 - `/ping`
-- `/source id:`
-- `/release type:`
+- `/source` `id:`
+- `/download` `repository:`
 - `/user`
-  - `avatar target:`
-  - `banner target:`
+  - `avatar` `target:`
+  - `banner` `target:`
 - `/steps`
+- `/jumbo` `emote:`
 
 **Message Commands**
 - `Request Steps`
 
 **Scopes**
-- application.commands
-- bot
+- `application.commands`
+- `bot`
 
 **Bot Permissions**
-- Send Messages
-- Read Messages/View Channels
+- `Send Messages`
+- `View Channels`
+- `View Message History`
+- `Attach Files`
+
+[Permission calculator](https://discordapi.com/permissions.html#101376)
 
 ## Development
 - 100% Kotlin
@@ -70,7 +75,7 @@ If you choose to develop a feature or fix a bug it's highly recommended that you
 1. Build the JAR 
    - `./gradlew installDist`
 2. Run the JAR
-   - `java -jar ./app/build/install/app/bin/app <BOT_TOKEN> <IGNORE_ROLES>`
+   - `./app/build/install/app/bin/app <BOT_TOKEN> <IGNORE_ROLES>`
 
 ### Intellij IDEA
 1. Open Run/Debug Configuration `Run -> Edit Configurations...`
