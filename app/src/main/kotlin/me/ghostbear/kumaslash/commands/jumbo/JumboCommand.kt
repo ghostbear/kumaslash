@@ -5,21 +5,23 @@ import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.StringChoiceBuilder
+import dev.kord.rest.builder.interaction.string
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.utils.io.jvm.javaio.*
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
+import me.ghostbear.core.SlashCommandConfig
 import me.ghostbear.kumaslash.client
 
 class JumboCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "jumbo"
     override val description: String = "Make emotes show their original size"
-    override val parameters: MutableList<OptionsBuilder> = mutableListOf(
-        StringChoiceBuilder("emote", "Emote").apply {
+    override val config: SlashCommandConfig = {
+        string("emote", "Emote") {
             required = true
         }
-    )
+    }
 
     override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = on@{
         val command = interaction.command

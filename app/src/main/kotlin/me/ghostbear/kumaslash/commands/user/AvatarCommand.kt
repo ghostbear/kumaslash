@@ -9,22 +9,22 @@ import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.Image
 import dev.kord.rest.builder.component.ActionRowBuilder
-import dev.kord.rest.builder.interaction.OptionsBuilder
-import dev.kord.rest.builder.interaction.UserBuilder
+import dev.kord.rest.builder.interaction.user
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.rest.builder.message.modify.embed
 import me.ghostbear.core.OnButtonInteractionCreateEvent
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.core.SlashCommand
+import me.ghostbear.core.SubSlashCommand
+import me.ghostbear.core.SubSlashCommandConfig
 
-class AvatarCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent, OnButtonInteractionCreateEvent {
+class AvatarCommand : SubSlashCommand(), OnGuildChatInputCommandInteractionCreateEvent, OnButtonInteractionCreateEvent {
     override val name: String = "avatar"
     override val description: String = "Get a user global or server avatar"
-    override val parameters: MutableList<OptionsBuilder> = mutableListOf(
-        UserBuilder("target", "The target user").apply {
+    override val config: SubSlashCommandConfig = {
+        user("target", "The target user") {
             required = true
         }
-    )
+    }
 
     override fun onButtonInteractionCreateEvent(): suspend ButtonInteractionCreateEvent.() -> Unit = on@{
         val customId = interaction.component.customId ?: return@on

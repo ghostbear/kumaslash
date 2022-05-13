@@ -14,12 +14,14 @@ import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEve
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.StringChoiceBuilder
+import dev.kord.rest.builder.interaction.string
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
 import me.ghostbear.core.OnButtonInteractionCreateEvent
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
+import me.ghostbear.core.SlashCommandConfig
 import me.ghostbear.data.github.GitHubRelease
 import me.ghostbear.data.github.toMessage
 import me.ghostbear.data.github.updateMessage
@@ -172,12 +174,12 @@ enum class Repository(
 class DownloadCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent, OnButtonInteractionCreateEvent {
     override val name: String = "download"
     override val description: String = "Get download link Tachiyomi or supported forks"
-    override val parameters: MutableList<OptionsBuilder> = mutableListOf(
-        StringChoiceBuilder("repository", "The type of Tachiyomi you want").apply {
+    override val config: SlashCommandConfig = {
+        string("repository", "The type of Tachiyomi you want") {
             required = true
             choices = Repository.choices
         }
-    )
+    }
 
     override fun onButtonInteractionCreateEvent(): suspend ButtonInteractionCreateEvent.() -> Unit = on@{
         val customId = interaction.component.customId ?: return@on
