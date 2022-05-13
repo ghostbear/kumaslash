@@ -10,6 +10,7 @@ dependencies {
     implementation(project(":data"))
     implementation(libs.kotlinx.serialization)
     implementation(libs.slf4j.simple)
+    implementation("com.github.haroldadmin:opengraphKt:1.0.0")
 }
 
 application {

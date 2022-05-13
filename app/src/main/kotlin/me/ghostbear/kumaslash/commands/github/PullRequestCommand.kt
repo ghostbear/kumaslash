@@ -1,13 +1,16 @@
 package me.ghostbear.kumaslash.commands.github
 
+import com.haroldadmin.opengraphKt.getOpenGraphTags
+import dev.kord.common.Color
 import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.StringChoiceBuilder
+import dev.kord.rest.builder.message.create.embed
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
-
+import java.net.URL
 
 class PullRequestCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "pull-request"
@@ -28,19 +31,42 @@ class PullRequestCommand : SlashCommand(), OnGuildChatInputCommandInteractionCre
 
         val user = "tachiyomiorg"
         val repository = command.strings["repository"]!!
-        val number = command.strings["number"]!!
+        val id = command.strings["number"]!!
 
-        val titleRegex = Regex("(.*?)(?:\\sÂ·\\s)(.*?)(?:\\sÂ·\\s)(.*)(?:\\sÂ·\\s)(.*)")
-        val githubUrl = "https://github.com/$user/$repository/pull/$number"
-        val githubUrlTags = githubUrl.getOpenGraphTags()
+        val githubUrl = URL("https://github.com/$user/$repository/pull/$id").getOpenGraphTags()
+        val githubTitle = githubUrl.title?.split(" · ")?.toTypedArray()
+
+        var issueTitle = githubTitle?.get(0)?.substringBeforeLast(" by ")
+        var issueCreator = githubTitle?.get(0)?.substringAfterLast(" by ")
+        var issueRepository = githubTitle?.get(2)
+        var issueNumber = githubTitle?.get(1)
+        var issueType = if (issueNumber?.contains("Pull Request", ignoreCase = true) == true) {
+            "Pull Request"
+        } else if (issueNumber?.contains("Issue", ignoreCase = true) == true) {
+            "Issue"
+        } else {
+            "Unknown"
+        }
 
         try {
             interaction.respondPublic {
-                content = githubUrl
+                embed {
+                    color = Color(47, 49, 54)
+                    image = githubUrl.image
+                    url = githubUrl.url
+                    title = issueTitle
+                    description = githubUrl.description
+                    author {
+                        name = "$issueRepository · #${issueNumber?.substringAfterLast("#")}"
+                    }
+                    footer {
+                        text = "$issueType by $issueCreator"
+                    }
+                }
                 components.add(
                     ActionRowBuilder().apply {
-                        linkButton(githubUrl) {
-                            label = "Open pull request in browser"
+                        linkButton(githubUrl.toString()) {
+                            label = "Open ${issueType.lowercase()} in browser"
                         }
                     }
                 )

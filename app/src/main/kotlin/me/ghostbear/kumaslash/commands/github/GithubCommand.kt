@@ -9,6 +9,6 @@ class GithubCommand : SlashCommandGroup() {
 
     override val subcommands: List<SlashCommand> = listOf(
         IssueCommand(),
-        PullRequestCommand()
+        PullRequestCommand(),
     )
 }
