@@ -20,6 +20,9 @@ class PullRequestCommand : SlashCommand(), OnGuildChatInputCommandInteractionCre
             required = true
             choice("Tachiyomi", "tachiyomi")
             choice("Tachiyomi Extensions", "tachiyomi-extensions")
+            choice("Tachiyomi Website", "website")
+            choice("Tachiyomi 1.x", "tachiyomi-1.x")
+            choice("Tachiyomi Extensions 1.x", "tachiyomi-extensions-1.x")
         },
         StringChoiceBuilder("number", "GitHub pull request ID").apply {
             required = true
