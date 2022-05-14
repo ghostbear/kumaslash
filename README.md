@@ -9,6 +9,9 @@
   - `banner` `target:`
 - `/steps`
 - `/jumbo` `emote:`
+- `/github`
+  - `issue` `repository:` `number:`
+  - `pull-request` `repository:` `number:`
 
 **Message Commands**
 - `Request Steps`
