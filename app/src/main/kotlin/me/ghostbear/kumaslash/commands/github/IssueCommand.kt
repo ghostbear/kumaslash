@@ -5,29 +5,29 @@ import dev.kord.common.Color
 import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.component.ActionRowBuilder
-import dev.kord.rest.builder.interaction.OptionsBuilder
-import dev.kord.rest.builder.interaction.StringChoiceBuilder
+import dev.kord.rest.builder.interaction.string
 import dev.kord.rest.builder.message.create.embed
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.core.SlashCommand
+import me.ghostbear.core.SubSlashCommand
+import me.ghostbear.core.SubSlashCommandConfig
 import java.net.URL
 
-class IssueCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
+class IssueCommand : SubSlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "issue"
     override val description: String = "Get issues from GitHub"
-    override val parameters: MutableList<OptionsBuilder> = mutableListOf(
-        StringChoiceBuilder("repository", "GitHub repository").apply {
+    override val config: SubSlashCommandConfig = {
+        string("repository", "GitHub repository") {
             required = true
             choice("Tachiyomi", "tachiyomi")
             choice("Tachiyomi Extensions", "tachiyomi-extensions")
             choice("Tachiyomi Website", "website")
             choice("Tachiyomi 1.x", "tachiyomi-1.x")
             choice("Tachiyomi Extensions 1.x", "tachiyomi-extensions-1.x")
-        },
-        StringChoiceBuilder("number", "GitHub issue ID").apply {
+        }
+        string("number", "GitHub issue ID") {
             required = true
         }
-    )
+    }
 
     override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = {
         val command = interaction.command
