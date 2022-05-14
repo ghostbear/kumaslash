@@ -65,8 +65,10 @@ class IssueCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEve
                 }
                 components.add(
                     ActionRowBuilder().apply {
-                        linkButton(githubUrl.toString()) {
-                            label = "Open ${issueType.lowercase()} in browser"
+                        githubUrl.url?.let {
+                            linkButton(it) {
+                                label = "Open ${issueType.lowercase()} in browser"
+                            }
                         }
                     }
                 )
