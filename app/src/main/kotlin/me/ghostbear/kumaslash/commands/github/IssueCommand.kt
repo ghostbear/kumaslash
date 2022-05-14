@@ -40,7 +40,6 @@ class IssueCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEve
         val githubTitle = githubUrl.title?.split(" · ")?.toTypedArray()
 
         var issueTitle = githubTitle?.get(0)?.substringBeforeLast(" by ")
-        var issueCreator = githubTitle?.get(0)?.substringAfterLast(" by ")
         var issueRepository = githubTitle?.get(2)
         var issueNumber = githubTitle?.get(1)
         var issueType = if (issueNumber?.contains("Pull Request", ignoreCase = true) == true) {
@@ -62,8 +61,10 @@ class IssueCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEve
                     author {
                         name = "$issueRepository · #${issueNumber?.substringAfterLast("#")}"
                     }
-                    footer {
-                        text = "$issueType by $issueCreator"
+                    if (issueType == "Pull Request") {
+                        footer {
+                            text = "$issueType by ${githubTitle?.get(0)?.substringAfterLast(" by ")}"
+                        }
                     }
                 }
                 components.add(
