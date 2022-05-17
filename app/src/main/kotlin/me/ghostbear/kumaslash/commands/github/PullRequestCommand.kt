@@ -2,7 +2,9 @@ package me.ghostbear.kumaslash.commands.github
 
 import com.haroldadmin.opengraphKt.getOpenGraphTags
 import dev.kord.common.Color
+import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.behavior.interaction.respondPublic
+import dev.kord.core.entity.interaction.InteractionCommand
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.string
@@ -12,11 +14,55 @@ import me.ghostbear.core.SubSlashCommand
 import me.ghostbear.core.SubSlashCommandConfig
 import java.net.URL
 
+internal const val USER = "tachiyomiorg"
+internal const val ARG_REPOSITORY = "repository"
+internal const val ARG_NUMBER = "number"
+
+fun InteractionCommand.getArguments(): Pair<String, String?> {
+    return strings[ARG_REPOSITORY]!! to strings[ARG_NUMBER]
+}
+
+data class GitHubOpenGraph(
+    val title: String?,
+    val author: String?,
+    val repository: String?,
+    val number: String?,
+    val type: String?,
+    val image: String?,
+    val url: String?,
+    val description: String?
+) {
+    companion object {
+        suspend fun create(url: URL): GitHubOpenGraph {
+            val tags = url.getOpenGraphTags()
+            val tagTitle = tags.title?.split(" · ")
+                ?: throw Exception("Unable to extract Open Graph data")
+
+            val title = tagTitle.getOrNull(0)?.split(" by ")
+            val number = tagTitle.getOrNull(1)
+            return GitHubOpenGraph(
+                title?.getOrNull(0),
+                title?.getOrNull(1),
+                tagTitle.getOrNull(2),
+                number,
+                when {
+                    number?.contains("Pull Request", ignoreCase = true) == true -> "Pull Request"
+                    number?.contains("Issue", ignoreCase = true) == true -> "Issue"
+                    else -> "Unknown"
+                },
+                tags.image,
+                tags.url,
+                tags.description
+            )
+        }
+    }
+}
+
 class PullRequestCommand : SubSlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "pull-request"
     override val description: String = "Get pull request from GitHub"
     override val config: SubSlashCommandConfig = {
-        string("repository", "GitHub repository") {
+        string(ARG_REPOSITORY, "GitHub repository") {
             required = true
             choice("Tachiyomi", "tachiyomi")
             choice("Tachiyomi Extensions", "tachiyomi-extensions")
@@ -24,61 +70,49 @@ class PullRequestCommand : SubSlashCommand(), OnGuildChatInputCommandInteraction
             choice("Tachiyomi 1.x", "tachiyomi-1.x")
             choice("Tachiyomi Extensions 1.x", "tachiyomi-extensions-1.x")
         }
-        string("number", "GitHub pull request ID") {
+        string(ARG_NUMBER, "GitHub pull request ID") {
             required = true
         }
     }
 
     override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = {
-        val command = interaction.command
-
-        val user = "tachiyomiorg"
-        val repository = command.strings["repository"]!!
-        val id = command.strings["number"]!!
-
-        val githubUrl = URL("https://github.com/$user/$repository/pull/$id").getOpenGraphTags()
-        val githubTitle = githubUrl.title?.split(" · ")?.toTypedArray()
-
-        var issueTitle = githubTitle?.get(0)?.substringBeforeLast(" by ")
-        var issueRepository = githubTitle?.get(2)
-        var issueNumber = githubTitle?.get(1)
-        var issueType = if (issueNumber?.contains("Pull Request", ignoreCase = true) == true) {
-            "Pull Request"
-        } else if (issueNumber?.contains("Issue", ignoreCase = true) == true) {
-            "Issue"
-        } else {
-            "Unknown"
-        }
+        val (repository, number) = interaction.command.getArguments()
 
         try {
+            val githubUrl = URL("https://github.com/$USER/$repository/pull/$number")
+            val gitHubOpenGraph = GitHubOpenGraph.create(githubUrl)
+
             interaction.respondPublic {
                 embed {
                     color = Color(47, 49, 54)
-                    image = githubUrl.image
-                    url = githubUrl.url
-                    title = issueTitle
-                    description = githubUrl.description
+                    image = gitHubOpenGraph.image
+                    url = gitHubOpenGraph.url
+                    title = gitHubOpenGraph.title
+                    description = gitHubOpenGraph.description
                     author {
-                        name = "$issueRepository · #${issueNumber?.substringAfterLast("#")}"
+                        name = "${gitHubOpenGraph.repository} · #${gitHubOpenGraph.number?.substringAfterLast("#")}"
                     }
-                    if (issueType == "Pull Request") {
+                    if (gitHubOpenGraph.type == "Pull Request") {
                         footer {
-                            text = "$issueType by ${githubTitle?.get(0)?.substringAfterLast(" by ")}"
+                            text = "${gitHubOpenGraph.type} by ${gitHubOpenGraph.author}"
                         }
                     }
                 }
-                components.add(
-                    ActionRowBuilder().apply {
-                        githubUrl.url?.let {
+                gitHubOpenGraph.url?.let {
+                    components.add(
+                        ActionRowBuilder().apply {
                             linkButton(it) {
-                                label = "Open ${issueType.lowercase()} in browser"
+                                label = "Open ${gitHubOpenGraph.type?.lowercase()} in browser"
                             }
                         }
-                    }
-                )
+                    )
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
+            interaction.respondEphemeral {
+                content = "Something went wrong"
+            }
         }
     }
 }
