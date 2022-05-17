@@ -24,6 +24,7 @@ import me.ghostbear.core.OnModalSubmitInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
 import me.ghostbear.core.SlashCommandGroup
 import me.ghostbear.kumaslash.commands.download.DownloadCommand
+import me.ghostbear.kumaslash.commands.github.GithubCommand
 import me.ghostbear.kumaslash.commands.jumbo.JumboCommand
 import me.ghostbear.kumaslash.commands.ping.PingCommand
 import me.ghostbear.kumaslash.commands.source.SourceCommand
@@ -60,6 +61,7 @@ val commands = mutableListOf(
     StepsCommand(),
     RequestStepsCommand(),
     JumboCommand(),
+    GithubCommand(),
 )
 
 suspend fun main(args: Array<String>) {

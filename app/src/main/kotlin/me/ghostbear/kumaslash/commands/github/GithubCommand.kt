@@ -1,0 +1,14 @@
+package me.ghostbear.kumaslash.commands.github
+
+import me.ghostbear.core.SlashCommandGroup
+import me.ghostbear.core.SubSlashCommand
+
+class GithubCommand : SlashCommandGroup() {
+    override val name: String = "github"
+    override val description: String = "Github related commands"
+
+    override val subcommands: List<SubSlashCommand> = listOf(
+        IssueCommand(),
+        PullRequestCommand(),
+    )
+}
