@@ -1,5 +1,9 @@
 package me.ghostbear.core
 
+import dev.kord.common.DiscordBitSet
+import dev.kord.common.entity.AuditLogChangeKey
+import dev.kord.common.entity.Permission
+import dev.kord.common.entity.Permissions
 import dev.kord.core.Kord
 import dev.kord.rest.builder.interaction.ChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.OptionsBuilder
@@ -14,7 +18,10 @@ abstract class SlashCommand : Command {
     open val config: SlashCommandConfig = {}
 
     override fun register(): suspend Kord.() -> Unit = {
-        createGlobalChatInputCommand(name, description, config)
+        createGlobalChatInputCommand(name, description) {
+            defaultMemberPermissions = Permissions(DiscordBitSet(0))
+            apply(config)
+        }
     }
 }
 
@@ -33,8 +40,10 @@ abstract class SlashCommandGroup : Command {
 
     override fun register(): suspend Kord.() -> Unit = {
         createGlobalChatInputCommand(name, description) {
+            defaultMemberPermissions = Permissions(DiscordBitSet(0))
             subcommands.forEach { subcommand ->
                 subCommand(subcommand.name, subcommand.description) {
+
                     subcommand.config(this)
                 }
             }
