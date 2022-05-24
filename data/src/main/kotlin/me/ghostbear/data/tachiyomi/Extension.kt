@@ -2,20 +2,21 @@ package me.ghostbear.data.tachiyomi
 
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.modify.InteractionResponseModifyBuilder
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Extension(
-    val name: String = "",
-    val pkg: String = "",
-    val apk: String = "",
-    val lang: String = "",
-    val code: Long = -1,
-    val version: String = "",
-    val nsfw: Long = -1,
-    val hasReadme: Long = -1,
-    val hasChangelog: Long = -1,
-    val sources: List<Source> = listOf()
+    @SerialName("name") val name: String,
+    @SerialName("pkg") val pkg: String,
+    @SerialName("apk") val apk: String,
+    @SerialName("lang") val language: String,
+    @SerialName("code") val code: Int,
+    @SerialName("version") val version: String,
+    @SerialName("nsfw") val nsfw: Int,
+    @SerialName("hasReadme") val hasReadme: Int,
+    @SerialName("hasChangelog") val hasChangelog: Int,
+    @SerialName("sources") val sources: List<Source>,
 )
 
 fun Extension.toMessage(): InteractionResponseModifyBuilder.() -> Unit = {

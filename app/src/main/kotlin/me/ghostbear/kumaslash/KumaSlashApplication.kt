@@ -32,13 +32,14 @@ import me.ghostbear.kumaslash.commands.steps.RequestStepsCommand
 import me.ghostbear.kumaslash.commands.steps.StepsCommand
 import me.ghostbear.kumaslash.commands.user.UserCommand
 
+val json = Json {
+    ignoreUnknownKeys = true
+    coerceInputValues = true
+}
+
 val client = HttpClient(CIO) {
     install(ContentNegotiation) {
-        json(
-            Json {
-                ignoreUnknownKeys = true
-            }
-        )
+        json(json)
     }
 }
 

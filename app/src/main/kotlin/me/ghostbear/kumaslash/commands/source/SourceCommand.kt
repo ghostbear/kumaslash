@@ -5,6 +5,7 @@ import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEve
 import dev.kord.rest.builder.interaction.OptionsBuilder
 import dev.kord.rest.builder.interaction.StringChoiceBuilder
 import dev.kord.rest.builder.interaction.string
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -21,6 +22,7 @@ import me.ghostbear.core.SlashCommandConfig
 import me.ghostbear.data.tachiyomi.Extension
 import me.ghostbear.data.tachiyomi.toMessage
 import me.ghostbear.kumaslash.client
+import me.ghostbear.kumaslash.json
 
 class SourceCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "source"
@@ -59,7 +61,7 @@ val extensions: Flow<List<Extension>> = flow {
                 contentType(ContentType.Application.Json)
             }
 
-        emit(Json.decodeFromString(raw.bodyAsText()))
+        emit(json.decodeFromString(raw.bodyAsText()))
         delay(3600000)
     }
 }
