@@ -1,4 +1,4 @@
-package me.ghostbear.data.tachiyomi
+package me.ghostbear.data.tachiyomi.model
 
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.modify.InteractionResponseModifyBuilder

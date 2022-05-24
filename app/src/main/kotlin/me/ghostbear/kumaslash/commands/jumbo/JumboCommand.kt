@@ -3,12 +3,10 @@ package me.ghostbear.kumaslash.commands.jumbo
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
-import dev.kord.rest.builder.interaction.OptionsBuilder
-import dev.kord.rest.builder.interaction.StringChoiceBuilder
 import dev.kord.rest.builder.interaction.string
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.utils.io.jvm.javaio.*
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsChannel
+import io.ktor.utils.io.jvm.javaio.toInputStream
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
 import me.ghostbear.core.SlashCommandConfig

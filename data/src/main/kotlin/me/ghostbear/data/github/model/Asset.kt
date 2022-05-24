@@ -1,4 +1,4 @@
-package me.ghostbear.data.github
+package me.ghostbear.data.github.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

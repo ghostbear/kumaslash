@@ -2,19 +2,23 @@ package me.ghostbear.kumaslash.commands.github
 
 import com.haroldadmin.opengraphKt.getOpenGraphTags
 import dev.kord.common.Color
-import dev.kord.core.behavior.interaction.respondEphemeral
-import dev.kord.core.behavior.interaction.respondPublic
+import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.InteractionCommand
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.string
-import dev.kord.rest.builder.message.create.embed
+import dev.kord.rest.builder.message.modify.embed
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import java.net.URL
+import kotlinx.coroutines.delay
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SubSlashCommand
 import me.ghostbear.core.SubSlashCommandConfig
-import java.net.URL
+import me.ghostbear.data.github.model.Pull
+import me.ghostbear.kumaslash.client
 
-internal const val USER = "tachiyomiorg"
+internal const val OWNER = "tachiyomiorg"
 internal const val ARG_REPOSITORY = "repository"
 internal const val ARG_NUMBER = "number"
 
@@ -78,41 +82,41 @@ class PullRequestCommand : SubSlashCommand(), OnGuildChatInputCommandInteraction
     override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = {
         val (repository, number) = interaction.command.getArguments()
 
-        try {
-            val githubUrl = URL("https://github.com/$USER/$repository/pull/$number")
-            val gitHubOpenGraph = GitHubOpenGraph.create(githubUrl)
+        val response = interaction.deferPublicResponse()
 
-            interaction.respondPublic {
+        try {
+            val data = client.get("https://api.github.com/repos/$OWNER/$repository/pulls/$number").body<Pull>()
+            val tags = URL("https://github.com/$OWNER/$repository/pull/$number").getOpenGraphTags()
+
+            response.respond {
                 embed {
                     color = Color(47, 49, 54)
-                    image = gitHubOpenGraph.image
-                    url = gitHubOpenGraph.url
-                    title = gitHubOpenGraph.title
-                    description = gitHubOpenGraph.description
+                    image = tags.image
+                    url = data.htmlUrl
+                    title = data.title
+                    description = data.body
                     author {
-                        name = "${gitHubOpenGraph.repository} · #${gitHubOpenGraph.number?.substringAfterLast("#")}"
+                        name = "$repository · #${data.number}"
                     }
-                    if (gitHubOpenGraph.type == "Pull Request") {
-                        footer {
-                            text = "${gitHubOpenGraph.type} by ${gitHubOpenGraph.author}"
-                        }
+                    footer {
+                        text = "Pull Request by ${data.user.login}"
                     }
                 }
-                gitHubOpenGraph.url?.let {
-                    components.add(
-                        ActionRowBuilder().apply {
-                            linkButton(it) {
-                                label = "Open ${gitHubOpenGraph.type?.lowercase()} in browser"
-                            }
+                components = mutableListOf(
+                    ActionRowBuilder().apply {
+                        linkButton(data.htmlUrl) {
+                            label = "Open pull Request in browser"
                         }
-                    )
-                }
+                    }
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            interaction.respondEphemeral {
-                content = "Something went wrong"
+            response.respond {
+                content = "Pull Request not found use `/github issue` for Issues"
             }
+            delay(1000)
+            response.delete()
         }
     }
 }

@@ -1,16 +1,21 @@
 package me.ghostbear.kumaslash.commands.github
 
+import com.haroldadmin.opengraphKt.getOpenGraphTags
 import dev.kord.common.Color
-import dev.kord.core.behavior.interaction.respondEphemeral
-import dev.kord.core.behavior.interaction.respondPublic
+import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.string
-import dev.kord.rest.builder.message.create.embed
+import dev.kord.rest.builder.message.modify.embed
+import io.ktor.client.call.body
+import io.ktor.client.request.get
 import java.net.URL
+import kotlinx.coroutines.delay
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SubSlashCommand
 import me.ghostbear.core.SubSlashCommandConfig
+import me.ghostbear.data.github.model.Issue
+import me.ghostbear.kumaslash.client
 
 class IssueCommand : SubSlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "issue"
@@ -32,41 +37,45 @@ class IssueCommand : SubSlashCommand(), OnGuildChatInputCommandInteractionCreate
     override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = {
         val (repository, number) = interaction.command.getArguments()
 
-        try {
-            val githubUrl = URL("https://github.com/$USER/$repository/issues/$number")
-            val gitHubOpenGraph = GitHubOpenGraph.create(githubUrl)
+        val response = interaction.deferPublicResponse()
 
-            interaction.respondPublic {
+        try {
+            val data = client.get("https://api.github.com/repos/$OWNER/$repository/issues/$number").body<Issue>()
+            val tags = URL("https://github.com/$OWNER/$repository/issues/$number").getOpenGraphTags()
+            val isPullRequest = data.pullRequest != null
+
+            response.respond {
                 embed {
                     color = Color(47, 49, 54)
-                    image = gitHubOpenGraph.image
-                    url = gitHubOpenGraph.url
-                    title = gitHubOpenGraph.title
-                    description = gitHubOpenGraph.description
+                    image = tags.image
+                    url = data.htmlUrl
+                    title = data.title
+                    description = data.body
                     author {
-                        name = "${gitHubOpenGraph.repository} · #${gitHubOpenGraph.number?.substringAfterLast("#")}"
+                        name = "$repository · #${data.number}"
                     }
-                    if (gitHubOpenGraph.type == "Pull Request") {
+                    if (isPullRequest) {
                         footer {
-                            text = "${gitHubOpenGraph.type} by ${gitHubOpenGraph.author}"
+                            icon = data.user.avatarUrl
+                            text = "Pull request by ${data.user.login}"
                         }
                     }
                 }
-                gitHubOpenGraph.url?.let {
-                    components.add(
-                        ActionRowBuilder().apply {
-                            linkButton(it) {
-                                label = "Open ${gitHubOpenGraph.type?.lowercase()} in browser"
-                            }
+                components = mutableListOf(
+                    ActionRowBuilder().apply {
+                        linkButton(data.htmlUrl) {
+                            label = "Open ${if (isPullRequest) "pull request" else "issue"} in browser"
                         }
-                    )
-                }
+                    }
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            interaction.respondEphemeral {
-                content = "Something went wrong"
+            response.respond {
+                content = "Issue or Pull Request not found"
             }
+            delay(1000)
+            response.delete()
         }
     }
 }

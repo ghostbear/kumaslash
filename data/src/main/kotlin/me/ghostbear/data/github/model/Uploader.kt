@@ -1,10 +1,10 @@
-package me.ghostbear.data.github
+package me.ghostbear.data.github.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Author(
+data class Uploader(
     @SerialName("avatar_url")
     val avatarUrl: String,
     @SerialName("events_url")

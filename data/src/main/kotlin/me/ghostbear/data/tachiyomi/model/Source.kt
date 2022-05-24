@@ -1,4 +1,4 @@
-package me.ghostbear.data.tachiyomi
+package me.ghostbear.data.tachiyomi.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -2,10 +2,7 @@ package me.ghostbear.kumaslash.commands.source
 
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
-import dev.kord.rest.builder.interaction.OptionsBuilder
-import dev.kord.rest.builder.interaction.StringChoiceBuilder
 import dev.kord.rest.builder.interaction.string
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
@@ -15,12 +12,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
 import me.ghostbear.core.SlashCommandConfig
-import me.ghostbear.data.tachiyomi.Extension
-import me.ghostbear.data.tachiyomi.toMessage
+import me.ghostbear.data.tachiyomi.model.Extension
+import me.ghostbear.data.tachiyomi.model.toMessage
 import me.ghostbear.kumaslash.client
 import me.ghostbear.kumaslash.json
 

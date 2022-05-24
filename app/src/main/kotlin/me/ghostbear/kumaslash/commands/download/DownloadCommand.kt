@@ -12,8 +12,6 @@ import dev.kord.core.entity.interaction.ChatInputCommandInteraction
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.component.ActionRowBuilder
-import dev.kord.rest.builder.interaction.OptionsBuilder
-import dev.kord.rest.builder.interaction.StringChoiceBuilder
 import dev.kord.rest.builder.interaction.string
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -22,9 +20,9 @@ import me.ghostbear.core.OnButtonInteractionCreateEvent
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
 import me.ghostbear.core.SlashCommandConfig
-import me.ghostbear.data.github.GitHubRelease
-import me.ghostbear.data.github.toMessage
-import me.ghostbear.data.github.updateMessage
+import me.ghostbear.data.github.model.GitHubRelease
+import me.ghostbear.data.github.model.toMessage
+import me.ghostbear.data.github.model.updateMessage
 import me.ghostbear.kumaslash.client
 
 interface Strategy {

@@ -1,4 +1,4 @@
-package me.ghostbear.data.github
+package me.ghostbear.data.github.model
 
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.create.UpdateMessageInteractionResponseCreateBuilder

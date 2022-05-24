@@ -3,11 +3,11 @@ package me.ghostbear.kumaslash.commands.ping
 import dev.kord.core.behavior.edit
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 import kotlinx.coroutines.delay
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
-import kotlin.time.ExperimentalTime
-import kotlin.time.measureTimedValue
 
 class PingCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
     override val name: String = "ping"
