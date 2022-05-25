@@ -63,5 +63,7 @@ data class Issue(
     @SerialName("reactions")
     val reactions: Reactions = Reactions(),
     @SerialName("timeline_url")
-    val timelineUrl: String = ""
+    val timelineUrl: String = "",
+    @SerialName("state_reason")
+    val stateReason: String? = null
 )

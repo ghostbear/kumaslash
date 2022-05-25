@@ -37,18 +37,48 @@ object GitHubApi {
     }
 }
 
+val GitHubResponse.stateColor: Color
+    get() {
+        val state = when (this) {
+            is Issue -> issue.state
+            is Pull -> pull.state
+        }
+        val stateReason = when (this) {
+            is Pull -> ""
+            is Issue -> issue.stateReason
+        }
+        val merged = when (this) {
+            is Pull -> pull.merged
+            is Issue -> false
+        }
+        val draft = when (this) {
+            is Pull -> pull.draft
+            is Issue -> false
+        }
+        return when {
+            merged -> Color(137, 87, 229)
+            draft -> Color(110, 118, 129)
+            stateReason == "completed" && state == "closed" -> Color(137, 87, 229)
+            state == "open" -> Color(35, 134, 54)
+            state == "closed" -> Color(216, 54, 51)
+            else -> {
+                Color(47, 49, 54)
+            }
+        }
+    }
+
 fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionResponseModifyBuilder.() -> Unit {
     return when (this) {
         is Issue -> {
             {
                 embed {
-                    color = Color(47, 49, 54)
+                    color = stateColor
                     image = tags.image
                     url = issue.htmlUrl
                     title = issue.title
                     description = issue.body
                     author {
-                        name = "$repository · #${issue.number}"
+                        name = "$repository #${issue.number}"
                     }
                     footer {
                         icon = issue.user.avatarUrl
@@ -67,13 +97,13 @@ fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionRes
         is Pull -> {
             {
                 embed {
-                    color = Color(47, 49, 54)
+                    color = stateColor
                     image = tags.image
                     url = pull.htmlUrl
                     title = pull.title
                     description = pull.body
                     author {
-                        name = "$repository · #${pull.number}"
+                        name = "$repository #${pull.number}"
                     }
                     footer {
                         icon = pull.user.avatarUrl
@@ -83,7 +113,7 @@ fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionRes
                 components = mutableListOf(
                     ActionRowBuilder().apply {
                         linkButton(pull.htmlUrl) {
-                            label = "Open pull Request in browser"
+                            label = "Open pull request in browser"
                         }
                     }
                 )
