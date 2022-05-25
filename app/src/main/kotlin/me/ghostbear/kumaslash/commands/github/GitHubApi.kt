@@ -43,6 +43,10 @@ val GitHubResponse.stateColor: Color
             is Issue -> issue.state
             is Pull -> pull.state
         }
+        val stateReason = when (this) {
+            is Pull -> ""
+            is Issue -> issue.stateReason
+        }
         val merged = when (this) {
             is Pull -> pull.merged
             is Issue -> false
@@ -51,29 +55,14 @@ val GitHubResponse.stateColor: Color
             is Pull -> pull.draft
             is Issue -> false
         }
-        return when (merged) {
-            true -> {
-                Color(137, 87, 229)
-            }
-            false -> {
-                when (draft) {
-                    true -> {
-                        Color(110, 118, 129)
-                    }
-                    false -> {
-                        when (state) {
-                            "open" -> {
-                                Color(35, 134, 54)
-                            }
-                            "closed" -> {
-                                Color(216, 54, 51)
-                            }
-                            else -> {
-                                Color(47, 49, 54)
-                            }
-                        }
-                    }
-                }
+        return when {
+            merged -> Color(137, 87, 229)
+            draft -> Color(110, 118, 129)
+            stateReason == "completed" && state == "closed" -> Color(137, 87, 229)
+            state == "open" -> Color(35, 134, 54)
+            state == "closed" -> Color(216, 54, 51)
+            else -> {
+                Color(47, 49, 54)
             }
         }
     }
