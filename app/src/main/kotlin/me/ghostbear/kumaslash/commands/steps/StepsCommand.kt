@@ -1,6 +1,8 @@
 package me.ghostbear.kumaslash.commands.steps
 
 import dev.kord.common.Color
+import dev.kord.common.DiscordBitSet
+import dev.kord.common.entity.Permissions
 import dev.kord.common.entity.TextInputStyle
 import dev.kord.core.behavior.interaction.modal
 import dev.kord.core.behavior.interaction.response.respond
@@ -10,6 +12,7 @@ import dev.kord.rest.builder.message.modify.embed
 import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
 import me.ghostbear.core.OnModalSubmitInteractionCreateEvent
 import me.ghostbear.core.SlashCommand
+import me.ghostbear.core.SlashCommandConfig
 
 class StepsCommand :
     SlashCommand(),
@@ -17,7 +20,9 @@ class StepsCommand :
     OnModalSubmitInteractionCreateEvent {
     override val name: String = "steps"
     override val description: String = "Answer these questions to receive better support."
-
+    override val config: SlashCommandConfig = {
+        defaultMemberPermissions = Permissions(DiscordBitSet(0))
+    }
     override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = on@{
         interaction.modal("Answer the following questions", "slash-steps-modal") {
             actionRow {

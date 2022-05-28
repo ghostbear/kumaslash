@@ -19,7 +19,6 @@ abstract class SlashCommand : Command {
 
     override fun register(): suspend Kord.() -> Unit = {
         createGlobalChatInputCommand(name, description) {
-            defaultMemberPermissions = Permissions(DiscordBitSet(0))
             apply(config)
         }
     }
@@ -40,10 +39,8 @@ abstract class SlashCommandGroup : Command {
 
     override fun register(): suspend Kord.() -> Unit = {
         createGlobalChatInputCommand(name, description) {
-            defaultMemberPermissions = Permissions(DiscordBitSet(0))
             subcommands.forEach { subcommand ->
                 subCommand(subcommand.name, subcommand.description) {
-
                     subcommand.config(this)
                 }
             }

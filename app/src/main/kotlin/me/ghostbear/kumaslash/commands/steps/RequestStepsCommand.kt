@@ -1,7 +1,9 @@
 package me.ghostbear.kumaslash.commands.steps
 
 import dev.kord.common.Color
+import dev.kord.common.DiscordBitSet
 import dev.kord.common.entity.ButtonStyle
+import dev.kord.common.entity.Permissions
 import dev.kord.common.entity.TextInputStyle
 import dev.kord.core.behavior.interaction.modal
 import dev.kord.core.behavior.interaction.respondPublic
@@ -13,6 +15,7 @@ import dev.kord.rest.Image
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.message.create.embed
 import me.ghostbear.core.MessageCommand
+import me.ghostbear.core.MessageCommandConfig
 import me.ghostbear.core.OnButtonInteractionCreateEvent
 import me.ghostbear.core.OnGuildMessageCommandInteractionCreateEvent
 import me.ghostbear.core.OnModalSubmitInteractionCreateEvent
@@ -25,6 +28,9 @@ class RequestStepsCommand :
     OnButtonInteractionCreateEvent {
     override val name: String = "Request Steps"
     override val description: String = "Request a user to fill out the /Steps form."
+    override val config: MessageCommandConfig = {
+        defaultMemberPermissions = Permissions(DiscordBitSet(0))
+    }
 
     override fun onGuildMessageCommandInteractionCreateEvent(): suspend GuildMessageCommandInteractionCreateEvent.() -> Unit = on@{
         interaction.respondPublic {
