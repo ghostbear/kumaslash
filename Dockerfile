@@ -9,7 +9,7 @@ USER gradle
 WORKDIR /build
 RUN ./gradlew installDist
 
-FROM openjdk:17-jdk-alpine
+FROM adoptopenjdk/openjdk16:alpine-jre
 WORKDIR /kumaslash
 COPY --from=builder /build/app/build/install/app/ .
 CMD ./bin/app $(echo $BOT_TOKEN) $(echo $IGNORE_ROLES)
