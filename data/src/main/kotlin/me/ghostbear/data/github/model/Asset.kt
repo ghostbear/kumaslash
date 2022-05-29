@@ -14,7 +14,7 @@ data class Asset(
     @SerialName("download_count")
     val downloadCount: Int,
     @SerialName("id")
-    val id: Int,
+    val id: Long,
     @SerialName("label")
     val label: String?,
     @SerialName("name")

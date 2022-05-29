@@ -9,7 +9,7 @@ data class MergedBy(
     @SerialName("login")
     val login: String = "",
     @SerialName("id")
-    val id: Int = 0,
+    val id: Long = 0,
     @SerialName("node_id")
     val nodeId: String = "",
     @SerialName("avatar_url")

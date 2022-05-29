@@ -9,7 +9,7 @@ data class Pull(
     @SerialName("url")
     val url: String = "",
     @SerialName("id")
-    val id: Int = 0,
+    val id: Long = 0,
     @SerialName("node_id")
     val nodeId: String = "",
     @SerialName("html_url")

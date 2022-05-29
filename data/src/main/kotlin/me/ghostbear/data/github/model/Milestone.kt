@@ -13,7 +13,7 @@ data class Milestone(
     @SerialName("labels_url")
     val labelsUrl: String = "",
     @SerialName("id")
-    val id: Int = 0,
+    val id: Long = 0,
     @SerialName("node_id")
     val nodeId: String = "",
     @SerialName("number")

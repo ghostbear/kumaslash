@@ -20,7 +20,7 @@ data class Author(
     @SerialName("html_url")
     val htmlUrl: String,
     @SerialName("id")
-    val id: Int,
+    val id: Long,
     @SerialName("login")
     val login: String,
     @SerialName("node_id")

@@ -23,7 +23,7 @@ data class GitHubRelease(
     @SerialName("html_url")
     val htmlUrl: String,
     @SerialName("id")
-    val id: Int,
+    val id: Long,
     @SerialName("name")
     val name: String,
     @SerialName("node_id")
