@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "me.ghostbear"
-version = "1.3.3"
+version = "1.4.1"
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
