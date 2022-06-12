@@ -94,3 +94,7 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# IDE plugin specific stuff
+.idea/discord.xml
+.idea/.name

@@ -67,6 +67,25 @@ val GitHubResponse.stateColor: Color
         }
     }
 
+val GitHubResponse.descriptionCleaned: String
+    get() {
+        val body = when (this) {
+            is Issue -> issue.body
+            is Pull -> pull.body
+        }
+
+        val cleanedBody = body
+            .substringBefore("### Acknowledgements")
+            .replace("^((?:#{3})\\s(?:.*))(\\n\\n)".toRegex(RegexOption.MULTILINE), "$1\n")
+            .replace("^(?:#{3})\\s(.*)\$".toRegex(RegexOption.MULTILINE), "**$1**")
+
+        return if (cleanedBody.length > 384) {
+            cleanedBody.substring(0, cleanedBody.length.coerceAtMost(384)) + "..."
+        } else {
+            cleanedBody
+        }
+    }
+
 fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionResponseModifyBuilder.() -> Unit {
     return when (this) {
         is Issue -> {
@@ -76,7 +95,7 @@ fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionRes
                     image = tags.image
                     url = issue.htmlUrl
                     title = issue.title
-                    description = issue.body
+                    description = descriptionCleaned
                     author {
                         name = "$repository #${issue.number}"
                     }
@@ -101,7 +120,7 @@ fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionRes
                     image = tags.image
                     url = pull.htmlUrl
                     title = pull.title
-                    description = pull.body
+                    description = descriptionCleaned
                     author {
                         name = "$repository #${pull.number}"
                     }
