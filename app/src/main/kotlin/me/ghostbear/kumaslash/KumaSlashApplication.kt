@@ -1,19 +1,26 @@
 package me.ghostbear.kumaslash
 
+import dev.kord.common.entity.AuditLogEvent
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
+import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.entity.application.ApplicationCommand
 import dev.kord.core.entity.interaction.SubCommand
+import dev.kord.core.event.guild.MemberUpdateEvent
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
 import dev.kord.core.kordLogger
 import dev.kord.core.on
+import dev.kord.gateway.Intent
+import dev.kord.gateway.Intents
+import dev.kord.gateway.PrivilegedIntent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import java.util.regex.Pattern
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.json.Json
 import me.ghostbear.core.MessageCommand
@@ -65,6 +72,7 @@ val commands = mutableListOf(
     GithubCommand(),
 )
 
+@OptIn(PrivilegedIntent::class)
 suspend fun main(args: Array<String>) {
     val kord = Kord(args[0])
 
@@ -187,8 +195,33 @@ suspend fun main(args: Array<String>) {
             }
     }
 
+    kord.on<MemberUpdateEvent> {
+        if (member.communicationDisabledUntil != null) {
+            val auditLogsForUser = kord.rest.auditLog.getAuditLogs(member.guildId) {
+                action = AuditLogEvent.MemberUpdate
+            }
+
+            kordLogger.info { "Number of audit logs: ${auditLogsForUser.auditLogEntries.size}" }
+
+            val entry = auditLogsForUser
+                .auditLogEntries
+                .firstOrNull { it.targetId == member.id }
+
+            val epoch = member.communicationDisabledUntil?.epochSeconds
+            val reason = entry?.reason?.value?.replace("\n", "\n> ") ?: "No specific reason was given"
+
+            member
+                .getDmChannel()
+                .createMessage {
+                    content = "You've been timed out until <t:$epoch:f> in Tachiyomi with the following reason:\n> $reason"
+                }
+        }
+
+    }
+
     try {
         kord.login {
+            intents = Intents.nonPrivileged + Intent.GuildMembers
             kordLogger.info("$name: Busting the door")
         }
     } catch (e: Exception) {

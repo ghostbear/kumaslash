@@ -1,5 +1,8 @@
 # KumaSlash
 
+**Automatic**
+- Send user the reason why they were timed out
+
 **Slash Commands**
 - `/ping`
 - `/source` `id:`
@@ -21,10 +24,14 @@
 - `bot`
 
 **Bot Permissions**
+- `View Audit Log`
 - `Send Messages`
 - `View Channels`
 - `View Message History`
 - `Attach Files`
+
+**Privileged Gateway Intents**
+- `SERVER MEMBERS INTENT`
 
 [Permission calculator](https://discordapi.com/permissions.html#101376)
 
