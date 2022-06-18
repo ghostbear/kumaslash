@@ -22,6 +22,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import java.util.regex.Pattern
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 import me.ghostbear.core.MessageCommand
 import me.ghostbear.core.OnButtonInteractionCreateEvent
@@ -196,12 +198,15 @@ suspend fun main(args: Array<String>) {
     }
 
     kord.on<MemberUpdateEvent> {
-        if (member.communicationDisabledUntil != null) {
+        val now = Clock.System.now()
+        if (
+            member.communicationDisabledUntil != null &&
+            old?.communicationDisabledUntil != member.communicationDisabledUntil &&
+            member.communicationDisabledUntil!! > now
+        ) {
             val auditLogsForUser = kord.rest.auditLog.getAuditLogs(member.guildId) {
                 action = AuditLogEvent.MemberUpdate
             }
-
-            kordLogger.info { "Number of audit logs: ${auditLogsForUser.auditLogEntries.size}" }
 
             val entry = auditLogsForUser
                 .auditLogEntries
