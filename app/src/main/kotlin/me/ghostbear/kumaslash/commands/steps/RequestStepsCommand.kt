@@ -5,55 +5,49 @@ import dev.kord.common.DiscordBitSet
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Permissions
 import dev.kord.common.entity.TextInputStyle
+import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.modal
 import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
-import dev.kord.core.kordLogger
 import dev.kord.rest.Image
-import dev.kord.rest.builder.component.ActionRowBuilder
+import dev.kord.rest.builder.message.create.actionRow
 import dev.kord.rest.builder.message.create.embed
-import me.ghostbear.core.MessageCommand
-import me.ghostbear.core.MessageCommandConfig
-import me.ghostbear.core.OnButtonInteractionCreateEvent
-import me.ghostbear.core.OnGuildMessageCommandInteractionCreateEvent
-import me.ghostbear.core.OnModalSubmitInteractionCreateEvent
 import me.ghostbear.kumaslash.commands.user.toUrl
+import me.ghostbear.kumaslash.util.createMessageCommand
+import me.ghostbear.kumaslash.util.on
 
-class RequestStepsCommand :
-    MessageCommand(),
-    OnGuildMessageCommandInteractionCreateEvent,
-    OnModalSubmitInteractionCreateEvent,
-    OnButtonInteractionCreateEvent {
-    override val name: String = "Request Steps"
-    override val description: String = "Request a user to fill out the /Steps form."
-    override val config: MessageCommandConfig = {
+private const val NAME: String = "Request Steps"
+
+suspend fun Kord.requestStepsMessageCommand() {
+    createMessageCommand(NAME) {
         defaultMemberPermissions = Permissions(DiscordBitSet(0))
     }
-
-    override fun onGuildMessageCommandInteractionCreateEvent(): suspend GuildMessageCommandInteractionCreateEvent.() -> Unit = on@{
+    on<GuildMessageCommandInteractionCreateEvent>(
+        condition = {
+            interaction.invokedCommandName == NAME
+        }
+    ) {
         interaction.respondPublic {
-            val mention = interaction.getTarget().author?.mention
-            kordLogger.info { mention }
-            content = "${interaction.target.asMessage().getAuthorAsMember()?.mention}, please follow the Troubleshooting link below, if that doesn't solve your issues, please click the Help button."
-            components.add(
-                ActionRowBuilder().apply {
-                    interactionButton(ButtonStyle.Primary, "command-steps-request") {
-                        label = "Help"
-                    }
-                    linkButton("https://tachiyomi.org/help/guides/troubleshooting/") {
-                        label = "Troubleshooting"
-                    }
+            content = "${
+                interaction.target.asMessage().getAuthorAsMember()?.mention
+            }, please follow the Troubleshooting link below, if that doesn't solve your issues, please click the Help button."
+            actionRow {
+                interactionButton(ButtonStyle.Primary, "command-steps-request") {
+                    label = "Help"
                 }
-            )
+                linkButton("https://tachiyomi.org/help/guides/troubleshooting/") {
+                    label = "Troubleshooting"
+                }
+            }
         }
     }
-
-    override fun onButtonInteractionCreateEvent(): suspend ButtonInteractionCreateEvent.() -> Unit = on@{
-        val customId = interaction.component.customId ?: return@on
-        if (customId != "command-steps-request") return@on
-
+    on<ButtonInteractionCreateEvent>(
+        condition = {
+            interaction.component.customId == "command-steps-request"
+        }
+    ) {
         interaction.modal("Answer the following questions", "command-steps-modal") {
             actionRow {
                 textInput(TextInputStyle.Short, "command-step-version", "What version of the app are you on?") {
@@ -92,9 +86,11 @@ class RequestStepsCommand :
             }
         }
     }
-
-    override fun onModalSubmitInteractionCreateEvent(): suspend ModalSubmitInteractionCreateEvent.() -> Unit = on@{
-        if (!interaction.textInputs.keys.all { it.startsWith("command-step-") }) return@on
+    on<ModalSubmitInteractionCreateEvent>(
+        condition = {
+            interaction.textInputs.keys.all { it.startsWith("command-step-") }
+        }
+    ) {
         interaction.respondPublic {
             embed {
                 color = Color(47, 49, 54)

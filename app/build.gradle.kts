@@ -6,7 +6,6 @@ plugins {
 
 dependencies {
     implementation(libs.kord.core)
-    implementation(project(":core"))
     implementation(project(":data"))
     implementation(libs.kotlinx.serialization)
     implementation(libs.slf4j.simple)

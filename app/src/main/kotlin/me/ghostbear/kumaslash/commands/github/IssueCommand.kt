@@ -1,15 +1,16 @@
 package me.ghostbear.kumaslash.commands.github
 
 import com.haroldadmin.opengraphKt.getOpenGraphTags
+import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.entity.interaction.InteractionCommand
+import dev.kord.core.entity.interaction.SubCommand
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.interaction.string
 import java.net.URL
 import kotlinx.coroutines.delay
-import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.core.SubSlashCommand
-import me.ghostbear.core.SubSlashCommandConfig
+import me.ghostbear.kumaslash.util.SubCommandInitializer
+import me.ghostbear.kumaslash.util.on
 
 internal const val OWNER = "tachiyomiorg"
 internal const val ARG_REPOSITORY = "repository"
@@ -19,10 +20,11 @@ fun InteractionCommand.getArguments(): Pair<String, String?> {
     return strings[ARG_REPOSITORY]!! to strings[ARG_NUMBER]
 }
 
-class IssueCommand : SubSlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
-    override val name: String = "issue"
-    override val description: String = "Get issues and pull requests from GitHub"
-    override val config: SubSlashCommandConfig = {
+private const val NAME: String = "issue"
+private const val DESCRIPTION: String = "Get issues and pull requests from GitHub"
+
+fun Kord.issueCommand(init: SubCommandInitializer) {
+    init(NAME, DESCRIPTION) {
         string(ARG_REPOSITORY, "GitHub repository") {
             required = true
             choice("Tachiyomi", "tachiyomi")
@@ -35,8 +37,14 @@ class IssueCommand : SubSlashCommand(), OnGuildChatInputCommandInteractionCreate
             required = true
         }
     }
-
-    override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = {
+    on<GuildChatInputCommandInteractionCreateEvent>(
+        condition = condition@{
+            if (interaction.command is SubCommand) {
+                return@condition (interaction.command as SubCommand).name == NAME
+            }
+            false
+        }
+    ) {
         val (repository, number) = interaction.command.getArguments()
 
         val response = interaction.deferPublicResponse()
