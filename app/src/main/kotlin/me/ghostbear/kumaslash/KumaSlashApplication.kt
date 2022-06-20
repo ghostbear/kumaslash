@@ -16,6 +16,7 @@ import me.ghostbear.kumaslash.commands.download.downloadCommand
 import me.ghostbear.kumaslash.commands.github.githubCommandGroup
 import me.ghostbear.kumaslash.commands.jumbo.jumboCommand
 import me.ghostbear.kumaslash.commands.ping.pingCommand
+import me.ghostbear.kumaslash.commands.rules.rulesCommand
 import me.ghostbear.kumaslash.commands.source.sourceCommand
 import me.ghostbear.kumaslash.commands.steps.requestStepsMessageCommand
 import me.ghostbear.kumaslash.commands.steps.stepsCommand
@@ -49,6 +50,7 @@ suspend fun main(args: Array<String>) {
     kord.userCommandGroup()
     kord.githubCommandGroup()
     kord.timeoutReasonAutomation()
+    kord.rulesCommand()
 
     try {
         kord.login {
