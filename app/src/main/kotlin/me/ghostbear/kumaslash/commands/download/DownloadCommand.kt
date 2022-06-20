@@ -14,12 +14,13 @@ import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.string
+import dev.kord.rest.builder.message.create.actionRow
+import dev.kord.rest.builder.message.modify.actionRow
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
+import me.ghostbear.data.github.model.Asset
 import me.ghostbear.data.github.model.GitHubRelease
-import me.ghostbear.data.github.model.toMessage
-import me.ghostbear.data.github.model.updateMessage
 import me.ghostbear.kumaslash.client
 import me.ghostbear.kumaslash.util.createChatInputCommand
 import me.ghostbear.kumaslash.util.on
@@ -33,17 +34,14 @@ class ChoiceStrategy : Strategy {
         val response = interaction.deferPublicResponse()
         response.respond {
             content = "Which release type do you want"
-            components = components ?: mutableListOf()
-            components?.add(
-                ActionRowBuilder().apply {
-                    interactionButton(ButtonStyle.Primary, "${repository.owner}_stable") {
-                        label = "Stable"
-                    }
-                    interactionButton(ButtonStyle.Primary, "${repository.owner}_preview") {
-                        label = "Preview"
-                    }
+            actionRow {
+                interactionButton(ButtonStyle.Primary, "${repository.owner}_stable") {
+                    label = "Stable"
                 }
-            )
+                interactionButton(ButtonStyle.Primary, "${repository.owner}_preview") {
+                    label = "Preview"
+                }
+            }
         }
     }
 }
@@ -56,10 +54,33 @@ class DisplayStrategy : Strategy {
             when (interaction) {
                 is ChatInputCommandInteraction -> {
                     response = interaction.deferPublicResponse()
-                    response.respond(release.toMessage())
+                    response.respond {
+                        content = release.name
+
+                        if (repository.isPreview) {
+                            content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
+                        }
+                        
+                        actionRow(releaseActionRow(
+                            release,
+                            release.assets.find(repository.assetPredicate)!!,
+                        ))
+                    }
+
                 }
                 is ButtonInteraction -> {
-                    interaction.updatePublicMessage(release.updateMessage(repository.isPreview))
+                    interaction.updatePublicMessage {
+                        content = release.name
+
+                        if (repository.isPreview) {
+                            content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
+                        }
+
+                        actionRow(releaseActionRow(
+                            release,
+                            release.assets.find(repository.assetPredicate)!!,
+                        ))
+                    }
                 }
                 else -> throw Exception("Unsupported ActionInteraction")
             }
@@ -89,6 +110,15 @@ class DisplayStrategy : Strategy {
     }
 }
 
+fun releaseActionRow(release: GitHubRelease, asset: Asset): ActionRowBuilder.() -> Unit = {
+    linkButton(asset.browserDownloadUrl) {
+        label = "Download"
+    }
+    linkButton(release.htmlUrl) {
+        label = "Changelog"
+    }
+}
+
 class Context {
     lateinit var strategy: Strategy
 
@@ -101,37 +131,56 @@ enum class Repository(
     val owner: String,
     val repo: String,
     val choice: Choice<*>? = null,
-    val isPreview: Boolean = false
+    val isPreview: Boolean = false,
+    val assetPredicate: (Asset) -> Boolean
 ) {
     TACHIYOMI(
         owner = "tachiyomiorg",
         repo = "tachiyomi",
-        choice = Choice.StringChoice("Tachiyomi", Optional.invoke(), "tachiyomi")
+        choice = Choice.StringChoice("Tachiyomi", Optional.invoke(), "tachiyomi"),
+        assetPredicate = { asset ->
+            "^tachiyomi-v\\d+\\.\\d+\\.\\d+.apk".toRegex().matches(asset.name)
+        }
     ),
     TACHIYOMI_PREVIEW(
         owner = "tachiyomiorg",
         repo = "tachiyomi-preview",
-        isPreview = true
+        isPreview = true,
+        assetPredicate = {asset ->
+            "^tachiyomi-r\\d{4,}.apk".toRegex().matches(asset.name)
+        }
     ),
     NEKO(
         owner = "CarlosEsco",
         repo = "Neko",
-        choice = Choice.StringChoice("Neko", Optional.invoke(), "neko")
+        choice = Choice.StringChoice("Neko", Optional.invoke(), "neko"),
+        assetPredicate = {asset ->
+            asset.name == "neko-universal.apk"
+        }
     ),
     TACHIYOMI_J2K(
         owner = "Jays2Kings",
         repo = "tachiyomiJ2K",
-        choice = Choice.StringChoice("Tachiyomi J2K", Optional.invoke(), "j2k")
+        choice = Choice.StringChoice("Tachiyomi J2K", Optional.invoke(), "j2k"),
+        assetPredicate = { asset ->
+            "tachiyomij2k-v\\d{1,}\\.\\d{1,}\\.\\d{1,}\\.apk".toRegex().matches(asset.name)
+        }
     ),
     TACHIYOMI_SY(
         owner = "jobobby04",
         repo = "TachiyomiSY",
-        choice = Choice.StringChoice("Tachiyomi SY", Optional.invoke(), "sy")
+        choice = Choice.StringChoice("Tachiyomi SY", Optional.invoke(), "sy"),
+        assetPredicate = { asset ->
+            "TachiyomiSY_\\d{1,}\\.\\d{1,}\\.\\d{1,}\\.apk".toRegex().matches(asset.name)
+        }
     ),
     TACHIYOMI_SY_PREVIEW(
         owner = "jobobby04",
         repo = "TachiyomiSYPreview",
-        isPreview = true
+        isPreview = true,
+        assetPredicate = { asset ->
+            "TachiyomiSY_\\d{3,}.apk".toRegex().matches(asset.name)
+        }
     );
 
     val url: String
