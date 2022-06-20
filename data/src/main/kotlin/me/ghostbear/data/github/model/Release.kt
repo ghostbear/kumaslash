@@ -1,8 +1,5 @@
 package me.ghostbear.data.github.model
 
-import dev.kord.rest.builder.component.ActionRowBuilder
-import dev.kord.rest.builder.message.create.UpdateMessageInteractionResponseCreateBuilder
-import dev.kord.rest.builder.message.modify.InteractionResponseModifyBuilder
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -47,42 +44,3 @@ data class GitHubRelease(
     @SerialName("zipball_url")
     val zipballUrl: String
 )
-
-fun GitHubRelease.toMessage(isPreview: Boolean = false): InteractionResponseModifyBuilder.() -> Unit = {
-    content = name
-
-    if (isPreview) {
-        content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
-    }
-
-    components = components ?: mutableListOf()
-    components?.add(
-        ActionRowBuilder().apply {
-            linkButton(assets.first().browserDownloadUrl) {
-                label = "Download"
-            }
-            linkButton(htmlUrl) {
-                label = "Changelog"
-            }
-        }
-    )
-}
-
-fun GitHubRelease.updateMessage(isPreview: Boolean = false): UpdateMessageInteractionResponseCreateBuilder.() -> Unit = {
-    content = name
-
-    if (isPreview) {
-        content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
-    }
-
-    components.add(
-        ActionRowBuilder().apply {
-            linkButton(assets.first().browserDownloadUrl) {
-                label = "Download"
-            }
-            linkButton(htmlUrl) {
-                label = "Changelog"
-            }
-        }
-    )
-}
