@@ -1,14 +1,19 @@
 package me.ghostbear.kumaslash.commands.user
 
-import me.ghostbear.core.SlashCommandGroup
-import me.ghostbear.core.SubSlashCommand
+import dev.kord.core.Kord
+import dev.kord.rest.builder.interaction.subCommand
+import me.ghostbear.kumaslash.util.SubCommandInitializer
+import me.ghostbear.kumaslash.util.createChatInputCommand
 
-class UserCommand : SlashCommandGroup() {
-    override val name: String = "user"
-    override val description: String = "User related commands"
+private const val name: String = "user"
+private const val description: String = "User related commands"
 
-    override val subcommands: List<SubSlashCommand> = listOf(
-        AvatarCommand(),
-        BannerCommand()
-    )
+suspend fun Kord.userCommandGroup() {
+    createChatInputCommand(name, description) {
+        val init: SubCommandInitializer = { name, description, builder ->
+            subCommand(name, description, builder)
+        }
+        avatarCommand(init)
+        bannerCommand(init)
+    }
 }

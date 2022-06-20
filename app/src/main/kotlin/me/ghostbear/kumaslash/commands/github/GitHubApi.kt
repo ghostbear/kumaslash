@@ -28,10 +28,12 @@ object GitHubApi {
         }
 
         return if (head.status != HttpStatusCode.NotFound) {
-            val data = client.get("https://api.github.com/repos/$owner/$repository/pulls/$number").body<GithubModelPull>()
+            val data =
+                client.get("https://api.github.com/repos/$owner/$repository/pulls/$number").body<GithubModelPull>()
             Pull(data)
         } else {
-            val data = client.get("https://api.github.com/repos/$owner/$repository/issues/$number").body<GithubModelIssue>()
+            val data =
+                client.get("https://api.github.com/repos/$owner/$repository/issues/$number").body<GithubModelIssue>()
             Issue(data)
         }
     }

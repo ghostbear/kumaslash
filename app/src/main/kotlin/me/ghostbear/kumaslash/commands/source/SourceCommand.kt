@@ -1,5 +1,6 @@
 package me.ghostbear.kumaslash.commands.source
 
+import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.rest.builder.interaction.string
@@ -12,28 +13,29 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.decodeFromString
-import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.core.SlashCommand
-import me.ghostbear.core.SlashCommandConfig
 import me.ghostbear.data.tachiyomi.model.Extension
 import me.ghostbear.data.tachiyomi.model.toMessage
 import me.ghostbear.kumaslash.client
 import me.ghostbear.kumaslash.json
+import me.ghostbear.kumaslash.util.createChatInputCommand
+import me.ghostbear.kumaslash.util.on
 
-class SourceCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent {
-    override val name: String = "source"
-    override val description: String = "Find your missing source based on id"
-    override val config: SlashCommandConfig = {
+private const val NAME: String = "source"
+private const val DESCRIPTION: String = "Find your missing source based on id"
+
+suspend fun Kord.sourceCommand() {
+    createChatInputCommand(NAME, DESCRIPTION) {
         string("id", "Id of the source") {
             required = true
         }
     }
-
-    override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = on@{
-        val command = interaction.command
-        if (command.rootName != name) return@on
+    on<GuildChatInputCommandInteractionCreateEvent>(
+        condition = {
+            interaction.command.rootName == NAME
+        }
+    ) {
         val response = interaction.deferEphemeralResponse()
-        val id = command.strings["id"]!!
+        val id = interaction.command.strings["id"]!!
         val extensions = extensions.first()
 
         val extension = extensions.find { extension ->
@@ -42,11 +44,12 @@ class SourceCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEv
             } != null
         }
 
-        if (extension != null) {
-            response.respond(extension.toMessage())
-        } else {
+        if (extension == null) {
             response.respond { content = "Not found" }
+            return@on
         }
+
+        response.respond(extension.toMessage())
     }
 }
 

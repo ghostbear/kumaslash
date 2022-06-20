@@ -3,6 +3,7 @@ package me.ghostbear.kumaslash.commands.download
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Choice
 import dev.kord.common.entity.optional.Optional
+import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.response.DeferredPublicMessageInteractionResponseBehavior
 import dev.kord.core.behavior.interaction.response.respond
 import dev.kord.core.behavior.interaction.updatePublicMessage
@@ -16,14 +17,12 @@ import dev.kord.rest.builder.interaction.string
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import kotlinx.coroutines.delay
-import me.ghostbear.core.OnButtonInteractionCreateEvent
-import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.core.SlashCommand
-import me.ghostbear.core.SlashCommandConfig
 import me.ghostbear.data.github.model.GitHubRelease
 import me.ghostbear.data.github.model.toMessage
 import me.ghostbear.data.github.model.updateMessage
 import me.ghostbear.kumaslash.client
+import me.ghostbear.kumaslash.util.createChatInputCommand
+import me.ghostbear.kumaslash.util.on
 
 interface Strategy {
     suspend fun execute(interaction: ActionInteraction, repository: Repository)
@@ -169,35 +168,24 @@ enum class Repository(
     }
 }
 
-class DownloadCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreateEvent, OnButtonInteractionCreateEvent {
-    override val name: String = "download"
-    override val description: String = "Get download link Tachiyomi or supported forks"
-    override val config: SlashCommandConfig = {
+private const val NAME: String = "download"
+private const val DESCRIPTION: String = "Get download link Tachiyomi or supported forks"
+
+suspend fun Kord.downloadCommand() {
+    createChatInputCommand(NAME, DESCRIPTION) {
         string("repository", "The type of Tachiyomi you want") {
             required = true
             choices = Repository.choices
         }
     }
-
-    override fun onButtonInteractionCreateEvent(): suspend ButtonInteractionCreateEvent.() -> Unit = on@{
-        val customId = interaction.component.customId ?: return@on
-        if (!listOf("stable", "preview").any { customId.endsWith(it) }) return@on
-
-        val context = Context()
-        context.strategy = DisplayStrategy()
-
-        val repository = Repository.parseCustomId(customId)
-
-        context.executeStrategy(interaction, repository)
-    }
-
-    override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = on@{
-        val command = interaction.command
-        if (command.rootName != name) return@on
-
+    on<GuildChatInputCommandInteractionCreateEvent>(
+        condition = {
+            interaction.command.rootName == NAME
+        }
+    ) {
         val context = Context()
 
-        val choice = command.strings["repository"]!!
+        val choice = interaction.command.strings["repository"]!!
         val repository = Repository.parseChoice(choice)
 
         when (repository) {
@@ -206,6 +194,21 @@ class DownloadCommand : SlashCommand(), OnGuildChatInputCommandInteractionCreate
             Repository.TACHIYOMI_SY,
             Repository.TACHIYOMI -> context.strategy = ChoiceStrategy()
         }
+
+        context.executeStrategy(interaction, repository)
+    }
+    on<ButtonInteractionCreateEvent>(
+        condition = condition@{
+            val customId = interaction.component.customId ?: return@condition false
+            listOf("stable", "preview").any { customId.endsWith(it) }
+        }
+    ) {
+        val customId = interaction.component.customId ?: return@on
+
+        val context = Context()
+        context.strategy = DisplayStrategy()
+
+        val repository = Repository.parseCustomId(customId)
 
         context.executeStrategy(interaction, repository)
     }

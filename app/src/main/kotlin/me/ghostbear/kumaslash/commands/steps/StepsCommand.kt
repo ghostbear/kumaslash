@@ -4,26 +4,27 @@ import dev.kord.common.Color
 import dev.kord.common.DiscordBitSet
 import dev.kord.common.entity.Permissions
 import dev.kord.common.entity.TextInputStyle
+import dev.kord.core.Kord
 import dev.kord.core.behavior.interaction.modal
-import dev.kord.core.behavior.interaction.response.respond
+import dev.kord.core.behavior.interaction.respondPublic
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.ModalSubmitInteractionCreateEvent
-import dev.kord.rest.builder.message.modify.embed
-import me.ghostbear.core.OnGuildChatInputCommandInteractionCreateEvent
-import me.ghostbear.core.OnModalSubmitInteractionCreateEvent
-import me.ghostbear.core.SlashCommand
-import me.ghostbear.core.SlashCommandConfig
+import dev.kord.rest.builder.message.create.embed
+import me.ghostbear.kumaslash.util.createChatInputCommand
+import me.ghostbear.kumaslash.util.on
 
-class StepsCommand :
-    SlashCommand(),
-    OnGuildChatInputCommandInteractionCreateEvent,
-    OnModalSubmitInteractionCreateEvent {
-    override val name: String = "steps"
-    override val description: String = "Answer these questions to receive better support."
-    override val config: SlashCommandConfig = {
+private const val NAME: String = "steps"
+private const val DESCRIPTION: String = "Answer these questions to receive better support."
+
+suspend fun Kord.stepsCommand() {
+    createChatInputCommand(NAME, DESCRIPTION) {
         defaultMemberPermissions = Permissions(DiscordBitSet(0))
     }
-    override fun onGuildChatInputCommandInteractionCreateEvent(): suspend GuildChatInputCommandInteractionCreateEvent.() -> Unit = on@{
+    on<GuildChatInputCommandInteractionCreateEvent>(
+        condition = {
+            interaction.command.rootName == NAME
+        }
+    ) {
         interaction.modal("Answer the following questions", "slash-steps-modal") {
             actionRow {
                 textInput(TextInputStyle.Short, "slash-step-version", "What version of the app are you on?") {
@@ -62,11 +63,12 @@ class StepsCommand :
             }
         }
     }
-
-    override fun onModalSubmitInteractionCreateEvent(): suspend ModalSubmitInteractionCreateEvent.() -> Unit = on@{
-        if (!interaction.textInputs.keys.all { it.startsWith("slash-step-") }) return@on
-        val response = interaction.deferPublicResponse()
-        response.respond {
+    on<ModalSubmitInteractionCreateEvent>(
+        condition = {
+            interaction.textInputs.keys.all { it.startsWith("slash-step-") }
+        }
+    ) {
+        interaction.respondPublic {
             embed {
                 color = Color(47, 49, 54)
                 field {
