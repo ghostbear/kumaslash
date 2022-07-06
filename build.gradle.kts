@@ -4,6 +4,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintBasePlugin
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.squareup.sqldelight:gradle-plugin:1.5.3")
+    }
+}
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktlint)

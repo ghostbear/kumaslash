@@ -7,6 +7,7 @@ plugins {
 dependencies {
     implementation(libs.kord.core)
     implementation(project(":data"))
+    implementation(project(":common"))
     implementation(libs.kotlinx.serialization)
     implementation(libs.slf4j.simple)
     implementation("com.github.haroldadmin:opengraphKt:1.0.0")

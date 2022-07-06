@@ -7,6 +7,7 @@ import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ val json = Json {
 }
 
 val client = HttpClient(CIO) {
+    install(HttpCache)
     install(ContentNegotiation) {
         json(json)
     }

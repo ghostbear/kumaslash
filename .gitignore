@@ -98,3 +98,5 @@ gradle-app.setting
 # IDE plugin specific stuff
 .idea/discord.xml
 .idea/.name
+
+*.db

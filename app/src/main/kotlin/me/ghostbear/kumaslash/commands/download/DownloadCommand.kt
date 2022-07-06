@@ -1,221 +1,23 @@
 package me.ghostbear.kumaslash.commands.download
 
-import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Choice
 import dev.kord.common.entity.optional.Optional
 import dev.kord.core.Kord
-import dev.kord.core.behavior.interaction.response.DeferredPublicMessageInteractionResponseBehavior
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.behavior.interaction.updatePublicMessage
-import dev.kord.core.entity.interaction.ActionInteraction
-import dev.kord.core.entity.interaction.ButtonInteraction
-import dev.kord.core.entity.interaction.ChatInputCommandInteraction
-import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
-import dev.kord.rest.builder.component.ActionRowBuilder
 import dev.kord.rest.builder.interaction.string
-import dev.kord.rest.builder.message.create.actionRow
 import dev.kord.rest.builder.message.modify.actionRow
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import kotlinx.coroutines.delay
-import me.ghostbear.data.github.model.Asset
-import me.ghostbear.data.github.model.GitHubRelease
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import me.ghostbear.common.download.Download
+import me.ghostbear.common.download.DownloadParams
+import me.ghostbear.common.download.Repository
 import me.ghostbear.kumaslash.client
 import me.ghostbear.kumaslash.util.createChatInputCommand
 import me.ghostbear.kumaslash.util.on
-
-interface Strategy {
-    suspend fun execute(interaction: ActionInteraction, repository: Repository)
-}
-
-class ChoiceStrategy : Strategy {
-    override suspend fun execute(interaction: ActionInteraction, repository: Repository) {
-        val response = interaction.deferPublicResponse()
-        response.respond {
-            content = "Which release type do you want"
-            actionRow {
-                interactionButton(ButtonStyle.Primary, "${repository.owner}_stable") {
-                    label = "Stable"
-                }
-                interactionButton(ButtonStyle.Primary, "${repository.owner}_preview") {
-                    label = "Preview"
-                }
-            }
-        }
-    }
-}
-
-class DisplayStrategy : Strategy {
-    override suspend fun execute(interaction: ActionInteraction, repository: Repository) {
-        var response: DeferredPublicMessageInteractionResponseBehavior? = null
-        try {
-            val release: GitHubRelease = client.get(repository.url).body()
-            when (interaction) {
-                is ChatInputCommandInteraction -> {
-                    response = interaction.deferPublicResponse()
-                    response.respond {
-                        content = release.name
-
-                        if (repository.isPreview) {
-                            content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
-                        }
-                        
-                        actionRow(releaseActionRow(
-                            release,
-                            release.assets.find(repository.assetPredicate)!!,
-                        ))
-                    }
-
-                }
-                is ButtonInteraction -> {
-                    interaction.updatePublicMessage {
-                        content = release.name
-
-                        if (repository.isPreview) {
-                            content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
-                        }
-
-                        actionRow(releaseActionRow(
-                            release,
-                            release.assets.find(repository.assetPredicate)!!,
-                        ))
-                    }
-                }
-                else -> throw Exception("Unsupported ActionInteraction")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            when (interaction) {
-                is ChatInputCommandInteraction -> {
-                    response = response.run {
-                        this ?: interaction.deferPublicResponse()
-                    }
-                    response.respond {
-                        content = "An error occurred, removing message shortly"
-                    }
-                    delay(1000)
-                    response.delete()
-                }
-                is ButtonInteraction -> {
-                    interaction.updatePublicMessage {
-                        content = "An error occurred, removing message shortly"
-                    }
-                    delay(1000)
-                    interaction.message.delete()
-                }
-                else -> throw Exception("Unsupported ActionInteraction")
-            }
-        }
-    }
-}
-
-fun releaseActionRow(release: GitHubRelease, asset: Asset): ActionRowBuilder.() -> Unit = {
-    linkButton(asset.browserDownloadUrl) {
-        label = "Download"
-    }
-    linkButton(release.htmlUrl) {
-        label = "Changelog"
-    }
-}
-
-class Context {
-    lateinit var strategy: Strategy
-
-    suspend fun executeStrategy(interaction: ActionInteraction, repository: Repository) {
-        strategy.execute(interaction, repository)
-    }
-}
-
-enum class Repository(
-    val owner: String,
-    val repo: String,
-    val choice: Choice<*>? = null,
-    val isPreview: Boolean = false,
-    val assetPredicate: (Asset) -> Boolean
-) {
-    TACHIYOMI(
-        owner = "tachiyomiorg",
-        repo = "tachiyomi",
-        choice = Choice.StringChoice("Tachiyomi", Optional.invoke(), "tachiyomi"),
-        assetPredicate = { asset ->
-            "^tachiyomi-v\\d+\\.\\d+\\.\\d+.apk".toRegex().matches(asset.name)
-        }
-    ),
-    TACHIYOMI_PREVIEW(
-        owner = "tachiyomiorg",
-        repo = "tachiyomi-preview",
-        isPreview = true,
-        assetPredicate = {asset ->
-            "^tachiyomi-r\\d{4,}.apk".toRegex().matches(asset.name)
-        }
-    ),
-    NEKO(
-        owner = "CarlosEsco",
-        repo = "Neko",
-        choice = Choice.StringChoice("Neko", Optional.invoke(), "neko"),
-        assetPredicate = {asset ->
-            asset.name == "neko-universal.apk"
-        }
-    ),
-    TACHIYOMI_J2K(
-        owner = "Jays2Kings",
-        repo = "tachiyomiJ2K",
-        choice = Choice.StringChoice("Tachiyomi J2K", Optional.invoke(), "j2k"),
-        assetPredicate = { asset ->
-            "tachiyomij2k-v\\d{1,}\\.\\d{1,}\\.\\d{1,}\\.apk".toRegex().matches(asset.name)
-        }
-    ),
-    TACHIYOMI_SY(
-        owner = "jobobby04",
-        repo = "TachiyomiSY",
-        choice = Choice.StringChoice("Tachiyomi SY", Optional.invoke(), "sy"),
-        assetPredicate = { asset ->
-            "TachiyomiSY_\\d{1,}\\.\\d{1,}\\.\\d{1,}\\.apk".toRegex().matches(asset.name)
-        }
-    ),
-    TACHIYOMI_SY_PREVIEW(
-        owner = "jobobby04",
-        repo = "TachiyomiSYPreview",
-        isPreview = true,
-        assetPredicate = { asset ->
-            "TachiyomiSY_\\d{3,}.apk".toRegex().matches(asset.name)
-        }
-    );
-
-    val url: String
-        get() = "https://api.github.com/repos/$owner/$repo/releases/latest"
-
-    companion object {
-        fun parseCustomId(customId: String): Repository {
-            val split = customId.split("_")
-            val owner = split[0]
-            val isPreview = split[1].contains("preview", true)
-            return when {
-                owner == NEKO.owner -> NEKO
-                owner == TACHIYOMI_J2K.owner -> TACHIYOMI_J2K
-                owner == TACHIYOMI_SY.owner && isPreview -> TACHIYOMI_SY_PREVIEW
-                owner == TACHIYOMI_SY.owner -> TACHIYOMI_SY
-                owner == TACHIYOMI.owner && isPreview -> TACHIYOMI_PREVIEW
-                owner == TACHIYOMI.owner -> TACHIYOMI
-                else -> throw Exception("Unknown repository")
-            }
-        }
-
-        fun parseChoice(choice: String): Repository {
-            return when (choice) {
-                NEKO.choice!!.value -> NEKO
-                TACHIYOMI_J2K.choice!!.value -> TACHIYOMI_J2K
-                TACHIYOMI_SY.choice!!.value -> TACHIYOMI_SY
-                TACHIYOMI.choice!!.value -> TACHIYOMI
-                else -> throw Exception("Unknown repository")
-            }
-        }
-
-        val choices: MutableList<Choice<*>>
-            get() = values().mapNotNull { it.choice }.toMutableList()
-    }
-}
 
 private const val NAME: String = "download"
 private const val DESCRIPTION: String = "Get download link Tachiyomi or supported forks"
@@ -224,7 +26,18 @@ suspend fun Kord.downloadCommand() {
     createChatInputCommand(NAME, DESCRIPTION) {
         string("repository", "The type of Tachiyomi you want") {
             required = true
-            choices = Repository.choices
+            choices = mutableListOf()
+
+            fun choice(name: String, value: Repository) {
+                choices?.add(Choice.StringChoice(name, Optional.invoke(), value.name))
+            }
+
+            choice("Tachiyomi", Repository.TACHIYOMI)
+            choice("TachiyomiSY", Repository.TACHIYOMI_SY)
+            choice("TachiyomiJ2K", Repository.TACHIYOMI_J2K)
+            choice("Neko", Repository.NEKO)
+            choice("Tachiyomi (Preview)", Repository.TACHIYOMI_PREVIEW)
+            choice("TachiyomiSY (Preview)", Repository.TACHIYOMI_SY_PREVIEW)
         }
     }
     on<GuildChatInputCommandInteractionCreateEvent>(
@@ -232,33 +45,37 @@ suspend fun Kord.downloadCommand() {
             interaction.command.rootName == NAME
         }
     ) {
-        val context = Context()
+        val response = interaction.deferPublicResponse()
 
         val choice = interaction.command.strings["repository"]!!
-        val repository = Repository.parseChoice(choice)
+        val repository = Repository.valueOf(choice)
 
-        when (repository) {
-            Repository.NEKO,
-            Repository.TACHIYOMI_J2K -> context.strategy = DisplayStrategy()
-            Repository.TACHIYOMI_SY,
-            Repository.TACHIYOMI -> context.strategy = ChoiceStrategy()
+        val body = client
+            .get("http://127.0.0.1:8080/download") {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    DownloadParams(
+                        repository = repository
+                    )
+                )
+            }
+            .body<Download>()
+
+        response.respond {
+            content = body.name
+
+            if (body.repository in listOf(Repository.TACHIYOMI_PREVIEW, Repository.TACHIYOMI_SY_PREVIEW) ) {
+                content += "\n\n⚠ Preview is not recommended if you're not willing to test for – and endure – issues. ⚠"
+            }
+
+            actionRow {
+                linkButton(body.downloadUrl) {
+                    label = "Download"
+                }
+                linkButton(body.changelogUrl) {
+                    label = "Changelog"
+                }
+            }
         }
-
-        context.executeStrategy(interaction, repository)
-    }
-    on<ButtonInteractionCreateEvent>(
-        condition = condition@{
-            val customId = interaction.component.customId ?: return@condition false
-            listOf("stable", "preview").any { customId.endsWith(it) }
-        }
-    ) {
-        val customId = interaction.component.customId ?: return@on
-
-        val context = Context()
-        context.strategy = DisplayStrategy()
-
-        val repository = Repository.parseCustomId(customId)
-
-        context.executeStrategy(interaction, repository)
     }
 }

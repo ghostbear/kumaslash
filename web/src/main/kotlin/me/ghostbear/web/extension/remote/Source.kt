@@ -1,4 +1,4 @@
-package me.ghostbear.data.tachiyomi.model
+package me.ghostbear.web.extension.remote
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

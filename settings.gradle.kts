@@ -9,3 +9,5 @@ dependencyResolutionManagement {
 rootProject.name = "kumaslash"
 include("data")
 include("app")
+include("web")
+include("common")
