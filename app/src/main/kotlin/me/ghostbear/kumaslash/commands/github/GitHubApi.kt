@@ -78,6 +78,7 @@ val GitHubResponse.descriptionCleaned: String
 
         val cleanedBody = body
             .substringBefore("### Acknowledgements")
+            .replace("(?:<!--)(.*?)(?:-->)".toRegex(RegexOption.DOT_MATCHES_ALL), "")
             .replace("^((?:#{3})\\s(?:.*))(\\n\\n)".toRegex(RegexOption.MULTILINE), "$1\n")
             .replace("^(?:#{3})\\s(.*)\$".toRegex(RegexOption.MULTILINE), "**$1**")
 
