@@ -20,6 +20,7 @@ import io.ktor.http.Url
 import me.ghostbear.common.extensions.Match
 import me.ghostbear.common.extensions.Source
 import me.ghostbear.kumaslash.client
+import me.ghostbear.kumaslash.util.Env
 import me.ghostbear.kumaslash.util.createChatInputCommand
 import me.ghostbear.kumaslash.util.on
 
@@ -27,6 +28,8 @@ private const val NAME: String = "source"
 private const val DESCRIPTION: String = "Find your missing source based on id"
 
 suspend fun Kord.sourceCommand() {
+    val baseUrl = "http://${Env.url}:${Env.port}"
+
     fun createEmbed(match: Match<Source>): EmbedBuilder.() -> Unit = {
         thumbnail {
             kordLogger.info { "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi-extensions/repo/icon/${match.value.apk.substringBeforeLast(".")}.png" }
@@ -71,7 +74,7 @@ suspend fun Kord.sourceCommand() {
         val response = interaction.deferEphemeralResponse()
         val id = interaction.command.strings["id"]!!
 
-        val raw = client.get("http://127.0.0.1:8080/extension/$id")
+        val raw = client.get("$baseUrl/extension/$id")
         val matches = raw.body<List<Match<Source>>>()
 
         if (matches.isEmpty()) {
@@ -102,7 +105,7 @@ suspend fun Kord.sourceCommand() {
         val id = uri.parameters["id"]!!
         val index = uri.parameters["index"]!!.toInt()
 
-        val raw = client.get("http://127.0.0.1:8080/extension/$id")
+        val raw = client.get("$baseUrl/extension/$id")
         val matches = raw.body<List<Match<Source>>>()
         val match = matches[index]
 

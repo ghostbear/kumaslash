@@ -16,6 +16,7 @@ import me.ghostbear.common.download.Download
 import me.ghostbear.common.download.DownloadParams
 import me.ghostbear.common.download.Repository
 import me.ghostbear.kumaslash.client
+import me.ghostbear.kumaslash.util.Env
 import me.ghostbear.kumaslash.util.createChatInputCommand
 import me.ghostbear.kumaslash.util.on
 
@@ -23,6 +24,8 @@ private const val NAME: String = "download"
 private const val DESCRIPTION: String = "Get download link Tachiyomi or supported forks"
 
 suspend fun Kord.downloadCommand() {
+    val baseUrl = "http://${Env.url}:${Env.port}"
+
     createChatInputCommand(NAME, DESCRIPTION) {
         string("repository", "The type of Tachiyomi you want") {
             required = true
@@ -51,7 +54,7 @@ suspend fun Kord.downloadCommand() {
         val repository = Repository.valueOf(choice)
 
         val body = client
-            .get("http://127.0.0.1:8080/download") {
+            .get("$baseUrl/download") {
                 contentType(ContentType.Application.Json)
                 setBody(
                     DownloadParams(

@@ -12,6 +12,7 @@ RUN ./gradlew installDist
 FROM adoptopenjdk/openjdk16:alpine-jre AS bot
 WORKDIR /kumaslash-bot
 COPY --from=builder /build/app/build/install/app/ .
+RUN touch kumaslash.db
 CMD ./bin/app $(echo $BOT_TOKEN) $(echo $IGNORE_ROLES)
 
 FROM adoptopenjdk/openjdk16:alpine-jre AS backend

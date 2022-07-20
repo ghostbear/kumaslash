@@ -17,6 +17,8 @@ dependencies {
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-cio:$ktorVersion")
 
+    implementation("io.ktor:ktor-server-cors:$ktorVersion")
+
     implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
 
     implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
