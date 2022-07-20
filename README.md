@@ -43,19 +43,56 @@
 
 ## Running with Docker
 
+1. Create a directory 
+   - `mkdir kumaslash`
+2. In the directory create a file called `docker-compose.yaml`
+   - `touch docker-compose.yaml`
+3. Copy the code either under **GitHub Release** or **Building** and paste it into the `docker-compose.yaml` file
+4. Before running in the directory create an empty file called `kumaslash.db`
+    - `touch kumaslash.db`
+5. Run the file called `docker-compose.yaml`
+   - `docker-compose up -d`
+
 ### GitHub Release
-```shell
-docker run  \
-  --env BOT_TOKEN=<YOUR_TOKEN> \
-  -d ghcr.io/ghostbear/kumaslash:latest
+```dockerfile
+version: "3.9"
+services:
+  backend:
+    image: ghcr.io/ghostbear/kumaslash-backend:latest
+    volumes:
+      - type: bind
+        source: ./kumaslash.db
+        target: /kumaslash-backend/kumaslash.db
+  bot:
+    environment:
+      - BOT_TOKEN={YOUR_BOT_TOKEN}
+      - KUMASLASH_BACKEND_URL=backend # Should match the name of the backend service
+      - KUMASLASH_BACKEND_PORT=8080 # Backend server uses 8080 by default
+    image: ghcr.io/ghostbear/kumaslash-bot:latest
 ```
 
 ### Building
-```shell
-docker build -t kumaslash:latest .
-docker run  \
-  --env BOT_TOKEN=<YOUR_TOKEN> \
-  -d kumaslash:latest
+```dockerfile
+version: "3.9"
+services:
+  backend:
+    image: kumaslash-backend
+    build:
+      context: .
+      target: backend
+    volumes:
+      - type: bind
+        source: ./kumaslash.db
+        target: /kumaslash-backend/kumaslash.db
+  bot:
+    environment:
+      - BOT_TOKEN={YOUR_BOT_TOKEN}
+      - KUMASLASH_BACKEND_URL=backend # Should match the name of the backend service
+      - KUMASLASH_BACKEND_PORT=8080 # Backend server uses 8080 by default
+    image: kumaslash-bot
+    build:
+      context: .
+      target: bot
 ```
 
 ## Developing
