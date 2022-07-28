@@ -43,6 +43,7 @@ fun Kord.avatarCommand(init: SubCommandInitializer) {
             val memberAvatar = member.memberAvatar?.toUrl(Image.Size.Size512)
             val targetAvatar = target.avatar?.toUrl(Image.Size.Size512)
             embed {
+                color = Color(47, 49, 54)
                 image = memberAvatar ?: targetAvatar
                 footer {
                     text = "Avatar for ${member.username}"
@@ -66,6 +67,7 @@ fun Kord.avatarCommand(init: SubCommandInitializer) {
                 kord.getUser(Snowflake(targetId.toLong()))?.asMember(interaction.message.getGuild().id) ?: return@on
             interaction.updatePublicMessage {
                 embed {
+                    color = Color(47, 49, 54)
                     image = user.memberAvatar?.toUrl(Image.Size.Size512)
                     footer {
                         text = "Avatar for ${user.username}"
@@ -79,6 +81,7 @@ fun Kord.avatarCommand(init: SubCommandInitializer) {
             val user = kord.getUser(Snowflake(targetId.toLong())) ?: return@on
             interaction.updatePublicMessage {
                 embed {
+                    color = Color(47, 49, 54)
                     image = user.avatar?.toUrl(Image.Size.Size512)
                     footer {
                         text = "Avatar for ${user.username}"

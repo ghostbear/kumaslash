@@ -43,6 +43,7 @@ fun Kord.bannerCommand(init: SubCommandInitializer) {
         if (bannerUrl != null) {
             response.respond {
                 embed {
+                    color = Color(47, 49, 54)
                     image = "$bannerUrl?size=4096"
                     footer {
                         text = "Banner for ${user.username}"

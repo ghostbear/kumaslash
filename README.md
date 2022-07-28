@@ -14,7 +14,6 @@
 - `/jumbo` `emote:`
 - `/github`
   - `issue` `repository:` `number:`
-  - `pull-request` `repository:` `number:`
 - `/rules` `target:` `rule:`
 
 **Message Commands**

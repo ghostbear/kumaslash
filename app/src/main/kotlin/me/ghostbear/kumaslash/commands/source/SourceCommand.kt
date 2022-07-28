@@ -80,6 +80,7 @@ suspend fun Kord.sourceCommand() {
         if (matches.isEmpty()) {
             response.respond {
                 embed {
+                    color = Color(47, 49, 54)
                     title = "No sources found with that **id**"
                     description = "There was no source found with that **id**. This could be because either it doesn't exists or that it has been removed due to being to hard to maintain or the scanlator asked to be removed."
                 }
