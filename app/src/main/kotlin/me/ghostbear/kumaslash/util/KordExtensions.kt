@@ -9,6 +9,7 @@ import dev.kord.rest.builder.interaction.GlobalChatInputCreateBuilder
 import dev.kord.rest.builder.interaction.GlobalMessageCommandCreateBuilder
 import dev.kord.rest.builder.interaction.MessageCommandCreateBuilder
 import dev.kord.rest.builder.interaction.SubCommandBuilder
+import dev.kord.rest.builder.interaction.subCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -20,6 +21,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 typealias SubCommandInitializer = (String, String, SubCommandBuilder.() -> Unit) -> Unit
+
+val GlobalChatInputCreateBuilder.subCommandInitializer: SubCommandInitializer
+    get() = { name, description, builder ->
+        subCommand(name, description, builder)
+    }
 
 inline fun <reified T : Event> Kord.on(
     scope: CoroutineScope = this,
