@@ -1,5 +1,6 @@
 package me.ghostbear.kumaslash.commands.user
 
+import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.common.entity.Snowflake
 import dev.kord.core.Kord
