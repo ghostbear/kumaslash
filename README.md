@@ -2,6 +2,7 @@
 
 **Automatic**
 - Send user the reason why they were timed out
+  - And to moderation log if set
 
 **Slash Commands**
 - `/ping`
