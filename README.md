@@ -16,6 +16,10 @@
 - `/github`
   - `issue` `repository:` `number:`
 - `/rules` `target:` `rule:`
+- `/logging`
+  - `set` `type:` `channel:`
+  - `get` `type:`
+  - `delete` `type:`
 
 **Message Commands**
 - `Request Steps`
