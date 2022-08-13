@@ -1,0 +1,10 @@
+import me.ghostbear.common.logging.Log;
+
+DROP TABLE Logging;
+
+CREATE TABLE Logging (
+    log TEXT AS Log NOT NULL,
+    guildId INTEGER NOT NULL,
+    channelId INTEGER NOT NULL,
+    PRIMARY KEY (log, guildId)
+);
