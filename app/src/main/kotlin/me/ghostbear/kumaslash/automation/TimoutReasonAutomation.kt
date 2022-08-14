@@ -56,12 +56,16 @@ suspend fun Kord.timeoutReasonAutomation() {
             } else {
                 null
             }
-            member
-                .getDmChannel()
-                .createMessage {
-                    content =
-                        "You've been timed out until <t:$epoch:f> in Tachiyomi with the following reason:\n> $reason"
-                }
+            try {
+                member
+                    .getDmChannel()
+                    .createMessage {
+                        content =
+                            "You've been timed out until <t:$epoch:f> in Tachiyomi with the following reason:\n> $reason"
+                    }
+            } catch (e: Exception) {
+                kordLogger.info { "Wasn't able to send timeout reason to user. Most likely due to them not allowing DMs from server members" }
+            }
 
             val timeoutTime = (epoch - (entry?.id?.timestamp?.epochSeconds ?: 0)).toDuration(DurationUnit.SECONDS)
             val timeoutString = when {
