@@ -20,6 +20,7 @@
   - `set` `type:` `channel:`
   - `get` `type:`
   - `delete` `type:`
+- `/social` `activity:` `target:`
 
 **Message Commands**
 - `Request Steps`
