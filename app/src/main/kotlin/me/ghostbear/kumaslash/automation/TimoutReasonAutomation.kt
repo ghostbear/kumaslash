@@ -56,16 +56,6 @@ suspend fun Kord.timeoutReasonAutomation() {
             } else {
                 null
             }
-            try {
-                member
-                    .getDmChannel()
-                    .createMessage {
-                        content =
-                            "You've been timed out until <t:$epoch:f> in Tachiyomi with the following reason:\n> $reason"
-                    }
-            } catch (e: Exception) {
-                kordLogger.info { "Wasn't able to send timeout reason to user. Most likely due to them not allowing DMs from server members" }
-            }
 
             val timeoutTime = (epoch - (entry?.id?.timestamp?.epochSeconds ?: 0)).toDuration(DurationUnit.SECONDS)
             val timeoutString = when {
@@ -77,6 +67,36 @@ suspend fun Kord.timeoutReasonAutomation() {
                 timeoutTime.inWholeSeconds >= 5.minutes.inWholeSeconds -> "5 minutes"
                 timeoutTime.inWholeSeconds >= 1.minutes.inWholeSeconds -> "1 minutes"
                 else -> timeoutTime.toString()
+            }
+
+            try {
+                member
+                    .getDmChannel()
+                    .createMessage {
+                        embed {
+                            title = "You were timed out"
+                            color = Color(47, 49, 54)
+                            field {
+                                name = "Reason"
+                                value = reason
+                            }
+                            field {
+                                name = "Duration"
+                                value = "$timeoutString (until <t:${epoch}:f>)"
+                            }
+                            field {
+                                name = "Moderator"
+                                value = moderator?.mention ?: "Unknown"
+                            }
+                            author {
+                                name = "Tachiyomi"
+                                icon = "https://cdn.discordapp.com/icons/349436576037732353/a_989e89146244387118ab43b03776a90b.webp"
+                                url = "https://discord.gg/tachiyomi"
+                            }
+                        }
+                    }
+            } catch (e: Exception) {
+                kordLogger.info { "Wasn't able to send timeout reason to user. Most likely due to them not allowing DMs from server members" }
             }
 
             try {
@@ -99,10 +119,10 @@ suspend fun Kord.timeoutReasonAutomation() {
                             embed {
                                 title = "timeout"
                                 description = """
-                                Offender: ${member.mention}
-                                Reason: $reason
-                                Duration: $timeoutString (until <t:${epoch}:f>)
-                                Moderator: ${moderator?.mention}
+                                **Offender:** ${member.mention}
+                                **Duration:** $timeoutString (until <t:${epoch}:f>)
+                                **Reason:** $reason
+                                **Moderator:** ${moderator?.mention}
                             """.trimIndent()
                                 footer {
                                     text = "Offender ID: ${member.id.value}"
