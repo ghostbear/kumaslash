@@ -1,0 +1,331 @@
+openapi: 3.0.3
+info:
+  title: Kumaslash
+  version: 1.0.0
+tags:
+  - name: rules
+  - name: socials
+  - name: servers
+paths:
+  /rules/{id}:
+    get:
+      tags:
+        - rules
+      operationId: getRuleById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rule'
+    put:
+      tags:
+        - rules
+      operationId: updateRuleById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rules'
+    delete:
+      tags:
+        - rules
+      operationId: deleteRuleById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+  /rules:
+    post:
+      tags:
+        - rules
+      operationId: createRule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rule'
+      responses:
+        '200':
+          description: Successful operation
+  /servers/{id}/rules:
+    get:
+      tags:
+        - rules
+        - servers
+      operationId: getRulesByIdAndServerId
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rules'
+  /socials/{id}:
+    get:
+      tags:
+        - socials
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Social'
+    delete:
+      tags:
+        - socials
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Social'
+  /socials:
+    post:
+      tags:
+        - socials
+      operationId: createSocials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Social'
+      responses:
+        '200':
+          description: Successful operation
+  /servers/{id}/socials:
+    get:
+      tags:
+        - socials
+        - servers
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Socials'
+  /extensions/{id}:
+    get:
+      tags:
+        - tachiyomi
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+  /download:
+    get:
+      tags:
+        - tachiyomi
+      parameters:
+        - name: type
+          required: true
+          in: query
+          schema:
+            type : string
+            enum:
+              - TACHIYOMI
+              - TACHIYOMI_SY
+              - TACHIYOMI_J2K
+              - NEKO
+              - TACHIYOMI_PREVIEW
+              - TACHIYOMI_SY_PREVIEW
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+  /servers/{id}/logs:
+    get:
+      tags:
+        - logs
+        - servers
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+        - name: type
+          required: true
+          in: query
+          schema:
+            type : string
+            enum:
+              - MOD
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+    post:
+      tags:
+        - logs
+        - servers
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+        - name: type
+          required: true
+          in: query
+          schema:
+            type : string
+            enum:
+              - MOD
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - logs
+        - servers
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type : integer
+            format: int64
+        - name: type
+          required: true
+          in: query
+          schema:
+            type : string
+            enum:
+              - MOD
+      responses:
+        '200':
+          description: Successful operation
+components:
+  schemas:
+    Rule:
+      type: object
+      properties:
+        id: 
+          type: integer
+          format: int64
+          example: 1
+        server_id:
+          type: integer
+          format: int64
+          example: 925423479415881546
+        number: 
+          type: integer
+          format: int64
+          example: 1
+        title:
+          type: string
+        description:
+          type: string
+    Rules:
+      type: array
+      items:
+        $ref: '#/components/schemas/Rule'
+    Social:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        server_id:
+          type: integer
+          format: int64
+          example: 925423479415881546
+        type: 
+          $ref: '#/components/schemas/SocialType'
+        image_url: 
+          type: string
+    SocialType:
+      type: string
+      enum: 
+        - BITE
+        - HUG
+        - KISS
+        - LICK
+        - NUZZLE
+        - SLAP
+        - HEADPAT
+    Socials:
+      type: array
+      items:
+        $ref: '#/components/schemas/Social'
+    Todo:
+      type: object
+      properties:
+        todo: 
+          type: string
+          example: todo
+
+  
