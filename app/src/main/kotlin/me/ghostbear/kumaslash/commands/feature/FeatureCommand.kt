@@ -94,7 +94,6 @@ suspend fun Kord.featureCommand() {
             "source" -> {
                 repositoryUser = "tachiyomiorg"
                 repositoryType = "tachiyomi-extensions"
-                issueReportType = "issues?q=is%3Aissue+label%3A\"Feature+request\""
                 applicationName = "Tachiyomi Extensions"
                 applicationIcon = "https://raw.githubusercontent.com/tachiyomiorg/tachiyomi/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
             }
@@ -122,10 +121,10 @@ suspend fun Kord.featureCommand() {
                     }
                     components = mutableListOf(
                         ActionRowBuilder().apply {
-                            linkButton("https://github.com/$repositoryUser/$repositoryType/$issueReportType") {
+                            linkButton("https://github.com/$repositoryUser/$repositoryType/issues?q=is%3Aissue+label%3A\"Feature+request\"") {
                                 label = "Search for requested features"
                             }
-                            linkButton("https://github.com/$repositoryUser/$repositoryType/$issueReportType") {
+                            linkButton("https://github.com/$repositoryUser/$repositoryType/issues?q=is%3Aissue+label%3A\"Source+request\"") {
                                 label = "Search for requested sources"
                             }
                         }
