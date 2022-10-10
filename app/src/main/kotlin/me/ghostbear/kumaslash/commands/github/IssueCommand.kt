@@ -29,8 +29,6 @@ fun Kord.issueCommand(init: SubCommandInitializer) {
             choice("Tachiyomi", "tachiyomi")
             choice("Tachiyomi Extensions", "tachiyomi-extensions")
             choice("Tachiyomi Website", "website")
-            choice("Tachiyomi 1.x", "tachiyomi-1.x")
-            choice("Tachiyomi Extensions 1.x", "tachiyomi-extensions-1.x")
             choice("Neko", "Neko")
             choice("TachiyomiJ2K", "TachiyomiJ2K")
             choice("TachiyomiSY", "TachiyomiSY")
