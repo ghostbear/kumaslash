@@ -21,6 +21,7 @@
   - `get` `type:`
   - `delete` `type:`
 - `/social` `activity:` `target:`
+- `/bug` `type:` `application:`
 
 **Message Commands**
 - `Request Steps`

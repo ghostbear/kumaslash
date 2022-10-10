@@ -24,6 +24,7 @@ import me.ghostbear.kumaslash.commands.steps.requestStepsMessageCommand
 import me.ghostbear.kumaslash.commands.steps.stepsCommand
 import me.ghostbear.kumaslash.commands.user.userCommandGroup
 import me.ghostbear.kumaslash.commands.social.socialCommand
+import me.ghostbear.kumaslash.commands.bug.bugCommand
 import me.ghostbear.kumaslash.util.removeCommands
 
 val json = Json {
@@ -57,6 +58,7 @@ suspend fun main(args: Array<String>) {
     kord.rulesCommand()
     kord.loggingCommand()
     kord.socialCommand()
+    kord.bugCommand()
 
     try {
         kord.login {
