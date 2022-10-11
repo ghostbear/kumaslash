@@ -12,7 +12,6 @@ import kotlinx.coroutines.delay
 import me.ghostbear.kumaslash.util.SubCommandInitializer
 import me.ghostbear.kumaslash.util.on
 
-internal const val OWNER = "tachiyomiorg"
 internal const val ARG_REPOSITORY = "repository"
 internal const val ARG_NUMBER = "number"
 
@@ -30,8 +29,10 @@ fun Kord.issueCommand(init: SubCommandInitializer) {
             choice("Tachiyomi", "tachiyomi")
             choice("Tachiyomi Extensions", "tachiyomi-extensions")
             choice("Tachiyomi Website", "website")
-            choice("Tachiyomi 1.x", "tachiyomi-1.x")
-            choice("Tachiyomi Extensions 1.x", "tachiyomi-extensions-1.x")
+            choice("Neko", "Neko")
+            choice("TachiyomiJ2K", "TachiyomiJ2K")
+            choice("TachiyomiSY", "TachiyomiSY")
+            choice("TachiyomiAZ", "TachiyomiAZ")
         }
         string(ARG_NUMBER, "GitHub issue or pull request ID") {
             required = true
@@ -47,11 +48,30 @@ fun Kord.issueCommand(init: SubCommandInitializer) {
     ) {
         val (repository, number) = interaction.command.getArguments()
 
+        var repositoryOwner: String
+        when (repository) {
+            "Neko" -> {
+                repositoryOwner = "CarlosEsco"
+            }
+            "TachiyomiJ2K" -> {
+                repositoryOwner = "Jays2Kings"
+            }
+            "TachiyomiSY" -> {
+                repositoryOwner = "jobobby04"
+            }
+            "TachiyomiAZ" -> {
+                repositoryOwner = "az4521"
+            }
+            else -> {
+                repositoryOwner = "tachiyomiorg"
+            }
+        }
+
         val response = interaction.deferPublicResponse()
 
         try {
-            val data = GitHubApi.getIssueOrPullRequest(OWNER, repository, number)
-            val tags = URL("https://github.com/$OWNER/$repository/pull/$number").getOpenGraphTags()
+            val data = GitHubApi.getIssueOrPullRequest(repositoryOwner, repository, number)
+            val tags = URL("https://github.com/$repositoryOwner/$repository/pull/$number").getOpenGraphTags()
             response.respond(data.buildResponse(repository, tags))
         } catch (e: Exception) {
             e.printStackTrace()
