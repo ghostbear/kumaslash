@@ -1,21 +1,23 @@
-FROM gradle:jdk17-alpine AS builder
-COPY . /build
-USER root
-RUN mkdir /kumaslash
-RUN chown -R gradle /build
-RUN chown -R gradle /kumaslash
-RUN chmod +x /build/gradlew
-USER gradle
-WORKDIR /build
-RUN ./gradlew installDist
+FROM eclipse-temurin:17-jdk-jammy as base
+WORKDIR /project
+COPY . ./
+RUN ./gradlew dependencies
 
-FROM adoptopenjdk/openjdk16:alpine-jre AS bot
-WORKDIR /kumaslash-bot
-COPY --from=builder /build/app/build/install/app/ .
-RUN touch kumaslash.db
-CMD ./bin/app $(echo $BOT_TOKEN) $(echo $IGNORE_ROLES)
+FROM base AS development-bot
+CMD ./gradlew app:installDist&&chmod +x ./app/build/install/app/bin/app&&./app/build/install/app/bin/app
 
-FROM adoptopenjdk/openjdk16:alpine-jre AS backend
-WORKDIR /kumaslash-backend
-COPY --from=builder /build/web/build/install/web/ .
-CMD ./bin/web $(echo $BOT_TOKEN) $(echo $IGNORE_ROLES)
+FROM base AS development-web
+CMD ./gradlew web:installDist&&chmod +x ./web/build/install/web/bin/web&&./web/build/install/web/bin/web
+
+FROM base AS build
+RUN ./gradlew installDist&&chmod +x ./web/build/install/web/bin/web&&chmod +x ./app/build/install/app/bin/app
+
+FROM eclipse-temurin:17-jre-jammy AS production-bot
+COPY --from=build /project/app/build/install/app ./app
+WORKDIR /app
+CMD ./bin/app
+
+FROM eclipse-temurin:17-jre-jammy AS production-web
+COPY --from=build /project/web/build/install/web ./app
+WORKDIR /app
+CMD ./bin/web

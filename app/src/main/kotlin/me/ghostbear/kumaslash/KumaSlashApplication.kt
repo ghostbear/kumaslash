@@ -26,6 +26,7 @@ import me.ghostbear.kumaslash.commands.user.userCommandGroup
 import me.ghostbear.kumaslash.commands.social.socialCommand
 import me.ghostbear.kumaslash.commands.bug.bugCommand
 import me.ghostbear.kumaslash.commands.feature.featureCommand
+import me.ghostbear.kumaslash.util.Env
 import me.ghostbear.kumaslash.util.removeCommands
 
 val json = Json {
@@ -42,7 +43,9 @@ val client = HttpClient(CIO) {
 
 @OptIn(PrivilegedIntent::class)
 suspend fun main(args: Array<String>) {
-    val kord = Kord(args[0])
+    val botToken = Env.botToken ?: throw Exception("No bot token is set")
+
+    val kord = Kord(botToken)
 
     kord.launch {
         kord.removeCommands()

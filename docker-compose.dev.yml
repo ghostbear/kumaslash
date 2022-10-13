@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  kumaslash:
+    build:
+      context: .
+      target: development-bot
+    volumes:
+      - ./:/project
+    env_file:
+      - ./kumaslash.env
+    depends_on:
+      - kumanounchi
+  kumanounchi:
+    build:
+      context: .
+      target: development-web
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./kumanounchi.env
+    volumes:
+      - ./:/project

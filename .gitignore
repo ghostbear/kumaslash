@@ -100,3 +100,6 @@ gradle-app.setting
 .idea/.name
 
 *.db
+
+/kumanounchi.env
+/kumaslash.env
