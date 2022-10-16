@@ -89,7 +89,7 @@ val GitHubResponse.descriptionCleaned: String
         }
     }
 
-fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionResponseModifyBuilder.() -> Unit {
+fun GitHubResponse.buildResponse(repository: String, tags: Tags, repositoryOwner: String, repositoryIcon: String): InteractionResponseModifyBuilder.() -> Unit {
     return when (this) {
         is Issue -> {
             {
@@ -100,7 +100,8 @@ fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionRes
                     title = issue.title
                     description = descriptionCleaned
                     author {
-                        name = "$repository #${issue.number}"
+                        icon = repositoryIcon
+                        name = "$repositoryOwner/$repository #${issue.number}"
                     }
                     footer {
                         icon = issue.user.avatarUrl
@@ -125,7 +126,8 @@ fun GitHubResponse.buildResponse(repository: String, tags: Tags): InteractionRes
                     title = pull.title
                     description = descriptionCleaned
                     author {
-                        name = "$repository #${pull.number}"
+                        icon = repositoryIcon
+                        name = "$repositoryOwner/$repository #${pull.number}"
                     }
                     footer {
                         icon = pull.user.avatarUrl
