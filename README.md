@@ -104,29 +104,32 @@ services:
 
 ## Developing
 
-If you choose to develop a feature or fix a bug it's highly recommended that you use Intellij IDEA Community Edition as your code editor. 
+If you choose to develop a feature or fix a bug it's highly recommended that you use Intellij IDEA Community Edition as your code editor.
 
-### Running
+### Docker (Recommended)
+1. Copy and rename `kumaslash.env.example` to `kumaslash.env` and `kumanounchi.env.example` to `kumanounchi.env`
+2. Get a bot token from Discord Developers and set the `BOT_TOKEN` in `kumanounchi.env`
+3. Now run `docker-compose -f .\docker-compose.dev.yml up --build`
+   - If you have issues with `docker-compose` on Windows like `gradlew dependecies` not working change the line endings in `gradlew` to `LF`
+4. After building the base image run `docker-compose -f .\docker-compose.dev.yml restart` to apply code changes
+### Manually
+1. Set all the environment variables
+    - See [Environment variables](#environment-variables)
+2. Run `gradlew run`
+    - If you are on Windows use `gradlew.bat` and if you are on macOS or Linux use `gradlew`
+    - If you want to run the bot and backend server separately use `app:run` and `web:run` instead of `run`
+### IntelliJ
+1. Find the `run` task under the Gradle tab
+2. Right-click the `run` task and select `Modify Run Configuration`
+3. Set all the environment variables
+    - See [Environment variables](#environment-variables)
+4. Click Apply and OK
 
-1. (Optional) Set System Environment variables for `KUMASLASH_GUILD_ID` and `KUMASLASH_DEBUG`
-   - `KUMASLASH_GUILD_ID` is the ID of your Discord Server
-   - `KUMASLASH_DEBUG` should be set to `true` when developing with the bot
-2. Build the JAR 
-   - `./gradlew installDist`
-3. Run the JAR
-   - `./app/build/install/app/bin/app <BOT_TOKEN> <IGNORE_ROLES>`
-
-### Intellij IDEA
-
-1. (Optional) Set System Environment variables for `KUMASLASH_GUILD_ID` and `KUMASLASH_DEBUG`
-    - `KUMASLASH_GUILD_ID` is the ID of your Discord Server
-    - `KUMASLASH_DEBUG` should be set to `true` when developing with the bot
-2. Open Run/Debug Configuration `Run -> Edit Configurations...`
-3. Click on the Run template for your operative system
-4. Duplicate the Run template by either pressing Copy Configuration or press `CTRL + D`
-5. Add Script options to your `BOT_TOKEN` and/or `<IGNORE_ROLES>`
-6. Press `Apply` and `OK`
-
-Now select the newly created Run/Debug Configuration profile from the dropdown and press the Run button
-
-![img.png](.github/assets/run_profiles.png)
+## Environment variables
+```env
+BOT_TOKEN={YOUR_BOT_TOKEN}
+SERVER_URL=http://127.0.0.1         # Optional
+SERVER_PORT=8080                    # Optional
+KUMASLASH_GUILD_ID={YOUR_GUILD_ID}  # Optional, don't use in a release environment
+KUMASLASH_DEBUG=true                # Optional, don't use in a release environment
+```
