@@ -48,7 +48,7 @@ jobs:
         with:
           context: .
           push: true
-          target: bot
+          target: production-bot
           tags: ${{ steps.meta-bot.outputs.tags }}
           labels: ${{ steps.meta-bot.outputs.labels }}
 
@@ -57,6 +57,6 @@ jobs:
         with:
           context: .
           push: true
-          target: backend
+          target: production-web
           tags: ${{ steps.meta-backend.outputs.tags }}
           labels: ${{ steps.meta-backend.outputs.labels }}
