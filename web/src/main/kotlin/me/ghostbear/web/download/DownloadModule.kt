@@ -65,7 +65,7 @@ class TachiyomiPreview : GithubRepository() {
 }
 
 class TachiyomiSy : GithubRepository() {
-    override val regex = "TachiyomiSY_\\d+\\.\\d+\\.\\d+\\.apk".toRegex()
+    override val regex = "TachiyomiSY[_-]\\d+\\.\\d+\\.\\d+\\.apk".toRegex()
     override val target = ("jobobby04" to "TachiyomiSY")
     override val repository = Repository.TACHIYOMI
 }
