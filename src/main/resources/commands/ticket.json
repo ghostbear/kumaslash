@@ -1,0 +1,48 @@
+{
+  "name": "ticket",
+  "description": "Get an issue or pull request from GitHub",
+  "options": [
+    {
+      "name": "flavour",
+      "description": "The type of flavour",
+      "type": 3,
+      "required": true,
+      "choices": [
+        {
+          "name": "Tachiyomi",
+          "value": "tachiyomi"
+        },
+        {
+          "name": "Tachiyomi Extensions",
+          "value": "tachiyomi-extensions"
+        },
+        {
+          "name": "Tachiyomi Website",
+          "value": "tachiyomi-website"
+        },
+        {
+          "name": "TachiyomiSY",
+          "value": "TachiyomiSY"
+        },
+        {
+          "name": "TachiyomiJ2K",
+          "value": "tachiyomiJ2K"
+        },
+        {
+          "name": "Neko",
+          "value": "Neko"
+        },
+        {
+          "name": "TachiyomiAZ",
+          "value": "TachiyomiAZ"
+        }
+      ]
+    },
+    {
+      "name": "number",
+      "description": "The issue is only a number",
+      "type": 4,
+      "required": true
+    }
+  ]
+}

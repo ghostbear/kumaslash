@@ -1,0 +1,21 @@
+{
+  "name": "timeout",
+  "description": "Timeout a user",
+  "default_member_permissions": "0",
+  "dm_permission": false,
+  "options": [
+    {
+      "type": 1,
+      "name": "channel",
+      "description": "Set a channel to log timeouts in",
+      "options": [
+        {
+          "type": 7,
+          "name": "channel",
+          "description": "The channel to log in",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

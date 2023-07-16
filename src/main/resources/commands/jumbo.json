@@ -1,0 +1,12 @@
+{
+  "name": "jumbo",
+  "description": "Make a emoji jumbo sized.",
+  "options": [
+    {
+      "type": 3,
+      "name": "emoji",
+      "description": "The emoji to jumbo size",
+      "required": true
+    }
+  ]
+}

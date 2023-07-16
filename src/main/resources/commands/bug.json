@@ -1,0 +1,51 @@
+{
+  "name": "bug",
+  "description": "Report a bug.",
+  "options": [
+    {
+      "type": 1,
+      "name": "app",
+      "description": "Report a bug for Tachiyomi or supported fork.",
+      "options": [
+        {
+          "name": "flavour",
+          "description": "The type of flavour",
+          "type": 3,
+          "required": true,
+          "choices": [
+            {
+              "name": "Tachiyomi",
+              "value": "tachiyomi"
+            },
+            {
+              "name": "TachiyomiSY",
+              "value": "TachiyomiSY"
+            },
+            {
+              "name": "TachiyomiJ2K",
+              "value": "tachiyomiJ2K"
+            },
+            {
+              "name": "Neko",
+              "value": "Neko"
+            },
+            {
+              "name": "TachiyomiAZ",
+              "value": "TachiyomiAZ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "website",
+      "description": "Report a bug for our website."
+    },
+    {
+      "type": 1,
+      "name": "source",
+      "description": "Report a bug for one of the sources."
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+spring:
+  flyway:
+    locations: classpath:db/migration
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/postgres
+    password: postgres
+    username: postgres
+tachiyomi:
+  flavours:
+    - owner: 'tachiyomiorg'
+      repository: 'tachiyomi'
+      name: 'Tachiyomi'
+      pattern: '^tachiyomi-v\d+\.\d+\.\d+.apk'
+      icon-url: 'https://raw.githubusercontent.com/tachiyomiorg/tachiyomi/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png'
+    - owner: 'tachiyomiorg'
+      repository: 'tachiyomi-preview'
+      name: 'Tachiyomi Preview'
+      pattern: '^tachiyomi-r\d{4,}.apk'
+      icon-url: 'https://raw.githubusercontent.com/tachiyomiorg/tachiyomi/master/app/src/debug/res/mipmap-xxxhdpi/ic_launcher.png'
+    - owner: 'jobobby04'
+      repository: 'TachiyomiSY'
+      name: 'TachiyomiSY'
+      pattern: 'TachiyomiSY[_-]\d+\.\d+\.\d+\.apk'
+      icon-url: 'https://raw.githubusercontent.com/jobobby04/TachiyomiSY/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png'
+    - owner: 'jobobby04'
+      repository: 'TachiyomiSYPreview'
+      name: 'TachiyomiSY Preview'
+      pattern: 'TachiyomiSY[_-]\d{3,}.apk'
+      icon-url: 'https://raw.githubusercontent.com/jobobby04/TachiyomiSY/master/app/src/debug/res/mipmap-xxxhdpi/ic_launcher.png'
+    - owner: 'Jays2Kings'
+      repository: 'tachiyomiJ2K'
+      name: 'TachiyomiJ2K'
+      pattern: 'tachiyomij2k-v\d+\.\d+\.\d+\.apk'
+      icon-url: 'https://raw.githubusercontent.com/Jays2Kings/tachiyomiJ2K/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png'
+    - owner: 'CarlosEsco'
+      repository: 'Neko'
+      name: 'Neko'
+      pattern: 'neko-universal\.apk'
+      icon-url: 'https://raw.githubusercontent.com/CarlosEsco/Neko/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png'
+    - owner: 'az4521'
+      repository: 'TachiyomiAZ'
+      name: 'TachiyomiAZ'
+      pattern: 'app\.apk'
+      icon-url: 'https://raw.githubusercontent.com/az4521/TachiyomiAZ/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png'
