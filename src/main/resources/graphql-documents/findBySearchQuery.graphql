@@ -1,0 +1,41 @@
+fragment Media on Media {
+  id
+  type
+  format
+  title {
+    romaji
+    english
+    native
+    userPreferred
+  }
+  description
+  startDate {
+    year
+    month
+    day
+  }
+  coverImage {
+    color
+  }
+  status
+  genres
+  siteUrl
+}
+
+query FindAnimeBySearchQuery($searchQuery: String) {
+  Media(search: $searchQuery, type: ANIME) {
+    ...Media
+  }
+}
+
+query FindMangaBySearchQuery($searchQuery: String) {
+  Media(search: $searchQuery, type: MANGA, format_not: NOVEL) {
+    ...Media
+  }
+}
+
+query FindLightNovelBySearchQuery($searchQuery: String) {
+  Media(search: $searchQuery, type: MANGA, format_in: NOVEL) {
+    ...Media
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "name": "feature",
+  "description": "Request a feature.",
+  "options": [
+    {
+      "type": 1,
+      "name": "app",
+      "description": "Request a feature.",
+      "options": [
+        {
+          "name": "flavour",
+          "description": "The type of flavour",
+          "type": 3,
+          "required": true,
+          "choices": [
+            {
+              "name": "Tachiyomi",
+              "value": "tachiyomi"
+            },
+            {
+              "name": "Tachiyomi Preview",
+              "value": "tachiyomi-preview"
+            },
+            {
+              "name": "TachiyomiSY",
+              "value": "TachiyomiSY"
+            },
+            {
+              "name": "TachiyomiSY Preview",
+              "value": "TachiyomiSYPreview"
+            },
+            {
+              "name": "TachiyomiJ2K",
+              "value": "tachiyomiJ2K"
+            },
+            {
+              "name": "Neko",
+              "value": "Neko"
+            },
+            {
+              "name": "TachiyomiAZ",
+              "value": "TachiyomiAZ"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "website",
+      "description": "Request a feature."
+    },
+    {
+      "type": 1,
+      "name": "source",
+      "description": "Request a feature or source."
+    }
+  ]
+}

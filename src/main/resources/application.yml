@@ -1,0 +1,37 @@
+spring:
+  flyway:
+    locations: classpath:db/migration
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/postgres
+    password: postgres
+    username: postgres
+tachiyomi:
+  flavours:
+    - owner: 'tachiyomiorg'
+      repository: 'tachiyomi'
+      name: 'Tachiyomi'
+      pattern: '^tachiyomi-v\d+\.\d+\.\d+.apk'
+    - owner: 'tachiyomiorg'
+      repository: 'tachiyomi-preview'
+      name: 'Tachiyomi Preview'
+      pattern: '^tachiyomi-r\d{4,}.apk'
+    - owner: 'jobobby04'
+      repository: 'TachiyomiSY'
+      name: 'TachiyomiSY'
+      pattern: 'TachiyomiSY[_-]\d+\.\d+\.\d+\.apk'
+    - owner: 'jobobby04'
+      repository: 'TachiyomiSYPreview'
+      name: 'TachiyomiSY Preview'
+      pattern: 'TachiyomiSY[_-]\d{3,}.apk'
+    - owner: 'Jays2Kings'
+      repository: 'tachiyomiJ2K'
+      name: 'TachiyomiJ2K'
+      pattern: 'tachiyomij2k-v\d+\.\d+\.\d+\.apk'
+    - owner: 'CarlosEsco'
+      repository: 'Neko'
+      name: 'Neko'
+      pattern: 'neko-universal\.apk'
+    - owner: 'az4521'
+      repository: 'TachiyomiAZ'
+      name: 'TachiyomiAZ'
+      pattern: 'app\.apk'
