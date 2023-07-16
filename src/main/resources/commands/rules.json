@@ -1,0 +1,16 @@
+{
+  "name": "rules",
+  "description": "Display the rule(s) of the guild.",
+  "options": [
+    {
+      "type": 6,
+      "name": "user",
+      "description": "The user whom to enlighten"
+    },
+    {
+      "type": 4,
+      "name": "index",
+      "description": "The rule number"
+    }
+  ]
+}

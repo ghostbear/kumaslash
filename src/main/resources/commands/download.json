@@ -1,0 +1,43 @@
+{
+  "name": "download",
+  "type": 1,
+  "description": "Get download link for Tachiyomi or supported fork",
+  "options": [
+    {
+      "name": "flavour",
+      "description": "The type of flavour",
+      "type": 3,
+      "required": true,
+      "choices": [
+        {
+          "name": "Tachiyomi",
+          "value": "tachiyomi"
+        },
+        {
+          "name": "Tachiyomi Preview",
+          "value": "tachiyomi-preview"
+        },
+        {
+          "name": "TachiyomiSY",
+          "value": "TachiyomiSY"
+        },
+        {
+          "name": "TachiyomiSY Preview",
+          "value": "TachiyomiSYPreview"
+        },
+        {
+          "name": "TachiyomiJ2K",
+          "value": "tachiyomiJ2K"
+        },
+        {
+          "name": "Neko",
+          "value": "Neko"
+        },
+        {
+          "name": "TachiyomiAZ",
+          "value": "TachiyomiAZ"
+        }
+      ]
+    }
+  ]
+}

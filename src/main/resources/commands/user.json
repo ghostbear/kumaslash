@@ -1,0 +1,37 @@
+{
+  "name": "user",
+  "description": "It's not like I like you or anything, idiot!",
+  "options": [
+    {
+      "type": 1,
+      "name": "avatar",
+      "description": "Get avatar or guild avatar for a user",
+      "options": [
+        {
+          "type": 6,
+          "name": "user",
+          "description": "The user whose avatar to get",
+          "required": true
+        },
+        {
+          "type": 5,
+          "name": "guild_avatar",
+          "description": "Get the guild avatar or normal avatar"
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "name": "banner",
+      "description": "Get banner for a user",
+      "options": [
+        {
+          "type": 6,
+          "name": "user",
+          "description": "The user whose banner to get",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
