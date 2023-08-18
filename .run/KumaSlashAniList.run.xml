@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="KumaSlash" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="KumaSlashAniList" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$/kumaslash" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/kumaslash-anilist" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="" />
       <option name="taskDescriptions">
@@ -10,7 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value=":kumaslash:bootRun" />
+          <option value=":kumaslash-anilist:bootRun" />
           <option value="--args='--spring.profiles.active=dev'" />
         </list>
       </option>

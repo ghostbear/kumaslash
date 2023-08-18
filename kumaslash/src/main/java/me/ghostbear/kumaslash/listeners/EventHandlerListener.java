@@ -9,7 +9,6 @@ import me.ghostbear.kumaslash.commands.core.EventHandler;
 import me.ghostbear.kumaslash.commands.core.GuildCreateEventHandler;
 import me.ghostbear.kumaslash.commands.core.ModalEventHandler;
 import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
-import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,7 +21,7 @@ public class EventHandlerListener {
 
 	private final Collection<EventHandler> eventHandlers;
 
-	public EventHandlerListener(GatewayDiscordClient client, List<EventHandler> eventHandlers, HttpGraphQlClient graphQlClient) {
+	public EventHandlerListener(GatewayDiscordClient client, List<EventHandler> eventHandlers) {
 		this.eventHandlers = eventHandlers;
 		client.on(GuildCreateEvent.class, this::handle).subscribe();
 		client.on(ChatInputInteractionEvent.class, this::handle).subscribe();

@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,16 +21,6 @@ public class KumaSlashConfiguration {
 				.build();
 		return WebClient.builder()
 				.exchangeStrategies(strategies)
-				.build();
-	}
-
-	@Bean
-	HttpGraphQlClient aniListGraphQlClient() {
-		return HttpGraphQlClient.builder(
-						WebClient.builder()
-								.baseUrl("https://graphql.anilist.co")
-								.build()
-				)
 				.build();
 	}
 

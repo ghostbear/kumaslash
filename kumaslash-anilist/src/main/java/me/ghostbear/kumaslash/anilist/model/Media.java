@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.data.anilist;
+package me.ghostbear.kumaslash.anilist.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
