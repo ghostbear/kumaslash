@@ -1,4 +1,6 @@
 rootProject.name = "kumaslash"
 
+include "core-discord4j"
 include "kumaslash"
 include "kumaslash-anilist"
+include "samples:discord-bot"

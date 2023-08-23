@@ -1,0 +1,11 @@
+spring:
+  devtools:
+    restart:
+      enabled: false
+    add-properties: true
+logging:
+  level:
+    web: DEBUG
+    discord4j: DEBUG
+    me:
+      ghostbear: DEBUG
