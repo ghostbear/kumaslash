@@ -63,6 +63,7 @@ public class AniListEventAdapter extends ReactiveEventAdapter {
 	}
 
 	private String cleanDescription(String value) {
+		if (Objects.isNull(value) || value.isEmpty()) return "No description";
 		return StringUtils.abbreviate(value.replaceAll("<br>", ""), 128);
 	}
 
