@@ -23,10 +23,10 @@ public class AniListService {
 		this.graphQlClient = graphQlClient;
 	}
 
-	public Mono<Media> retrieveMedia(ImmutablePair<Type, String> typeAndSearchQuery) {
+	public Mono<Media> retrieveMedia(ImmutablePair<Type, String> typeAndSearchQuery, boolean isAdult) {
 		return graphQlClient.documentName(DOCUMENT_NAME)
 				.operationName(typeAndSearchQuery.getLeft().operationName())
-				.variables(AniListService.Type.buildVariables(typeAndSearchQuery.getRight()))
+				.variables(AniListService.Type.buildVariables(typeAndSearchQuery.getRight(), isAdult))
 				.retrieve("Media")
 				.toEntity(Media.class)
 				.doOnError(GraphQlTransportException.class, throwable -> LOG.warn("Failed to retrieve media, 404 Not Found means that AniList can't find a title with the provided search query and can safely be ignored", throwable))
@@ -48,8 +48,8 @@ public class AniListService {
 			return operationName;
 		}
 
-		public static Map<String, Object> buildVariables(String searchQuery) {
-			return Map.of("searchQuery", searchQuery);
+		public static Map<String, Object> buildVariables(String searchQuery, boolean isAdult) {
+			return Map.of("searchQuery", searchQuery, "isAdult", isAdult);
 		}
 
 	}

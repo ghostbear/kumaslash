@@ -4,6 +4,7 @@ import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.ReactiveEventAdapter;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.User;
+import discord4j.core.object.entity.channel.TextChannel;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
@@ -41,9 +42,11 @@ public class AniListEventAdapter extends ReactiveEventAdapter {
 		}
 		String content = event.getMessage().getContent();
 		return event.getMessage().getChannel()
+				.filter(messageChannel -> messageChannel instanceof TextChannel)
+				.map(messageChannel -> (TextChannel) messageChannel)
 				.filter(messageChannel -> pattern.matcher(content).find())
 				.flatMap(messageChannel -> messageChannel.type().thenReturn(messageChannel))
-				.zipWith(findAndRetrieveMedia(content).collectList())
+				.zipWhen(messageChannel -> findAndRetrieveMedia(content, messageChannel.isNsfw()).collectList())
 				.filter(messageChannelAndMediaList -> !messageChannelAndMediaList.getT2().isEmpty())
 				.flatMap(messageChannelAndMediaList -> messageChannelAndMediaList.getT1().createMessage(messageChannelAndMediaList.getT2().stream()
 						.map(media -> EmbedCreateSpec.builder()
@@ -74,10 +77,10 @@ public class AniListEventAdapter extends ReactiveEventAdapter {
 		return StringUtils.abbreviate(value.replaceAll("<br>", ""), 128);
 	}
 
-	private Flux<Media> findAndRetrieveMedia(String content) {
+	private Flux<Media> findAndRetrieveMedia(String content, boolean isAdult) {
 		return findMediaQueries(content)
 				.parallel()
-				.flatMap(service::retrieveMedia)
+				.flatMap(typeAndSearchQuery -> service.retrieveMedia(typeAndSearchQuery, isAdult))
 				.sequential();
 	}
 

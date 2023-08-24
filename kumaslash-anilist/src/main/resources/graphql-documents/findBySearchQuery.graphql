@@ -22,20 +22,20 @@ fragment Media on Media {
   siteUrl
 }
 
-query FindAnimeBySearchQuery($searchQuery: String) {
-  Media(search: $searchQuery, type: ANIME) {
+query FindAnimeBySearchQuery($searchQuery: String, $isAdult: Boolean) {
+  Media(search: $searchQuery, type: ANIME, isAdult: $isAdult) {
     ...Media
   }
 }
 
-query FindMangaBySearchQuery($searchQuery: String) {
-  Media(search: $searchQuery, type: MANGA, format_not: NOVEL) {
+query FindMangaBySearchQuery($searchQuery: String, $isAdult: Boolean) {
+  Media(search: $searchQuery, type: MANGA, format_not: NOVEL, isAdult: $isAdult) {
     ...Media
   }
 }
 
-query FindLightNovelBySearchQuery($searchQuery: String) {
-  Media(search: $searchQuery, type: MANGA, format_in: NOVEL) {
+query FindLightNovelBySearchQuery($searchQuery: String, $isAdult: Boolean) {
+  Media(search: $searchQuery, type: MANGA, format_in: NOVEL, isAdult: $isAdult) {
     ...Media
   }
 }
