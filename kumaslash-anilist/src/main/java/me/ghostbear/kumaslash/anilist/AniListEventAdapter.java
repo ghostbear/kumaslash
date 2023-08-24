@@ -16,10 +16,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 public class AniListEventAdapter extends ReactiveEventAdapter {
@@ -47,9 +49,14 @@ public class AniListEventAdapter extends ReactiveEventAdapter {
 						.map(media -> EmbedCreateSpec.builder()
 								.title(media.title().romaji())
 								.description(cleanDescription(media.description()))
-								.addField("Genre", String.join(", ", media.genres()),false)
+								.addField("Genre", String.join(", ", media.genres()), false)
 								.image("https://img.anili.st/media/" + media.id())
-								.footer(EmbedCreateFields.Footer.of("%s - %s".formatted(media.startDate(), media.status()), null))
+								.footer(EmbedCreateFields.Footer.of(
+										Arrays.stream(new Object[]{media.startDate(), media.status()})
+												.filter(Objects::nonNull)
+												.map(Object::toString)
+												.collect(Collectors.joining(" - ")),
+										null))
 								.color(media.coverImage()
 										.asDiscord4jColor()
 										.orElseGet(() -> switch (media.format()) {
