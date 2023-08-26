@@ -38,7 +38,7 @@ public class DiscordApplicationCommandRegistrar {
 			long count = Arrays.stream(ReflectionUtils.getAllDeclaredMethods(bean.getClass()))
 					.filter(method -> method.isAnnotationPresent(DiscordApplicationCommandProperties.class))
 					.count();
-			if (count != 1) {
+			if (count > 1) {
 				throw new FatalBeanException("Bean can only have one of %s".formatted(DiscordApplicationCommandProperties.class.getName()));
 			}
  			ReflectionUtils.doWithMethods(bean.getClass(), method -> {

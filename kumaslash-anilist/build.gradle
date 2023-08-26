@@ -22,4 +22,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-graphql"
 
     implementation "org.apache.commons:commons-lang3"
+
+    implementation project(":core-discord4j")
 }

@@ -4,6 +4,7 @@ import discord4j.core.DiscordClient;
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.EventDispatcher;
+import discord4j.gateway.intent.IntentSet;
 import me.ghostbear.core.discord4j.beans.DiscordApplicationCommandRegistrar;
 import me.ghostbear.core.discord4j.beans.DiscordEventHandlerBeanProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -46,10 +47,17 @@ public class DiscordAutoConfiguration {
 	@Bean("gatewayDiscordClient")
 	@DependsOn({"discordClient", "eventDispatcher", "discordEventHandlerBeanProcessor"})
 	@ConditionalOnMissingBean
-	public GatewayDiscordClient gatewayDiscordClient(DiscordClient discordClient, EventDispatcher eventDispatcher) {
+	public GatewayDiscordClient gatewayDiscordClient(DiscordClient discordClient, EventDispatcher eventDispatcher, IntentSet intentSet) {
 		return discordClient.gateway()
 				.setEventDispatcher(eventDispatcher)
+				.setEnabledIntents(intentSet)
 				.login()
 				.block();
+	}
+
+	@Bean("intentSet")
+	@ConditionalOnMissingBean
+	public IntentSet intentSet() {
+		return IntentSet.nonPrivileged();
 	}
 }
