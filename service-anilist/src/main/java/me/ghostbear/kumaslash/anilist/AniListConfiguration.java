@@ -1,12 +1,14 @@
 package me.ghostbear.kumaslash.anilist;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.client.HttpGraphQlClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class KumaSlashAniListConfiguration {
+@ComponentScan
+public class AniListConfiguration {
 
 	@Bean
 	HttpGraphQlClient aniListGraphQlClient() {

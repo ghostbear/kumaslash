@@ -29,7 +29,8 @@ public class DiscordBotConfiguration {
 						Intent.GUILD_MESSAGES,
 						Intent.GUILD_MODERATION,
 						Intent.GUILD_MEMBERS,
-						Intent.AUTO_MODERATION_EXECUTION);
+						Intent.AUTO_MODERATION_EXECUTION,
+						Intent.MESSAGE_CONTENT);
 	}
 
 }

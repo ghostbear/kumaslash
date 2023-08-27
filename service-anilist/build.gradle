@@ -4,18 +4,20 @@ plugins {
     id "java"
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencyManagement {
     imports {
         mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     api "com.discord4j:discord4j-core:3.2.5"
-    api "org.springframework.boot:spring-boot-starter"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    api "org.springframework.boot:spring-boot-starter-webflux"
+    api "org.springframework.boot:spring-boot-starter-graphql"
+    api "org.apache.commons:commons-lang3"
+    api project(":core-discord4j")
 }

@@ -8,5 +8,4 @@ logging:
     web: DEBUG
     discord4j: DEBUG
     me:
-      ghostbear:
-        kumaslash: DEBUG
+      ghostbear: DEBUG
