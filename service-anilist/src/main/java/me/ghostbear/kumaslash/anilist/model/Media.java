@@ -12,7 +12,7 @@ public record Media(
 		Title title,
 		String description,
 		FuzzyDate startDate,
-		String status,
+		MediaStatus status,
 		CoverImage coverImage,
 		List<String> genres,
 		String siteUrl

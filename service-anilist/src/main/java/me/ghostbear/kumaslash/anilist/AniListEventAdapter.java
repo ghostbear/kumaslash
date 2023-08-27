@@ -9,6 +9,7 @@ import discord4j.rest.util.Color;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import me.ghostbear.kumaslash.anilist.model.Media;
+import me.ghostbear.kumaslash.anilist.model.MediaStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.reactivestreams.Publisher;
@@ -53,9 +54,10 @@ public class AniListEventAdapter {
 								.addField("Genre", String.join(", ", media.genres()), false)
 								.image("https://img.anili.st/media/" + media.id())
 								.footer(EmbedCreateFields.Footer.of(
-										Arrays.stream(new Object[]{media.startDate(), media.status()})
+										Arrays.stream(new Object[]{media.startDate(), visualName(media.status())})
 												.filter(Objects::nonNull)
 												.map(Object::toString)
+												.filter(s -> !s.isEmpty())
 												.collect(Collectors.joining(" - ")),
 										null))
 								.color(media.coverImage()
@@ -68,6 +70,16 @@ public class AniListEventAdapter {
 								.url(media.siteUrl())
 								.build())
 						.toArray(EmbedCreateSpec[]::new)));
+	}
+
+	private String visualName(MediaStatus status) {
+ 		return switch (status) {
+			case FINISHED -> "Finished";
+			case RELEASING -> "Releasing";
+			case NOT_YET_RELEASED -> "Not Yet Released";
+			case CANCELLED -> "Cancelled";
+			case HIATUS -> "Hiatus";
+		};
 	}
 
 	private String cleanDescription(String value) {
