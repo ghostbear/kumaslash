@@ -4,8 +4,9 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.rest.util.Image;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
-import org.springframework.stereotype.Component;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
@@ -13,17 +14,17 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
-public class JumboEventHandler implements SlashCommandEventHandler.SlashCommand {
+@DiscordComponent
+public class JumboEventHandler {
 
 	private final Pattern pattern = Pattern.compile("<(a)?:(.*):(.*)>", Pattern.CASE_INSENSITIVE);
 
-	@Override
-	public String getName() {
-		return "jumbo";
+	@DiscordInteractionProperties
+	public String applicationProperties() {
+		return "commands/jumbo.json";
 	}
 
-	@Override
+	@DiscordInteractionHandler(name = "jumbo")
 	public Mono<Void> handle(ChatInputInteractionEvent event) {
 		return Mono.justOrEmpty(event.getOption("emoji")
 						.flatMap(ApplicationCommandInteractionOption::getValue)

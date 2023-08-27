@@ -8,31 +8,30 @@ import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.discordjson.possible.Possible;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.kumaslash.data.guild.GuildRuleRepository;
 import me.ghostbear.kumaslash.util.Tachiyomi;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-@Component
-public class RulesEventHandler implements SlashCommandEventHandler.SlashCommand {
+@DiscordComponent
+public class RulesEventHandler {
 
 	private final GuildRuleRepository ruleRepository;
 
-	@Autowired
 	public RulesEventHandler(GuildRuleRepository ruleRepository) {
 		this.ruleRepository = ruleRepository;
 	}
 
-	@Override
+	@DiscordInteractionProperties
 	public String getName() {
-		return "rules";
+		return "commands/rules.json";
 	}
 
-	@Override
+	@DiscordInteractionHandler(name = "rules")
 	public Mono<Void> handle(ChatInputInteractionEvent event) {
 		Optional<Long> index = event.getOption("index")
 				.flatMap(ApplicationCommandInteractionOption::getValue)

@@ -5,23 +5,20 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.kumaslash.configuration.TachiyomiProperties;
 import me.ghostbear.kumaslash.data.github.Asset;
 import me.ghostbear.kumaslash.data.tachiyomi.TachiyomiFlavourService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
-@Component
-public class DownloadEventHandler implements SlashCommandEventHandler.SlashCommand {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(DownloadEventHandler.class);
+@DiscordComponent
+public class DownloadEventHandler {
 
 	private final List<TachiyomiProperties.Flavour> flavours;
 	private final TachiyomiFlavourService flavourRepository;
@@ -32,13 +29,13 @@ public class DownloadEventHandler implements SlashCommandEventHandler.SlashComma
 		this.flavourRepository = flavourRepository;
 	}
 
-	@Override
-	public String getName() {
-		return "download";
+	@DiscordInteractionProperties
+	public String commandProperties() {
+		return "commands/download.json";
 	}
 
-	@Override
-	public Mono<Void> handle(ChatInputInteractionEvent event) {
+	@DiscordInteractionHandler(name = "download")
+	public Mono<Void> onCommandDownload(ChatInputInteractionEvent event) {
 		var target = event.getOption("flavour")
 				.flatMap(ApplicationCommandInteractionOption::getValue)
 				.map(ApplicationCommandInteractionOptionValue::asString)

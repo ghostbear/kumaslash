@@ -2,7 +2,6 @@ package me.ghostbear.kumaslash.commands;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
-import discord4j.core.event.ReactiveEventAdapter;
 import discord4j.core.event.domain.AuditLogEntryCreateEvent;
 import discord4j.core.event.domain.automod.AutoModActionExecutedEvent;
 import discord4j.core.object.audit.ActionType;
@@ -26,11 +25,12 @@ import discord4j.discordjson.json.UserData;
 import discord4j.discordjson.possible.Possible;
 import discord4j.rest.service.AuditLogService;
 import discord4j.rest.service.ChannelService;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import me.ghostbear.kumaslash.data.guild.GuildLogChannelRepository;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Component
-public class TimeoutEventAdapter extends ReactiveEventAdapter {
+@DiscordComponent
+public class TimeoutEventAdapter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TimeoutEventAdapter.class);
 
@@ -58,10 +58,9 @@ public class TimeoutEventAdapter extends ReactiveEventAdapter {
 		channelService = client.getRestClient()
 				.getChannelService();
 		this.channelRepository = channelRepository;
-		client.on(this).subscribe();
 	}
 
-	@Override
+	@DiscordEventHandler
 	public Publisher<?> onAuditLogEntryCreate(AuditLogEntryCreateEvent event) {
 		AuditLogEntry auditLogEntry = event.getAuditLogEntry();
 		if (!auditLogEntry.getActionType().equals(ActionType.MEMBER_UPDATE)) {
@@ -118,7 +117,7 @@ public class TimeoutEventAdapter extends ReactiveEventAdapter {
 						.flatMap(privateChannel -> createPrivateChannelMessage(event.getGuild().block(), privateChannel, change.getCurrentValue().orElse(Instant.now()),reason))));
 	}
 
-	@Override
+	@DiscordEventHandler
 	public Publisher<?> onAutoModActionExecution(AutoModActionExecutedEvent event) {
 		AutoModRuleAction eventAction = event.getAction();
 		if (!eventAction.getType().equals(AutoModRuleAction.Type.TIMEOUT)) {

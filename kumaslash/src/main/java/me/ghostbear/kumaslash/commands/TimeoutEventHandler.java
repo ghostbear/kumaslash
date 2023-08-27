@@ -3,14 +3,15 @@ package me.ghostbear.kumaslash.commands;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.kumaslash.data.guild.GuildLogChannel;
 import me.ghostbear.kumaslash.data.guild.GuildLogChannelRepository;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Component
-public class TimeoutEventHandler implements SlashCommandEventHandler.SubSlashCommand {
+@DiscordComponent
+public class TimeoutEventHandler {
 
 	private final GuildLogChannelRepository guildLogChannelRepository;
 
@@ -18,20 +19,16 @@ public class TimeoutEventHandler implements SlashCommandEventHandler.SubSlashCom
 		this.guildLogChannelRepository = guildLogChannelRepository;
 	}
 
-	@Override
+	@DiscordInteractionProperties
 	public String getName() {
-		return "timeout";
+		return "commands/timeout.json";
 	}
 
-	@Override
-	public String getSubName() {
-		return "channel";
-	}
-
-	@Override
-	public Mono<Void> handle(ChatInputInteractionEvent event, ApplicationCommandInteractionOption option) {
+	@DiscordInteractionHandler(name = "timeout.channel")
+	public Mono<Void> onSubcommandChannel(ChatInputInteractionEvent event) {
 		return event.deferReply()
-				.then(Mono.defer(() -> option.getOption("channel")
+				.then(Mono.defer(() -> event.getOption("channel")
+						.flatMap(option -> option.getOption("channel"))
 						.flatMap(ApplicationCommandInteractionOption::getValue)
 						.map(ApplicationCommandInteractionOptionValue::asChannel)
 						.orElseThrow()))

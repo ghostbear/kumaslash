@@ -6,17 +6,17 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.rest.util.Color;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.kumaslash.data.tachiyomi.TachiyomiExtensionService;
 import me.ghostbear.kumaslash.util.Tachiyomi;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Component
-public class SourceEventHandler implements SlashCommandEventHandler.SlashCommand {
+@DiscordComponent
+public class SourceEventHandler {
 
 	private final TachiyomiExtensionService tachiyomiExtensionService;
 
@@ -25,14 +25,13 @@ public class SourceEventHandler implements SlashCommandEventHandler.SlashCommand
 		this.tachiyomiExtensionService = tachiyomiExtensionService;
 	}
 
-	@Override
+	@DiscordInteractionProperties
 	public String getName() {
-		return "source";
+		return "commands/source.json";
 	}
 
-	@Override
+	@DiscordInteractionHandler(name = "source")
 	public Mono<Void> handle(ChatInputInteractionEvent event) {
-
 		return event.deferReply()
 				.withEphemeral(true)
 				.then(Mono.defer(() -> Mono.just(

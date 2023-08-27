@@ -1,18 +1,17 @@
 package me.ghostbear.kumaslash.anilist;
 
-import discord4j.core.GatewayDiscordClient;
-import discord4j.core.event.ReactiveEventAdapter;
 import discord4j.core.event.domain.message.MessageCreateEvent;
 import discord4j.core.object.entity.User;
 import discord4j.core.object.entity.channel.TextChannel;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import me.ghostbear.kumaslash.anilist.model.Media;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.reactivestreams.Publisher;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -24,18 +23,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Component
-public class AniListEventAdapter extends ReactiveEventAdapter {
+@DiscordComponent
+public class AniListEventAdapter {
 
 	private final Pattern pattern = Pattern.compile("(?:\\{\\{([\\w\\s\\d-:,!?]+)\\}\\})|(?:<<([\\w\\s\\d-:,!?]+)>>)|(?:\\[\\[([\\w\\s\\d-:,!?]+)\\]\\])");
 	private final AniListService service;
 
-	public AniListEventAdapter(GatewayDiscordClient client, AniListService service) {
+	public AniListEventAdapter(AniListService service) {
 		this.service = service;
-		client.on(this).subscribe();
 	}
 
-	@Override
+	@DiscordEventHandler
 	public Publisher<?> onMessageCreate(MessageCreateEvent event) {
 		if (event.getMessage().getAuthor().map(User::isBot).orElse(true)) {
 			return Mono.empty();

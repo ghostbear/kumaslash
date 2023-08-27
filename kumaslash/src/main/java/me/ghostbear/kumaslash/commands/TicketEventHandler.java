@@ -9,21 +9,22 @@ import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionFollowupCreateMono;
 import discord4j.rest.util.Color;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.kumaslash.configuration.TachiyomiProperties;
 import me.ghostbear.kumaslash.data.github.GitHubWebClient;
 import me.ghostbear.kumaslash.data.github.Issue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Component
-public class TicketEventHandler implements SlashCommandEventHandler.SlashCommand {
+@DiscordComponent
+public class TicketEventHandler {
 
 	private final List<TachiyomiProperties.Flavour> flavours;
 	private final GitHubWebClient gitHubWebClient;
@@ -34,12 +35,12 @@ public class TicketEventHandler implements SlashCommandEventHandler.SlashCommand
 		this.gitHubWebClient = gitHubWebClient;
 	}
 
-	@Override
-	public String getName() {
-		return "ticket";
+	@DiscordInteractionProperties
+	public String commandProperties() {
+		return "commands/ticket.json";
 	}
 
-	@Override
+	@DiscordInteractionHandler(name = "ticket")
 	public Mono<Void> handle(ChatInputInteractionEvent event) {
 		var target = event.getOption("flavour")
 				.flatMap(ApplicationCommandInteractionOption::getValue)

@@ -1,23 +1,21 @@
 package me.ghostbear.kumaslash.commands;
 
 import discord4j.common.util.Snowflake;
-import discord4j.core.event.ReactiveEventAdapter;
 import discord4j.core.event.domain.guild.GuildCreateEvent;
-import discord4j.core.event.domain.guild.GuildDeleteEvent;
-import discord4j.core.event.domain.guild.GuildUpdateEvent;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import me.ghostbear.kumaslash.data.guild.Guild;
 import me.ghostbear.kumaslash.data.guild.GuildRepository;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
-@Component
-public class GuildCreatedEventHandler extends ReactiveEventAdapter {
+@DiscordComponent
+public class GuildCreatedEventHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(GuildCreatedEventHandler.class);
 
@@ -28,10 +26,10 @@ public class GuildCreatedEventHandler extends ReactiveEventAdapter {
 		this.guildRepository = guildRepository;
 	}
 
-	@Override
+	@DiscordEventHandler
 	public Publisher<?> onGuildCreate(GuildCreateEvent event) {
 		Snowflake snowflake = event.getGuild().getId();
-		LOG.info("Guild Update: {}", event);
+		LOG.info("Guild create event: {}", snowflake.asString());
 		return guildRepository.findById(snowflake.asLong())
 				.delayElement(Duration.ofSeconds(0))
 				.switchIfEmpty(Mono.defer(() -> guildRepository.save(new Guild(snowflake, true))))
@@ -39,15 +37,4 @@ public class GuildCreatedEventHandler extends ReactiveEventAdapter {
 				.then();
 	}
 
-	@Override
-	public Publisher<?> onGuildUpdate(GuildUpdateEvent event) {
-		LOG.info("Guild Update: {}", event);
-		return super.onGuildUpdate(event);
-	}
-
-	@Override
-	public Publisher<?> onGuildDelete(GuildDeleteEvent event) {
-		LOG.info("Guild Delete: {}", event);
-		return super.onGuildDelete(event);
-	}
 }
