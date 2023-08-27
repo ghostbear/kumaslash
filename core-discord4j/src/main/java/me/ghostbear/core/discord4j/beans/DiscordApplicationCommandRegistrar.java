@@ -4,12 +4,11 @@ import discord4j.common.JacksonResources;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import jakarta.annotation.PostConstruct;
-import me.ghostbear.core.discord4j.annotations.DiscordApplicationCommandProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -35,14 +34,8 @@ public class DiscordApplicationCommandRegistrar {
 	public Object processBean(Object bean, String beanName) throws BeansException {
 		if (AnnotationUtils.isAnnotationDeclaredLocally(DiscordComponent.class, bean.getClass())) {
 			LOG.debug("Class is annotated with DiscordComponent");
-			long count = Arrays.stream(ReflectionUtils.getAllDeclaredMethods(bean.getClass()))
-					.filter(method -> method.isAnnotationPresent(DiscordApplicationCommandProperties.class))
-					.count();
-			if (count > 1) {
-				throw new FatalBeanException("Bean can only have one of %s".formatted(DiscordApplicationCommandProperties.class.getName()));
-			}
  			ReflectionUtils.doWithMethods(bean.getClass(), method -> {
-				if (method.isAnnotationPresent(DiscordApplicationCommandProperties.class)) {
+				if (method.isAnnotationPresent(DiscordInteractionProperties.class)) {
 					LOG.debug("Method is annotated with DiscordApplicationCommandProperties");
 					try {
 						doDiscordApplicationCommandProperties(method, bean);

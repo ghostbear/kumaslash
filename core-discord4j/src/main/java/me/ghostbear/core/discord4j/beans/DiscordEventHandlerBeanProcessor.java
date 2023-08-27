@@ -87,15 +87,18 @@ public class DiscordEventHandlerBeanProcessor implements BeanPostProcessor {
                     }
                     return Flux.error(new RuntimeException("%s not supported".formatted(e.getClass().getName())));
 				})
+				.doOnCancel(() -> LOG.debug("{} was cancelled", commandName))
 				.subscribe();
 	}
 
 	private Publisher<?> doChatInputInteractionEvent(String[] args, Method method, Object bean, ChatInputInteractionEvent event) {
-		if (EventUtils.isSubCommandGroup(event) && args.length <= 1) {
-			return Flux.error(new RuntimeException("Expected command name to be a subcommand, i.e. \"myCommand.mySubCommand\""));
-		}
 		if (!event.getCommandName().equals(args[0])) {
 			return Flux.empty();
+		}
+		LOG.debug("{}", args[0]);
+		if (EventUtils.isSubCommandGroup(event) && args.length <= 1) {
+			LOG.error("Event is sub command: {}, Command length is {}", EventUtils.isSubCommandGroup(event), args.length);
+			return Flux.error(new RuntimeException("Expected command name to be a subcommand, i.e. \"myCommand.mySubCommand\""));
 		}
 		if (!EventUtils.isSubCommandGroup(event)) {
 			return invokeMethod(method, bean, event);

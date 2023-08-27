@@ -10,7 +10,7 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.*;
 import discord4j.core.object.entity.User;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
-import me.ghostbear.core.discord4j.annotations.DiscordApplicationCommandProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import org.reactivestreams.Publisher;
@@ -27,7 +27,7 @@ public class MyDiscordComponent {
 	private static final Logger LOG = LoggerFactory.getLogger(MyDiscordComponent.class);
 
 
-	@DiscordApplicationCommandProperties
+	@DiscordInteractionProperties
 	public String applicationCommandRaw() {
 		// language=json
 		return """

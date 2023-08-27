@@ -5,15 +5,16 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.kumaslash.data.guild.GuildSocial;
 import me.ghostbear.kumaslash.data.guild.GuildSocialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Component
-public class SocialEventHandler implements SlashCommandEventHandler.SlashCommand {
+@DiscordComponent
+public class SocialEventHandler {
 
 	private final GuildSocialRepository socialRepository;
 
@@ -22,12 +23,12 @@ public class SocialEventHandler implements SlashCommandEventHandler.SlashCommand
 		this.socialRepository = socialRepository;
 	}
 
-	@Override
-	public String getName() {
-		return "social";
+	@DiscordInteractionProperties
+	public String applicationProperties() {
+		return "commands/social.json";
 	}
 
-	@Override
+	@DiscordInteractionHandler(name = "social")
 	public Mono<Void> handle(ChatInputInteractionEvent event) {
 		var targetSnowflake = event.getOption("user")
 				.flatMap(ApplicationCommandInteractionOption::getValue)

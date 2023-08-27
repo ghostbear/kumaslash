@@ -1,10 +1,11 @@
 package me.ghostbear.kumaslash.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import me.ghostbear.kumaslash.commands.core.SlashCommandEventHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordComponent;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -13,8 +14,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
-@Component
-public class VersionEventHandler implements SlashCommandEventHandler.SlashCommand {
+@DiscordComponent
+public class VersionEventHandler {
 
 	private final BuildProperties buildProperties;
 
@@ -23,13 +24,13 @@ public class VersionEventHandler implements SlashCommandEventHandler.SlashComman
 		this.buildProperties = buildProperties;
 	}
 
-	@Override
+	@DiscordInteractionProperties()
 	public String getName() {
-		return "version";
+		return "commands/version.json";
 	}
 
-	@Override
-	public Mono<Void> handle(ChatInputInteractionEvent event) {
+	@DiscordInteractionHandler(name = "version")
+	public Mono<Void> onCommandVersion(ChatInputInteractionEvent event) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM);
 		ZonedDateTime localDateTime = LocalDateTime.ofInstant(buildProperties.getTime(), ZoneOffset.UTC).atZone(ZoneOffset.UTC);
 		String formatted = dateTimeFormatter.format(localDateTime);

@@ -34,4 +34,6 @@ dependencies {
 
     runtimeOnly "org.postgresql:postgresql"
     runtimeOnly "org.postgresql:r2dbc-postgresql"
+
+    implementation project(":core-discord4j")
 }

@@ -3,7 +3,7 @@ package me.ghostbear.discord.bot;
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.UserInteractionEvent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
-import me.ghostbear.core.discord4j.annotations.DiscordApplicationCommandProperties;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import reactor.core.publisher.Mono;
 
@@ -12,7 +12,7 @@ import java.time.Instant;
 @DiscordComponent
 public class MyDiscordUserComponent {
 
-	@DiscordApplicationCommandProperties
+	@DiscordInteractionProperties
 	public String properties() {
 		// language=json
 		return """
