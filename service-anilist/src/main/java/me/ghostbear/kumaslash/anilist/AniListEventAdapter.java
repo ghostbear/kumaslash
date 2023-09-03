@@ -11,27 +11,23 @@ import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import me.ghostbear.kumaslash.anilist.model.Media;
 import me.ghostbear.kumaslash.anilist.model.MediaStatus;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @DiscordComponent
 public class AniListEventAdapter {
 
-	private final Pattern pattern = Pattern.compile("(?:\\{\\{([\\w\\s\\d-:,!?]+)\\}\\})|(?:<<([\\w\\s\\d-:,!?]+)>>)|(?:\\[\\[([\\w\\s\\d-:,!?]+)\\]\\])");
 	private final AniListService service;
+	private final AniListPatternMatcher matcher;
 
-	public AniListEventAdapter(AniListService service) {
+	public AniListEventAdapter(AniListService service, AniListPatternMatcher matcher) {
 		this.service = service;
+		this.matcher = matcher;
 	}
 
 	@DiscordEventHandler
@@ -43,7 +39,7 @@ public class AniListEventAdapter {
 		return event.getMessage().getChannel()
 				.filter(messageChannel -> messageChannel instanceof TextChannel)
 				.map(messageChannel -> (TextChannel) messageChannel)
-				.filter(messageChannel -> pattern.matcher(content).find())
+				.filter(messageChannel -> matcher.contains(content))
 				.flatMap(messageChannel -> messageChannel.type().thenReturn(messageChannel))
 				.zipWhen(messageChannel -> findAndRetrieveMedia(content, messageChannel.isNsfw()).collectList())
 				.filter(messageChannelAndMediaList -> !messageChannelAndMediaList.getT2().isEmpty())
@@ -73,7 +69,7 @@ public class AniListEventAdapter {
 	}
 
 	private String visualName(MediaStatus status) {
- 		return switch (status) {
+		return switch (status) {
 			case FINISHED -> "Finished";
 			case RELEASING -> "Releasing";
 			case NOT_YET_RELEASED -> "Not Yet Released";
@@ -88,25 +84,10 @@ public class AniListEventAdapter {
 	}
 
 	private Flux<Media> findAndRetrieveMedia(String content, boolean isAdult) {
-		return findMediaQueries(content)
+		return matcher.matches(content)
 				.parallel()
-				.flatMap(typeAndSearchQuery -> service.retrieveMedia(typeAndSearchQuery, isAdult))
+				.flatMap(match -> service.retrieveMedia(match.type(), match.query(), isAdult))
 				.sequential();
-	}
-
-	private Flux<ImmutablePair<AniListService.Type, String>> findMediaQueries(String content) {
-		Matcher matcher = pattern.matcher(content);
-		List<ImmutablePair<AniListService.Type, String>> results = new ArrayList<>();
-		while (matcher.find()) {
-			if (Objects.nonNull(matcher.group(1))) {
-				results.add(ImmutablePair.of(AniListService.Type.ANIME, matcher.group(1)));
-			} else if (Objects.nonNull(matcher.group(2))) {
-				results.add(ImmutablePair.of(AniListService.Type.MANGA, matcher.group(2)));
-			} else if (Objects.nonNull(matcher.group(3))) {
-				results.add(ImmutablePair.of(AniListService.Type.LIGHT_NOVEL, matcher.group(3)));
-			}
-		}
-		return Flux.fromIterable(results);
 	}
 
 }

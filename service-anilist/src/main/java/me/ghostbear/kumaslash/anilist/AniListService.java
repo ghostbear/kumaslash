@@ -1,7 +1,6 @@
 package me.ghostbear.kumaslash.anilist;
 
 import me.ghostbear.kumaslash.anilist.model.Media;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.client.GraphQlTransportException;
@@ -23,10 +22,10 @@ public class AniListService {
 		this.graphQlClient = graphQlClient;
 	}
 
-	public Mono<Media> retrieveMedia(ImmutablePair<Type, String> typeAndSearchQuery, boolean isAdult) {
+	public Mono<Media> retrieveMedia(Type type, String query, boolean isAdult) {
 		return graphQlClient.documentName(DOCUMENT_NAME)
-				.operationName(typeAndSearchQuery.getLeft().operationName())
-				.variables(AniListService.Type.buildVariables(typeAndSearchQuery.getRight(), isAdult))
+				.operationName(type.operationName())
+				.variables(AniListService.Type.buildVariables(query, isAdult))
 				.retrieve("Media")
 				.toEntity(Media.class)
 				.doOnError(GraphQlTransportException.class, throwable -> LOG.warn("Failed to retrieve media, 404 Not Found means that AniList can't find a title with the provided search query and can safely be ignored", throwable))

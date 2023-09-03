@@ -15,7 +15,7 @@ public record FuzzyDate(
 
 	@Override
 	public String toString() {
-		return Arrays.stream(new Long[] {year, month, day})
+		return Arrays.stream(new Long[]{year, month, day})
 				.filter(Objects::nonNull)
 				.map(Object::toString)
 				.collect(Collectors.joining("/"));
