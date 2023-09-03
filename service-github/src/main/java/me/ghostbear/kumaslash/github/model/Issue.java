@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.data.github;
+package me.ghostbear.kumaslash.github.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

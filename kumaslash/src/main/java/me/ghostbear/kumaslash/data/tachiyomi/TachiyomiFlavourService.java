@@ -1,7 +1,7 @@
 package me.ghostbear.kumaslash.data.tachiyomi;
 
-import me.ghostbear.kumaslash.data.github.GitHubWebClient;
-import me.ghostbear.kumaslash.data.github.Release;
+import me.ghostbear.kumaslash.github.model.Release;
+import me.ghostbear.kumaslash.github.GitHubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -9,15 +9,15 @@ import reactor.core.publisher.Mono;
 @Service
 public class TachiyomiFlavourService {
 
-	private final GitHubWebClient gitHubWebClient;
+	private final GitHubRepository gitHubRepository;
 
 	@Autowired
-	public TachiyomiFlavourService(GitHubWebClient gitHubWebClient) {
-		this.gitHubWebClient = gitHubWebClient;
+	public TachiyomiFlavourService(GitHubRepository gitHubRepository) {
+		this.gitHubRepository = gitHubRepository;
 	}
 
 	public Mono<Release> getLatestRelease(String owner, String repository) {
-		return gitHubWebClient.getLatestRelease(owner, repository);
+		return gitHubRepository.getLatestRelease(owner, repository);
 	}
 
 }

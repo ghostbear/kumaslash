@@ -9,7 +9,7 @@ import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.kumaslash.configuration.TachiyomiProperties;
-import me.ghostbear.kumaslash.data.github.Asset;
+import me.ghostbear.kumaslash.github.model.Asset;
 import me.ghostbear.kumaslash.data.tachiyomi.TachiyomiFlavourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
