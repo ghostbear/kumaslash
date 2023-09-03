@@ -84,7 +84,7 @@ public class AniListEventAdapter {
 
 	private String cleanDescription(String value) {
 		if (Objects.isNull(value) || value.isEmpty()) return "No description";
-		return StringUtils.abbreviate(value.replaceAll("<br>", ""), 128);
+		return StringUtils.abbreviate(value.replaceAll("<[brBR]{2}>", ""), 128);
 	}
 
 	private Flux<Media> findAndRetrieveMedia(String content, boolean isAdult) {
