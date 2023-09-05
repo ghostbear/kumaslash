@@ -1,4 +1,6 @@
 spring:
+  main:
+    web-application-type: none
   flyway:
     locations: classpath:db/migration
   r2dbc:

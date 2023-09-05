@@ -52,6 +52,12 @@ public class DiscordAutoConfiguration {
 				.setEventDispatcher(eventDispatcher)
 				.setEnabledIntents(intentSet)
 				.login()
+				.doOnNext(gatewayDiscordClient -> {
+					Thread awaitThread = new Thread(() -> gatewayDiscordClient.onDisconnect().block(), "discord");
+					awaitThread.setContextClassLoader(getClass().getClassLoader());
+					awaitThread.setDaemon(false);
+					awaitThread.start();
+				})
 				.block();
 	}
 
