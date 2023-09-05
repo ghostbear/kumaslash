@@ -37,5 +37,5 @@ dependencies {
 
     implementation project(":core-discord4j")
     implementation project(":service-anilist")
-    implementation project(":service-github")
+    implementation project(":service-tachiyomi")
 }
