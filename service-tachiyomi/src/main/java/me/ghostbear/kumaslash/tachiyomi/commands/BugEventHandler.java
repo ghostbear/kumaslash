@@ -7,9 +7,9 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.discordjson.possible.Possible;
-import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.kumaslash.tachiyomi.configuration.TachiyomiProperties;
 import reactor.core.publisher.Mono;
 

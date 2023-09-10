@@ -4,9 +4,9 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.rest.util.Image;
-import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 

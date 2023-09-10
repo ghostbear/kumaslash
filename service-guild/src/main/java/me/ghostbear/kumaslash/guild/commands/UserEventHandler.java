@@ -6,9 +6,9 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.discordjson.possible.Possible;
-import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import reactor.core.publisher.Mono;
 
 @DiscordComponent

@@ -1,9 +1,9 @@
 package me.ghostbear.kumaslash.core.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
+import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import reactor.core.publisher.Mono;

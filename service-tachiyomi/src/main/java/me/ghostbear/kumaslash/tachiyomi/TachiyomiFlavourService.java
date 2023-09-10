@@ -1,7 +1,7 @@
 package me.ghostbear.kumaslash.tachiyomi;
 
-import me.ghostbear.kumaslash.github.model.Release;
 import me.ghostbear.kumaslash.github.GitHubRepository;
+import me.ghostbear.kumaslash.github.model.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

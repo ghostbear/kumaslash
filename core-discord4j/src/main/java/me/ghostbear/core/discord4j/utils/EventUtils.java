@@ -6,7 +6,6 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandOption;
 
 import java.util.Objects;
-import java.util.Optional;
 
 public final class EventUtils {
 

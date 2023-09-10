@@ -10,10 +10,6 @@ dependencyManagement {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     api "com.discord4j:discord4j-core:3.2.5"
     api "org.springframework.boot:spring-boot-starter-webflux"

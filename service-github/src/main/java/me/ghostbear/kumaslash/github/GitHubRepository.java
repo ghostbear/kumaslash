@@ -2,7 +2,6 @@ package me.ghostbear.kumaslash.github;
 
 import me.ghostbear.kumaslash.github.model.Issue;
 import me.ghostbear.kumaslash.github.model.Release;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
