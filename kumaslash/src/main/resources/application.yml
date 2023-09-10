@@ -14,14 +14,6 @@ spring:
       username: postgres
       flyway:
         locations: classpath:guild/db/migration
-    pool:
-      max-size:
-  data:
-    r2dbc:
-      repositories:
-        enabled: false
-  flyway:
-    enabled: false
 tachiyomi:
   flavours:
     - owner: 'tachiyomiorg'
