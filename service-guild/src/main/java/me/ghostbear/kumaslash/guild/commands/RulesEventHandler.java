@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands;
+package me.ghostbear.kumaslash.guild.commands;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
@@ -8,11 +8,11 @@ import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.discordjson.possible.Possible;
+import discord4j.rest.util.Color;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
-import me.ghostbear.kumaslash.data.guild.GuildRuleRepository;
-import me.ghostbear.kumaslash.tachiyomi.util.TachiyomiHelper;
+import me.ghostbear.kumaslash.guild.GuildRuleRepository;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -49,7 +49,7 @@ public class RulesEventHandler {
 					.flatMap(ruleAndMention -> event.createFollowup()
 							.withContent(ruleAndMention.getT2())
 							.withEmbeds(EmbedCreateSpec.builder()
-									.color(TachiyomiHelper.color())
+									.color(Color.BISMARK)
 									.title("Server Rule")
 									.description("%s. **%s** %s".formatted(ruleAndMention.getT1().index(), ruleAndMention.getT1().title(), ruleAndMention.getT1().description()))
 									.footer(EmbedCreateFields.Footer.of("Full list of rules can be found in #rules or by using /rules.", null))
@@ -72,7 +72,7 @@ public class RulesEventHandler {
 					.flatMap(rulesAndMention -> event.createFollowup()
 							.withContent(rulesAndMention.getT2())
 							.withEmbeds(EmbedCreateSpec.builder()
-									.color(TachiyomiHelper.color())
+									.color(Color.BISMARK)
 									.title("Server Rules")
 									.description(rulesAndMention.getT1().trim())
 									.build()))

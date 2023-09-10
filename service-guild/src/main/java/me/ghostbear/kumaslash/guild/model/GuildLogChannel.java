@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.data.guild;
+package me.ghostbear.kumaslash.guild.model;
 
 import discord4j.common.util.Snowflake;
 import org.springframework.data.relational.core.mapping.Column;

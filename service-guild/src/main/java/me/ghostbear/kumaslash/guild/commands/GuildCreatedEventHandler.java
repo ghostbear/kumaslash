@@ -1,11 +1,11 @@
-package me.ghostbear.kumaslash.commands;
+package me.ghostbear.kumaslash.guild.commands;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.guild.GuildCreateEvent;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
-import me.ghostbear.kumaslash.data.guild.Guild;
-import me.ghostbear.kumaslash.data.guild.GuildRepository;
+import me.ghostbear.kumaslash.guild.GuildRepository;
+import me.ghostbear.kumaslash.guild.model.Guild;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

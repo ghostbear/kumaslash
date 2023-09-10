@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands;
+package me.ghostbear.kumaslash.guild.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
@@ -6,8 +6,8 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
-import me.ghostbear.kumaslash.data.guild.GuildLogChannel;
-import me.ghostbear.kumaslash.data.guild.GuildLogChannelRepository;
+import me.ghostbear.kumaslash.guild.GuildLogChannelRepository;
+import me.ghostbear.kumaslash.guild.model.GuildLogChannel;
 import reactor.core.publisher.Mono;
 
 @DiscordComponent

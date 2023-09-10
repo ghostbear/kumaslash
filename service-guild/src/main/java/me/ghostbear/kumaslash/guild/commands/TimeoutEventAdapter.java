@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands;
+package me.ghostbear.kumaslash.guild.commands;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -27,7 +27,7 @@ import discord4j.rest.service.AuditLogService;
 import discord4j.rest.service.ChannelService;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
-import me.ghostbear.kumaslash.data.guild.GuildLogChannelRepository;
+import me.ghostbear.kumaslash.guild.GuildLogChannelRepository;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

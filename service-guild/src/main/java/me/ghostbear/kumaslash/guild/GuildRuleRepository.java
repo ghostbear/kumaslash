@@ -1,5 +1,6 @@
-package me.ghostbear.kumaslash.data.guild;
+package me.ghostbear.kumaslash.guild;
 
+import me.ghostbear.kumaslash.guild.model.GuildRule;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

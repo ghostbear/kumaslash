@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands;
+package me.ghostbear.kumaslash.core.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;

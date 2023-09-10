@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands;
+package me.ghostbear.kumaslash.guild.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;

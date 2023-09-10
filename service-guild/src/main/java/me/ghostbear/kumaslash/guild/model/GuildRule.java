@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.data.guild;
+package me.ghostbear.kumaslash.guild.model;
 
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;

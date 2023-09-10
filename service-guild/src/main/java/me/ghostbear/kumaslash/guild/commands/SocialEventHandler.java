@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.commands;
+package me.ghostbear.kumaslash.guild.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
@@ -8,8 +8,8 @@ import discord4j.rest.util.Color;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
-import me.ghostbear.kumaslash.data.guild.GuildSocial;
-import me.ghostbear.kumaslash.data.guild.GuildSocialRepository;
+import me.ghostbear.kumaslash.guild.GuildSocialRepository;
+import me.ghostbear.kumaslash.guild.model.GuildSocial;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
