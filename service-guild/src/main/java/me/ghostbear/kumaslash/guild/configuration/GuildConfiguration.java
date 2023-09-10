@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.tachiyomi.configuration;
+package me.ghostbear.kumaslash.guild.configuration;
 
 import io.r2dbc.pool.ConnectionPool;
 import io.r2dbc.pool.ConnectionPoolConfiguration;
@@ -8,19 +8,19 @@ import io.r2dbc.spi.ConnectionFactoryOptions;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.flyway.*;
+import org.springframework.boot.autoconfigure.flyway.FlywayConnectionDetails;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
+import org.springframework.boot.autoconfigure.flyway.FlywayProperties;
 import org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryOptionsBuilderCustomizer;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcConnectionDetails;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.r2dbc.core.DefaultReactiveDataAccessStrategy;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
@@ -30,25 +30,24 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.core.DatabaseClient;
 
 @Configuration
-@EnableConfigurationProperties(TachiyomiProperties.class)
-@EnableR2dbcRepositories(entityOperationsRef = "tachiyomiEntityTemplate", basePackages = "me.ghostbear.kumaslash.tachiyomi")
-public class TachiyomiConfiguration {
+@EnableR2dbcRepositories(entityOperationsRef = "guildEntityTemplate", basePackages = "me.ghostbear.kumaslash.guild")
+public class GuildConfiguration {
 
-	@Bean(name = "tachiyomiR2dbcProperties")
-	@ConfigurationProperties("spring.r2dbc.tachiyomi")
-	public R2dbcProperties tachiyomiR2dbcProperties() {
+	@Bean(name = "guildR2dbcProperties")
+	@ConfigurationProperties("spring.r2dbc.guild")
+	public R2dbcProperties guildR2dbcProperties() {
 		return new R2dbcProperties();
 	}
 
-	@Bean(name = "tachiyomiFlywayProperties")
-	@ConfigurationProperties("spring.r2dbc.tachiyomi.flyway")
-	public FlywayProperties tachiyomiFlywayProperties() {
+	@Bean(name = "guildFlywayProperties")
+	@ConfigurationProperties("spring.r2dbc.guild.flyway")
+	public FlywayProperties guildFlywayProperties() {
 		return new FlywayProperties();
 	}
 
-	@Bean(name = "tachiyomiFlywayConnectionDetails")
+	@Bean(name = "guildFlywayConnectionDetails")
 	@ConditionalOnMissingBean(FlywayConnectionDetails.class)
-	FlywayConnectionDetails tachiyomiFlywayConnectionDetails(@Qualifier("tachiyomiFlywayProperties") FlywayProperties properties) {
+	FlywayConnectionDetails guildFlywayConnectionDetails(@Qualifier("guildFlywayProperties") FlywayProperties properties) {
 		return new FlywayConnectionDetails() {
 
 			@Override
@@ -73,19 +72,20 @@ public class TachiyomiConfiguration {
 		};
 	}
 
-	@Bean(name = "tachiyomiFlywayInitializer")
+	@Bean(name = "guildFlywayInitializer")
 	@ConditionalOnMissingBean
-	public FlywayMigrationInitializer tachiyomiFlywayInitializer(
-			@Qualifier("tachiyomiFlyway") Flyway flyway,
+	public FlywayMigrationInitializer guildFlywayInitializer(
+			@Qualifier("guildFlyway") Flyway flyway,
 			ObjectProvider<FlywayMigrationStrategy> migrationStrategy
 	) {
 		return new FlywayMigrationInitializer(flyway, migrationStrategy.getIfAvailable());
 	}
 
-	@Bean(name = "tachiyomiFlyway", initMethod = "migrate")
-	public Flyway tachiyomiFlyway(
-			@Qualifier("tachiyomiFlywayProperties") FlywayProperties flywayProperties,
-			@Qualifier("tachiyomiR2dbcProperties") R2dbcProperties r2dbcProperties
+	@Bean(name = "guildFlyway", initMethod = "migrate")
+	@Qualifier("guildFlyway")
+	public Flyway guildFlyway(
+			@Qualifier("guildFlywayProperties") FlywayProperties flywayProperties,
+			@Qualifier("guildR2dbcProperties") R2dbcProperties r2dbcProperties
 	) {
 		return Flyway.configure()
 				.dataSource(r2dbcProperties.getUrl().replace("r2dbc", "jdbc"), r2dbcProperties.getUsername(), r2dbcProperties.getPassword())
@@ -96,7 +96,7 @@ public class TachiyomiConfiguration {
 	}
 
 
-	public ConnectionFactory createConnectionFactory(R2dbcProperties r2dbcProperties) {
+	public ConnectionFactory createConnectionFactory( R2dbcProperties r2dbcProperties) {
 		ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(r2dbcProperties.getUrl());
 		ConnectionFactoryOptions.Builder builder = ConnectionFactoryOptions.builder().from(options);
 		builder.option(ConnectionFactoryOptions.USER, r2dbcProperties.getUsername());
@@ -104,9 +104,9 @@ public class TachiyomiConfiguration {
 		return ConnectionFactories.get(builder.build());
 	}
 
-	@DependsOn("tachiyomiFlyway")
-	@Bean(name = "tachiyomiR2dbcConnectionFactory",destroyMethod = "dispose")
-	ConnectionPool connectionFactory(@Qualifier("tachiyomiR2dbcProperties") R2dbcProperties properties) {
+	@DependsOn("guildFlyway")
+	@Bean(name = "guildConnectionFactory")
+	ConnectionPool connectionFactory(@Qualifier("guildR2dbcProperties") R2dbcProperties properties) {
 		ConnectionFactory connectionFactory = createConnectionFactory(properties);
 		R2dbcProperties.Pool pool = properties.getPool();
 		PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
@@ -124,8 +124,8 @@ public class TachiyomiConfiguration {
 		return new ConnectionPool(builder.build());
 	}
 
-	@Bean(name = "tachiyomiEntityTemplate")
-	public R2dbcEntityOperations tachiyomiEntityTemplate(@Qualifier("tachiyomiR2dbcConnectionFactory") ConnectionFactory connectionFactory) {
+	@Bean(name = "guildEntityTemplate")
+	public R2dbcEntityOperations guildEntityTemplate(@Qualifier("guildConnectionFactory") ConnectionFactory connectionFactory) {
 		DefaultReactiveDataAccessStrategy strategy = new DefaultReactiveDataAccessStrategy(PostgresDialect.INSTANCE);
 		DatabaseClient databaseClient = DatabaseClient.builder()
 				.connectionFactory(connectionFactory)

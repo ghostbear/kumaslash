@@ -1,12 +1,27 @@
 spring:
   main:
     web-application-type: none
-  flyway:
-    locations: classpath:db/migration
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/postgres
-    password: postgres
-    username: postgres
+    tachiyomi:
+      url: r2dbc:postgresql://localhost:5433/tachiyomi
+      password: postgres
+      username: postgres
+      flyway:
+        locations: classpath:tachiyomi/db/migration
+    guild:
+      url: r2dbc:postgresql://localhost:5432/guild
+      password: postgres
+      username: postgres
+      flyway:
+        locations: classpath:guild/db/migration
+    pool:
+      max-size:
+  data:
+    r2dbc:
+      repositories:
+        enabled: false
+  flyway:
+    enabled: false
 tachiyomi:
   flavours:
     - owner: 'tachiyomiorg'

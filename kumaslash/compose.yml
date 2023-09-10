@@ -1,13 +1,23 @@
 # This YAML file is for spring-boot-docker-compose
 services:
-  postgres:
+  postgres-guild:
     image: postgres:15-alpine
     environment:
+      POSTGRES_DB: guild
       POSTGRES_PASSWORD: postgres
     ports:
       - 5432:5432
     labels:
-      org.springframework.boot.service-connection: postgres
+      org.springframework.boot.service-connection: postgres-guild
+  postgres-tachiyomi:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: tachiyomi
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5433:5432
+    labels:
+      org.springframework.boot.service-connection: postgres-tachiyomi
   adminer:
     image: adminer
     ports:

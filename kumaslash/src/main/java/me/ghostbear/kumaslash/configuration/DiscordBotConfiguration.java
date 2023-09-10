@@ -13,7 +13,7 @@ import org.springframework.context.annotation.DependsOn;
 public class DiscordBotConfiguration {
 
 	@Bean("gatewayDiscordClient")
-	@DependsOn({"discordClient", "eventDispatcher", "discordEventHandlerBeanProcessor", "flyway"})
+	@DependsOn({"discordClient", "eventDispatcher", "discordEventHandlerBeanProcessor"})
 	public GatewayDiscordClient gatewayDiscordClient(DiscordClient discordClient, EventDispatcher eventDispatcher, IntentSet intentSet) {
 		return discordClient.gateway()
 				.setEventDispatcher(eventDispatcher)
