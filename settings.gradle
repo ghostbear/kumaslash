@@ -1,7 +1,20 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 rootProject.name = "kumaslash"
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+    }
+}
 
 include "core-discord4j"
 include "service-anilist"
+include "service-core"
+include "service-github"
+include "service-guild"
+include "service-tachiyomi"
 include "kumaslash"
 include "kumaslash-anilist"
 include "samples:discord-bot"

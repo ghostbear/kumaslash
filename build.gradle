@@ -16,10 +16,6 @@ allprojects {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
 
 }

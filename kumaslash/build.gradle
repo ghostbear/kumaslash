@@ -15,10 +15,6 @@ if (Objects.nonNull(System.getenv("DOCKER_PIPELINE")) && System.getenv("DOCKER_P
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     developmentOnly "org.springframework.boot:spring-boot-docker-compose"
@@ -37,4 +33,7 @@ dependencies {
 
     implementation project(":core-discord4j")
     implementation project(":service-anilist")
+    implementation project(":service-core")
+    implementation project(":service-guild")
+    implementation project(":service-tachiyomi")
 }
