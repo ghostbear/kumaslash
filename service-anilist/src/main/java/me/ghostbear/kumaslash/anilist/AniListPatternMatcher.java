@@ -44,8 +44,13 @@ public class AniListPatternMatcher {
 		return (m, sink) -> {
 			boolean found = m.find();
 			if (!found) sink.complete();
-			sink.next(m.group());
-			return m;
+			try {
+				sink.next(m.group());
+				return m;
+			} catch (IllegalStateException e) {
+				sink.error(e);
+				return m;
+			}
 		};
 	}
 

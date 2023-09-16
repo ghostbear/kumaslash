@@ -8,7 +8,7 @@ allprojects {
     apply plugin: "java-library"
 
     group = "me.ghostbear"
-    version = "2023.07.3"
+    version = "2023.07.4"
 
     java {
         sourceCompatibility = JavaVersion.VERSION_20.toString()
