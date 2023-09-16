@@ -14,15 +14,18 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
   build:
     runs-on: ubuntu-latest
-    name: Build Java Application
+    strategy:
+      matrix:
+        java: [ '20', '21-ea' ]
+    name: Build Application with Java ${{ matrix.Java }}
     steps:
       - name: Clone Repository
         uses: actions/checkout@v3
-      - name: Setup Java 20
+      - name: Setup Java ${{ matrix.Java }}
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '20'
+          java-version: ${{ matrix.Java }}
           cache: 'gradle'
       - name: Build With Gradle
         run: ./gradlew build --no-daemon
