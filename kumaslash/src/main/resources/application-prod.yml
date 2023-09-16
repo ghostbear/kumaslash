@@ -1,0 +1,2 @@
+sentry:
+  environment: production

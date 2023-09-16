@@ -10,6 +10,7 @@ dependencyResolutionManagement {
 }
 
 include "core-discord4j"
+include "core-sentry"
 include "service-anilist"
 include "service-core"
 include "service-github"

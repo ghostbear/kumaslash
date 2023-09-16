@@ -1,3 +1,5 @@
 spring:
+  profiles:
+    include: sentry
   main:
     web-application-type: none

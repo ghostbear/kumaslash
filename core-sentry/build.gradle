@@ -1,0 +1,20 @@
+plugins {
+    id "org.springframework.boot" apply false
+    id "io.spring.dependency-management"
+    id "java"
+}
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+processResources {
+    include("**/application*.yml")
+    expand(project.properties)
+}
+
+dependencies {
+    api 'io.sentry:sentry-spring-boot-starter-jakarta:6.29.0'
+    api 'io.sentry:sentry-logback:6.29.0'
+}

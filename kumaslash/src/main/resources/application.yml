@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: sentry
   main:
     web-application-type: none
   r2dbc:

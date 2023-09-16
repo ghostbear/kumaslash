@@ -13,5 +13,6 @@ dependencies {
 
     implementation "ch.qos.logback:logback-classic:1.4.11"
 
+    implementation project(":core-sentry")
     implementation project(":service-anilist")
 }

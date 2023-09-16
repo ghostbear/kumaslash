@@ -28,7 +28,7 @@ public class AniListService {
 				.variables(AniListService.Type.buildVariables(query, isAdult))
 				.retrieve("Media")
 				.toEntity(Media.class)
-				.doOnError(GraphQlTransportException.class, throwable -> LOG.warn("Failed to retrieve media, 404 Not Found means that AniList can't find a title with the provided search query and can safely be ignored", throwable))
+				.doOnError(GraphQlTransportException.class, throwable -> LOG.error("Failed to retrieve media, 404 Not Found means that AniList can't find a title with the provided search query and can safely be ignored", throwable))
 				.onErrorComplete();
 	}
 

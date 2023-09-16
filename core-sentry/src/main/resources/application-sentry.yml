@@ -1,0 +1,3 @@
+sentry:
+  dsn: ${SENTRY_DNS}
+  traces-sample-rate: 1.0

@@ -9,3 +9,6 @@ logging:
     discord4j: DEBUG
     me:
       ghostbear: DEBUG
+sentry:
+  environment: development
+  debug: true
