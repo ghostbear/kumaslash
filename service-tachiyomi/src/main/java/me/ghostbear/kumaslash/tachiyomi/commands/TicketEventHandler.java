@@ -12,11 +12,10 @@ import discord4j.rest.util.Color;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
-import me.ghostbear.kumaslash.github.GitHubRepository;
+import me.ghostbear.kumaslash.github.GitHubService;
 import me.ghostbear.kumaslash.github.model.Issue;
 import me.ghostbear.kumaslash.tachiyomi.configuration.TachiyomiProperties;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -27,12 +26,11 @@ import java.util.UUID;
 public class TicketEventHandler {
 
 	private final List<TachiyomiProperties.Flavour> flavours;
-	private final GitHubRepository gitHubRepository;
+	private final GitHubService gitHubService;
 
-	@Autowired
-	public TicketEventHandler(TachiyomiProperties tachiyomiProperties, GitHubRepository gitHubRepository) {
+	public TicketEventHandler(TachiyomiProperties tachiyomiProperties, GitHubService gitHubService) {
 		this.flavours = tachiyomiProperties.getFlavours();
-		this.gitHubRepository = gitHubRepository;
+		this.gitHubService = gitHubService;
 	}
 
 	@DiscordInteractionProperties
@@ -68,7 +66,7 @@ public class TicketEventHandler {
 				.map(ApplicationCommandInteractionOptionValue::asLong)
 				.orElseThrow();
 		return event.deferReply()
-				.then(gitHubRepository.getIssue(flavour.getOwner(), flavour.getRepository(), String.valueOf(issueNumber)))
+				.then(gitHubService.getIssue(flavour.getOwner(), flavour.getRepository(), String.valueOf(issueNumber)))
 				.flatMap(issue -> createFollowup(event, issue, flavour))
 				.then();
 	}
