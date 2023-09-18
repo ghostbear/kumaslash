@@ -5,10 +5,12 @@ import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
+import discord4j.core.object.entity.Message;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import me.ghostbear.kumaslash.github.model.Asset;
+import me.ghostbear.kumaslash.github.model.Release;
 import me.ghostbear.kumaslash.tachiyomi.TachiyomiFlavourService;
 import me.ghostbear.kumaslash.tachiyomi.configuration.TachiyomiProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ public class DownloadEventHandler {
 	}
 
 	@DiscordInteractionHandler(name = "download")
-	public Mono<Void> onCommandDownload(ChatInputInteractionEvent event) {
+	public Mono<?> onCommandDownload(ChatInputInteractionEvent event) {
 		var target = event.getOption("flavour")
 				.flatMap(ApplicationCommandInteractionOption::getValue)
 				.map(ApplicationCommandInteractionOptionValue::asString)
@@ -44,21 +46,24 @@ public class DownloadEventHandler {
 				.filter(f -> f.getRepository().equals(target))
 				.findFirst()
 				.orElseThrow();
-		Pattern pattern = Pattern.compile(flavour.getPattern());
 		return event.deferReply()
 				.then(flavourRepository.getLatestRelease(flavour.getOwner(), flavour.getRepository()))
-				.flatMap(release -> event.createFollowup()
-						.withContent("# %s (%s)".formatted(flavour.getName(), release.tagName()))
-						.withComponents(ActionRow.of(
-								Button.link(
-										release.assets().stream()
-												.filter(asset -> pattern.matcher(asset.name()).matches())
-												.findFirst()
-												.map(Asset::browserDownloadUrl)
-												.orElseThrow(),
-										"Download"),
-								Button.link(release.htmlUrl(), "Changelog")
-						)))
-				.then();
+				.flatMap(release -> releaseReply(event, flavour, release));
 	}
+
+	Mono<Message> releaseReply(ChatInputInteractionEvent event, TachiyomiProperties.Flavour flavour, Release release) {
+		Pattern pattern = Pattern.compile(flavour.getPattern());
+		return event.createFollowup()
+				.withContent("# %s (%s)".formatted(flavour.getName(), release.tagName()))
+				.withComponents(ActionRow.of(
+						Button.link(
+								release.assets().stream()
+										.filter(asset -> pattern.matcher(asset.name()).matches())
+										.findFirst()
+										.map(Asset::browserDownloadUrl)
+										.orElseThrow(),
+								"Download"),
+						Button.link(release.htmlUrl(), "Changelog")));
+	}
+
 }
