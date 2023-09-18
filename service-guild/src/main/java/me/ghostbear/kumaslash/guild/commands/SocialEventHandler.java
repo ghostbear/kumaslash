@@ -3,6 +3,8 @@ package me.ghostbear.kumaslash.guild.commands;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.entity.Member;
+import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
@@ -12,10 +14,10 @@ import me.ghostbear.kumaslash.guild.GuildSocialRepository;
 import me.ghostbear.kumaslash.guild.model.GuildSocial;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuples;
 
 @DiscordComponent
 public class SocialEventHandler {
-
 	private final GuildSocialRepository socialRepository;
 
 	@Autowired
@@ -29,38 +31,43 @@ public class SocialEventHandler {
 	}
 
 	@DiscordInteractionHandler(name = "social")
-	public Mono<Void> handle(ChatInputInteractionEvent event) {
-		var targetSnowflake = event.getOption("user")
+	public Mono<?> handle(ChatInputInteractionEvent event) {
+		var interaction = event.getInteraction();
+		var interactor = interaction.getUser();
+		var guildId = interaction.getGuildId().orElseThrow();
+		var targetUser = event.getOption("user")
 				.flatMap(ApplicationCommandInteractionOption::getValue)
-				.map(ApplicationCommandInteractionOptionValue::asSnowflake)
+				.map(ApplicationCommandInteractionOptionValue::asUser)
 				.orElseThrow();
-		var interactorSnowflake = event.getInteraction().getUser().getId();
-		if (targetSnowflake.equals(interactorSnowflake)) {
-			return event.reply()
-					.withEphemeral(true)
-					.withContent("You need to mention someone other than yourself to do this!")
-					.then();
-		}
+		var action = event.getOption("action")
+				.flatMap(ApplicationCommandInteractionOption::getValue)
+				.map(ApplicationCommandInteractionOptionValue::asString)
+				.orElseThrow();
 
+		return targetUser.filter(user -> !user.getId().equals(interactor.getId()))
+				.flatMap(user -> event.deferReply().thenReturn(user))
+				.flatMap(user -> user.asMember(guildId))
+				.zipWith(Mono.defer(() -> interactor.asMember(guildId)))
+				.zipWith(
+						Mono.defer(() -> socialRepository.findByGuildSnowflakeAndAction(guildId.asLong(), GuildSocial.Action.valueOf(action))),
+						(tuple, social) -> Tuples.of(tuple.getT2(), tuple.getT1(), social))
+				.flatMap(tuple -> successReply(event, tuple.getT1(), tuple.getT2(), tuple.getT3()))
+				.switchIfEmpty(Mono.defer(() -> targetSelfReply(event)));
+	}
+
+	Mono<Message> successReply(ChatInputInteractionEvent event, Member interactor, Member target, GuildSocial social) {
+		return event.createFollowup()
+				.withEmbeds(EmbedCreateSpec.builder()
+						.color(Color.PINK)
+						.description(interactor.getDisplayName() + " " + social.action().name().toLowerCase() + " " + target.getDisplayName())
+						.image(social.imageUrl())
+						.build());
+	}
+
+	Mono<Message> targetSelfReply(ChatInputInteractionEvent event) {
 		return event.deferReply()
-				.then(Mono.defer(() -> event.getOption("user")
-						.flatMap(ApplicationCommandInteractionOption::getValue)
-						.map(ApplicationCommandInteractionOptionValue::asUser)
-						.orElseThrow()
-						.flatMap(user -> user.asMember(event.getInteraction().getGuildId().orElseThrow()))))
-				.zipWith(Mono.defer(() -> event.getInteraction().getUser().asMember(event.getInteraction().getGuildId().orElseThrow())))
-				.zipWith(Mono.defer(() -> Mono.just(
-								event.getOption("action")
-										.flatMap(ApplicationCommandInteractionOption::getValue)
-										.map(ApplicationCommandInteractionOptionValue::asString)
-										.orElseThrow())
-						.flatMap(action -> socialRepository.findByGuildSnowflakeAndAction(event.getInteraction().getGuildId().orElseThrow().asLong(), GuildSocial.Action.valueOf(action)))))
-				.flatMap(value -> event.createFollowup()
-						.withEmbeds(EmbedCreateSpec.builder()
-								.color(Color.PINK)
-								.description(value.getT1().getT2().getDisplayName() + " " + value.getT2().action().name().toLowerCase() + " " + value.getT1().getT1().getDisplayName())
-								.image(value.getT2().imageUrl())
-								.build()))
-				.then();
+				.withEphemeral(true)
+				.then(event.createFollowup()
+						.withContent("You need to mention someone other than yourself to do this!"));
 	}
 }

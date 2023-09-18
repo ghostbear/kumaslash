@@ -11,4 +11,3 @@ logging:
       ghostbear: DEBUG
 sentry:
   environment: development
-  debug: true
