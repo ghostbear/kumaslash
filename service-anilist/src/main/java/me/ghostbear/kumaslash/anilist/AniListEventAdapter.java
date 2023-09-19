@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @DiscordComponent
@@ -58,10 +59,14 @@ public class AniListEventAdapter {
 										null))
 								.color(media.coverImage()
 										.asDiscord4jColor()
-										.orElseGet(() -> switch (media.format()) {
-											case MANGA -> Color.JAZZBERRY_JAM;
-											case NOVEL -> Color.MOON_YELLOW;
-											default -> Color.ENDEAVOUR;
+										.orElseGet(() -> {
+											Media.Format format = media.format();
+											if (Objects.isNull(format)) return Color.ENDEAVOUR;
+											return switch (format) {
+												case MANGA -> Color.JAZZBERRY_JAM;
+												case NOVEL -> Color.MOON_YELLOW;
+												default -> Color.ENDEAVOUR;
+											};
 										}))
 								.url(media.siteUrl())
 								.build())
