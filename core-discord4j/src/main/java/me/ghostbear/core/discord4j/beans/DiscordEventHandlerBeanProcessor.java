@@ -72,6 +72,7 @@ public class DiscordEventHandlerBeanProcessor implements BeanPostProcessor {
                     }
                     return invokeMethod(method, bean, e);
                 })
+				.onErrorContinue((throwable, object) -> LOG.error("Component Interaction Event Handler failed spectacularly", throwable))
 				.subscribe();
 	}
 
@@ -88,6 +89,7 @@ public class DiscordEventHandlerBeanProcessor implements BeanPostProcessor {
                     return Flux.error(new RuntimeException("%s not supported".formatted(e.getClass().getName())));
 				})
 				.doOnCancel(() -> LOG.debug("{} was cancelled", commandName))
+				.onErrorContinue((throwable, object) -> LOG.error("Application Command Event Handler failed spectacularly", throwable))
 				.subscribe();
 	}
 
@@ -118,7 +120,14 @@ public class DiscordEventHandlerBeanProcessor implements BeanPostProcessor {
 
 	private void doEvent(Method method, Object bean, Class<? extends Event> clazz) {
 		eventDispatcher.on(clazz)
-				.flatMap(e -> invokeMethod(method, bean, e))
+				.flatMap(e -> {
+					try {
+						return invokeMethod(method, bean, e);
+					} catch (Exception exception) {
+						return Mono.error(exception);
+					}
+				})
+				.onErrorContinue((throwable, object) -> LOG.error("Event Handler failed spectacularly", throwable))
 				.subscribe();
 	}
 
