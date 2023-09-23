@@ -11,8 +11,11 @@ allprojects {
     version = "2023.07.6"
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_20.toString()
-        targetCompatibility = JavaVersion.VERSION_20.toString()
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+            vendor = JvmVendorSpec.AZUL
+            implementation = JvmImplementation.VENDOR_SPECIFIC
+        }
     }
 }
 
