@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @DiscordComponent
@@ -59,22 +58,24 @@ public class AniListEventAdapter {
 										null))
 								.color(media.coverImage()
 										.asDiscord4jColor()
-										.orElseGet(() -> {
-											Media.Format format = media.format();
-											if (Objects.isNull(format)) return Color.ENDEAVOUR;
-											return switch (format) {
-												case MANGA -> Color.JAZZBERRY_JAM;
-												case NOVEL -> Color.MOON_YELLOW;
-												default -> Color.ENDEAVOUR;
-											};
-										}))
+										.orElseGet(() -> getDefaultColor(media)))
 								.url(media.siteUrl())
 								.build())
 						.toArray(EmbedCreateSpec[]::new)));
 	}
 
+	private static Color getDefaultColor(Media media) {
+		return switch (media.format()) {
+			case null -> Color.GRAY;
+			case MANGA -> Color.JAZZBERRY_JAM;
+			case NOVEL -> Color.MOON_YELLOW;
+			default -> Color.ENDEAVOUR;
+		};
+	}
+
 	private String visualName(MediaStatus status) {
 		return switch (status) {
+			case null -> "";
 			case FINISHED -> "Finished";
 			case RELEASING -> "Releasing";
 			case NOT_YET_RELEASED -> "Not Yet Released";
