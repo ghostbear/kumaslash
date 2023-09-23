@@ -11,6 +11,7 @@ dependencyManagement {
 }
 
 dependencies {
+    compileOnly 'org.jetbrains:annotations:24.0.0'
     api "com.discord4j:discord4j-core:3.2.5"
     api "org.springframework.boot:spring-boot-starter-webflux"
     api "org.springframework.boot:spring-boot-starter-graphql"
