@@ -1,7 +1,7 @@
 plugins {
     id "java"
-    id "org.springframework.boot" apply false
-    id "io.spring.dependency-management"
+    alias libs.plugins.spring.boot apply false
+    alias libs.plugins.spring.dependency.management
 }
 
 dependencyManagement {
@@ -11,7 +11,7 @@ dependencyManagement {
 }
 
 dependencies {
-    api "org.springframework.boot:spring-boot-starter-webflux"
+    api libs.spring.boot.starter.webflux
 
     api project(":core-discord4j")
 }

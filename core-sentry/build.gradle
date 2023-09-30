@@ -1,7 +1,7 @@
 plugins {
-    id "org.springframework.boot" apply false
-    id "io.spring.dependency-management"
     id "java"
+    alias libs.plugins.spring.boot apply false
+    alias libs.plugins.spring.dependency.management
 }
 dependencyManagement {
     imports {
@@ -15,6 +15,6 @@ processResources {
 }
 
 dependencies {
-    api 'io.sentry:sentry-spring-boot-starter-jakarta:6.29.0'
-    api 'io.sentry:sentry-logback:6.29.0'
+    api libs.sentry.boot.starter
+    api libs.sentry.logback
 }

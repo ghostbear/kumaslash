@@ -1,7 +1,7 @@
 plugins {
-    id "org.springframework.boot" apply false
-    id "io.spring.dependency-management"
     id "java"
+    alias libs.plugins.spring.boot apply false
+    alias libs.plugins.spring.dependency.management
 }
 
 dependencyManagement {
@@ -11,10 +11,12 @@ dependencyManagement {
 }
 
 dependencies {
-    compileOnly 'org.jetbrains:annotations:24.0.0'
-    api "com.discord4j:discord4j-core:3.2.5"
-    api "org.springframework.boot:spring-boot-starter-webflux"
-    api "org.springframework.boot:spring-boot-starter-graphql"
-    api "org.apache.commons:commons-lang3"
+    compileOnly libs.annotations
+
+    api libs.spring.boot.starter.webflux
+    api libs.spring.boot.starter.graphql
+
+    api libs.apache.commons.lang
+
     api project(":core-discord4j")
 }

@@ -1,0 +1,32 @@
+[versions]
+spring-boot = "3.1.3"
+spring-dependency-management = "1.1.3"
+sentry = "6.29.0"
+discord4j = "3.2.6"
+
+[libraries]
+annotations = { group = "org.jetbrains", name = "annotations", version = "24.0.0" }
+
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version = "1.4.11" }
+
+spring-boot-devtools = { group = "org.springframework.boot", name = "spring-boot-devtools" }
+spring-boot-docker-compose = { group = "org.springframework.boot", name = "spring-boot-docker-compose" }
+spring-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
+spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux" }
+spring-boot-starter-graphql = { group = "org.springframework.boot", name = "spring-boot-starter-graphql" }
+spring-boot-starter-data-r2dbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-r2dbc" }
+spring-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
+
+sentry-boot-starter = { group = "io.sentry", name = "sentry-spring-boot-starter-jakarta", version.ref = "sentry" }
+sentry-logback = { group = "io.sentry", name = "sentry-logback", version.ref = "sentry" }
+
+discord4j = { group = "com.discord4j", name = "discord4j-core", version.ref = "discord4j" }
+
+flyway = { group = "org.flywaydb", name = "flyway-core" }
+apache-commons-lang = { group = "org.apache.commons", name = "commons-lang3" }
+postgresql-jdbc = { group = "org.postgresql", name = "postgresql" }
+postgresql-r2dbc = { group = "org.postgresql", name = "r2dbc-postgresql" }
+
+[plugins]
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }

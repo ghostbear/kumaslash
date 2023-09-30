@@ -1,7 +1,7 @@
 plugins {
-    id "org.springframework.boot" apply false
-    id "io.spring.dependency-management"
     id "java"
+    alias libs.plugins.spring.boot apply false
+    alias libs.plugins.spring.dependency.management
 }
 
 dependencyManagement {
@@ -11,7 +11,7 @@ dependencyManagement {
 }
 
 dependencies {
-    api "com.discord4j:discord4j-core:3.2.6"
-    api "org.springframework.boot:spring-boot-starter"
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    api libs.discord4j
+    api libs.spring.boot.starter
+    testImplementation libs.spring.boot.starter.test
 }
