@@ -5,6 +5,7 @@ import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.core.event.EventDispatcher;
 import discord4j.gateway.intent.IntentSet;
+import discord4j.rest.RestClient;
 import me.ghostbear.core.discord4j.beans.DiscordApplicationCommandRegistrar;
 import me.ghostbear.core.discord4j.beans.DiscordEventHandlerBeanProcessor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -39,9 +40,9 @@ public class DiscordAutoConfiguration {
 	}
 
 	@Bean(value = "discordApplicationCommandRegistrarBeanProcessor")
-	@DependsOn({"gatewayDiscordClient", "discordEventHandlerBeanProcessor"})
-	public DiscordApplicationCommandRegistrar discordApplicationCommandRegistrarBeanProcessor(ApplicationContext applicationContext, GatewayDiscordClient gatewayDiscordClient) {
-		return new DiscordApplicationCommandRegistrar(applicationContext, gatewayDiscordClient);
+	@DependsOn({"restClient", "discordEventHandlerBeanProcessor"})
+	public DiscordApplicationCommandRegistrar discordApplicationCommandRegistrarBeanProcessor(ApplicationContext applicationContext, RestClient restClient) {
+		return new DiscordApplicationCommandRegistrar(applicationContext, restClient);
 	}
 
 	@Bean("gatewayDiscordClient")
@@ -59,6 +60,12 @@ public class DiscordAutoConfiguration {
 					awaitThread.start();
 				})
 				.block();
+	}
+
+	@Bean
+	@DependsOn({"gatewayDiscordClient"})
+	RestClient restClient(GatewayDiscordClient gatewayDiscordClient) {
+		return gatewayDiscordClient.getRestClient();
 	}
 
 	@Bean("intentSet")

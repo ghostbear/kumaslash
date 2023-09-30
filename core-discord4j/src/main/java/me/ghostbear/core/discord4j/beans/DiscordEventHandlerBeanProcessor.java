@@ -120,13 +120,7 @@ public class DiscordEventHandlerBeanProcessor implements BeanPostProcessor {
 
 	private void doEvent(Method method, Object bean, Class<? extends Event> clazz) {
 		eventDispatcher.on(clazz)
-				.flatMap(e -> {
-					try {
-						return invokeMethod(method, bean, e);
-					} catch (Exception exception) {
-						return Mono.error(exception);
-					}
-				})
+				.flatMap(e -> invokeMethod(method, bean, e))
 				.onErrorContinue((throwable, object) -> LOG.error("Event Handler failed spectacularly", throwable))
 				.subscribe();
 	}

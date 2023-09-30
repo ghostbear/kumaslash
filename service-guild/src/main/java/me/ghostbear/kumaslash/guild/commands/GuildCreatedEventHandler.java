@@ -29,12 +29,18 @@ public class GuildCreatedEventHandler {
 	@DiscordEventHandler
 	public Publisher<?> onGuildCreate(GuildCreateEvent event) {
 		Snowflake snowflake = event.getGuild().getId();
-		LOG.info("Guild create event: {}", snowflake.asString());
+		return findGuildById(snowflake).switchIfEmpty(Mono.defer(() -> createNewGuild(snowflake)))
+				.doOnSuccess(guild -> LOG.debug("Registered guild with snowflake {}", snowflake.asString()));
+	}
+
+	Mono<Guild> findGuildById(Snowflake snowflake) {
 		return guildRepository.findById(snowflake.asLong())
-				.delayElement(Duration.ofSeconds(0))
-				.switchIfEmpty(Mono.defer(() -> guildRepository.save(new Guild(snowflake, true))))
-				.doOnError(throwable -> LOG.error("Failed to create new guild", throwable))
-				.then();
+				.doOnError(throwable -> LOG.error("Failed to find guild", throwable));
+	}
+
+	Mono<Guild> createNewGuild(Snowflake snowflake) {
+		return guildRepository.save(new Guild(snowflake, true))
+				.doOnError(throwable -> LOG.error("Failed to save guild", throwable));
 	}
 
 }

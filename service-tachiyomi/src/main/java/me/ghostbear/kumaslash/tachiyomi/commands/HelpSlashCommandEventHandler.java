@@ -4,6 +4,7 @@ import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
 import discord4j.core.event.domain.interaction.ModalSubmitInteractionEvent;
+import discord4j.core.object.component.ActionComponent;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.component.TextInput;
@@ -39,7 +40,7 @@ public class HelpSlashCommandEventHandler {
 
 	@DiscordInteractionHandler(name = "help")
 	public Mono<Void> handle(ChatInputInteractionEvent event) {
-		var actionComponents = new HelpActionComponentFactory().create();
+		var actionComponents = actionComponents();
 		return event.presentModal()
 				.withCustomId(MODAL_ID)
 				.withTitle("Answer the following questions")
@@ -62,7 +63,7 @@ public class HelpSlashCommandEventHandler {
 
 	@DiscordInteractionHandler(name = "help_button")
 	public Publisher<?> onButtonInteraction(ButtonInteractionEvent event) {
-		var actionComponents = new HelpActionComponentFactory().create();
+		var actionComponents = actionComponents();
 		return event.presentModal()
 				.withCustomId(MODAL_ID)
 				.withTitle("Answer the following questions")
@@ -75,7 +76,7 @@ public class HelpSlashCommandEventHandler {
 	@DiscordInteractionHandler(name = MODAL_ID)
 	public Mono<Void> onModal(ModalSubmitInteractionEvent event) {
 		var member = event.getInteraction().getMember();
-		var actionComponents = new HelpActionComponentFactory().create();
+		var actionComponents = actionComponents();
 		return event.reply()
 				.withEmbeds(
 						EmbedCreateSpec.builder()
@@ -111,4 +112,20 @@ public class HelpSlashCommandEventHandler {
 												member.map(Member::getEffectiveAvatarUrl).orElseThrow()))
 								.build());
 	}
+
+	ActionComponent[] actionComponents() {
+		return new ActionComponent[] {
+				TextInput.small("first", "What version of the app are you on?")
+						.placeholder("Tachiyomi 1.13.3"),
+				TextInput.small("second", "What source are you having issues with?")
+						.placeholder("Example: MangaDex 1.2.158"),
+				TextInput.small("third", "What device are you using?")
+						.placeholder("Example: Google Pixel 6"),
+				TextInput.small("fourth", "What Android version are you on?")
+						.placeholder("Example: Android 12L"),
+				TextInput.paragraph("fifth", "What issue are you having?", 10, 500)
+						.placeholder("Please explain your issue here in detail and include the error if there is any")
+		};
+	}
+
 }
