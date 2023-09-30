@@ -3,6 +3,8 @@ package me.ghostbear.core.discord4j.beans;
 import discord4j.common.JacksonResources;
 import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandRequest;
+import discord4j.rest.RestClient;
+import discord4j.rest.service.ApplicationService;
 import jakarta.annotation.PostConstruct;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -13,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ReflectionUtils;
+import reactor.core.publisher.FluxOperator;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -25,11 +28,11 @@ public class DiscordApplicationCommandRegistrar {
 	private static final Logger LOG = LoggerFactory.getLogger(DiscordApplicationCommandRegistrar.class);
 
 	private final ApplicationContext applicationContext;
-	private final GatewayDiscordClient gatewayDiscordClient;
+	private final RestClient restClient;
 
-	public DiscordApplicationCommandRegistrar(ApplicationContext applicationContext, GatewayDiscordClient gatewayDiscordClient) {
+	public DiscordApplicationCommandRegistrar(ApplicationContext applicationContext, RestClient restClient) {
 		this.applicationContext = applicationContext;
-		this.gatewayDiscordClient = gatewayDiscordClient;
+		this.restClient = restClient;
 	}
 
 	private final List<ApplicationCommandRequest> commands = new ArrayList<>();
@@ -87,11 +90,14 @@ public class DiscordApplicationCommandRegistrar {
 	}
 
 	public void registerApplicationCommands() {
-
 		LOG.info("Registering %s Application Commands".formatted(commands.size()));
-		final var applicationService = gatewayDiscordClient.getRestClient().getApplicationService();
-		final long applicationId = gatewayDiscordClient.getRestClient().getApplicationId().block();
-		applicationService.bulkOverwriteGlobalApplicationCommand(applicationId, commands)
+		final ApplicationService applicationService = restClient.getApplicationService();
+		final Optional<Long> applicationId = restClient.getApplicationId().blockOptional();
+		if (applicationId.isEmpty()) {
+			LOG.error("No application id available");
+			return;
+		}
+		applicationService.bulkOverwriteGlobalApplicationCommand(applicationId.get(), commands)
 				.doOnNext(data -> LOG.debug("Successfully registered %s".formatted(data.name())))
 				.doOnError(e -> LOG.error("Failed to register global commands", e))
 				.subscribe();
