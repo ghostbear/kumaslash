@@ -5,7 +5,7 @@ spring:
     web-application-type: none
   r2dbc:
     tachiyomi:
-      url: r2dbc:postgresql://localhost:5433/tachiyomi
+      url: r2dbc:postgresql://localhost:5432/tachiyomi
       password: postgres
       username: postgres
       flyway:
