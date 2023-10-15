@@ -8,7 +8,7 @@ allprojects {
     apply plugin: "java-library"
 
     group = "me.ghostbear"
-    version = "2023.07.6"
+    version = "2023.07.7"
 
     java {
         toolchain {

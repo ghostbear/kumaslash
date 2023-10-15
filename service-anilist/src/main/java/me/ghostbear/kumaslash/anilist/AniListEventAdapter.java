@@ -21,10 +21,7 @@ import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -60,8 +57,13 @@ public class AniListEventAdapter {
 
 	@NotNull
 	Mono<Message> successMessage(@NotNull TextChannel textChannel, @NotNull List<Media> mediaList) {
+		var uniqueMediaSet = new HashSet<>(mediaList);
+		if (uniqueMediaSet.size() > 3) {
+			String stringBuilder = mediaList.stream().map(media -> "- [%s](<%s>)\n".formatted(getTitle(media.title()).orElseThrow(), media.siteUrl())).collect(Collectors.joining());
+            return textChannel.createMessage(stringBuilder.trim());
+		}
 		return textChannel.createMessage(
-				mediaList.stream()
+				uniqueMediaSet.stream()
 						.map(AniListEventAdapter.this::createMessage)
 						.toArray(EmbedCreateSpec[]::new));
 	}
@@ -70,7 +72,7 @@ public class AniListEventAdapter {
 	EmbedCreateSpec createMessage(@NotNull Media media) {
 		return EmbedCreateSpec.builder()
 				.url(getSiteUrl(media.siteUrl()))
-				.title(getTitle(media.title()))
+				.title(getTitle(media.title()).map(Possible::of).orElse(Possible.absent()))
 				.description(getDescription(media.description()))
 				.addField("Genre", getGenres(media.genres()).toOptional().orElse("No genre"), false)
 				.image(getEmbedImage(media.id()))
@@ -92,13 +94,10 @@ public class AniListEventAdapter {
 		return Possible.of("https://img.anili.st/media/" + id);
 	}
 
-	@NotNull
-	private Possible<String> getTitle(@Nullable Title title) {
+	private Optional<String> getTitle(@Nullable Title title) {
 		Optional<Title> mediaOptional = Optional.ofNullable(title);
 		return mediaOptional.map(Title::romaji)
-				.or(() -> mediaOptional.map(Title::english))
-				.map(Possible::of)
-				.orElse(Possible.absent());
+				.or(() -> mediaOptional.map(Title::english));
 	}
 
 	@NotNull
@@ -137,7 +136,7 @@ public class AniListEventAdapter {
 	@NotNull
 	private String visualName(@Nullable MediaStatus status) {
 		return switch (status) {
-			case null -> "";
+			case null -> "Unknown";
 			case FINISHED -> "Finished";
 			case RELEASING -> "Releasing";
 			case NOT_YET_RELEASED -> "Not Yet Released";
