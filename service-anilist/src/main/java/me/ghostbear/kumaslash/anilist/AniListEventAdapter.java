@@ -148,7 +148,7 @@ public class AniListEventAdapter {
 	@NotNull
 	private String getDescription(@Nullable String value) {
 		return Optional.ofNullable(value)
-				.filter(String::isEmpty)
+				.filter(s ->  !s.isEmpty())
 				.map(s -> s.replaceAll("<[brBR]{2}>", ""))
 				.map(s -> StringUtils.abbreviate(s, 128))
 				.orElse("No description");
