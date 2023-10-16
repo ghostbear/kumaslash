@@ -58,7 +58,7 @@ public class AniListEventAdapter {
 	@NotNull
 	Mono<Message> successMessage(@NotNull TextChannel textChannel, @NotNull List<Media> mediaList) {
 		var uniqueMediaSet = new HashSet<>(mediaList);
-		if (uniqueMediaSet.size() > 3) {
+		if (uniqueMediaSet.size() > 1) {
 			String stringBuilder = mediaList.stream().map(media -> "- [%s](<%s>)\n".formatted(getTitle(media.title()).orElseThrow(), media.siteUrl())).collect(Collectors.joining());
             return textChannel.createMessage(stringBuilder.trim());
 		}
