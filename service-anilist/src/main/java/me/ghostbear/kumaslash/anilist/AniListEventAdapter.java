@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @DiscordComponent
 public class AniListEventAdapter {
@@ -56,14 +57,46 @@ public class AniListEventAdapter {
 	}
 
 	@NotNull
-	Mono<Message> successMessage(@NotNull TextChannel textChannel, @NotNull List<Media> mediaList) {
-		var uniqueMediaSet = new HashSet<>(mediaList);
+	Mono<Message> successMessage(@NotNull TextChannel textChannel, @NotNull List<AniListResult> results) {
+		var uniqueMediaSet = new HashSet<>(results);
 		if (uniqueMediaSet.size() > 1) {
-			String stringBuilder = mediaList.stream().map(media -> "- [%s](<%s>)\n".formatted(getTitle(media.title()).orElseThrow(), media.siteUrl())).collect(Collectors.joining());
-            return textChannel.createMessage(stringBuilder.trim());
+			Map<Class<? extends AniListResult>, List<AniListResult>> map = uniqueMediaSet.stream()
+					.collect(Collectors.groupingBy(AniListResult::getClass));
+
+			StringBuilder builder = new StringBuilder();
+
+			if (map.containsKey(AniListResult.Success.class)) {
+				builder.append(map.getOrDefault(AniListResult.Success.class, Collections.emptyList())
+						.stream()
+						.map(aniListResult -> (AniListResult.Success) aniListResult)
+						.map(AniListResult.Success::media)
+						.map(media -> "- [%s](<%s>)".formatted(getTitle(media.title()).orElseThrow(), media.siteUrl()))
+						.collect(Collectors.joining("\n", "", "\n\n")));
+			}
+
+			if (map.containsKey(AniListResult.NotFound.class)) {
+				builder.append(map.getOrDefault(AniListResult.NotFound.class, Collections.emptyList())
+						.stream()
+						.map(aniListResult -> (AniListResult.NotFound) aniListResult)
+						.map(error -> "- %s".formatted(error.query()))
+						.collect(Collectors.joining("\n", "**Not found**\n", "\n\n")));
+			}
+
+			if (map.containsKey(AniListResult.UnknownError.class)) {
+				builder.append(map.getOrDefault(AniListResult.UnknownError.class, Collections.emptyList())
+						.stream()
+						.map(aniListResult -> (AniListResult.UnknownError) aniListResult)
+						.map(error -> "- Unknown error when trying to find **%s**".formatted(error.query()))
+						.collect(Collectors.joining("\n", "**Unknown error**\n", "\n\n")));
+			}
+			return textChannel.createMessage(builder.toString().trim());
+		}
+		if (uniqueMediaSet.isEmpty() || !(results.getFirst() instanceof AniListResult.Success success)) {
+			return Mono.empty();
 		}
 		return textChannel.createMessage(
-				uniqueMediaSet.stream()
+				Stream.of(success)
+						.map(AniListResult.Success::media)
 						.map(AniListEventAdapter.this::createMessage)
 						.toArray(EmbedCreateSpec[]::new));
 	}
@@ -148,14 +181,14 @@ public class AniListEventAdapter {
 	@NotNull
 	private String getDescription(@Nullable String value) {
 		return Optional.ofNullable(value)
-				.filter(s ->  !s.isEmpty())
+				.filter(s -> !s.isEmpty())
 				.map(s -> s.replaceAll("<[brBR]{2}>", ""))
 				.map(s -> StringUtils.abbreviate(s, 128))
 				.orElse("No description");
 	}
 
 	@NotNull
-	private Flux<Media> findAndRetrieveMedia(@NotNull String content, @Nullable Boolean isAdult) {
+	private Flux<AniListResult> findAndRetrieveMedia(@NotNull String content, @Nullable Boolean isAdult) {
 		return matcher.matches(content)
 				.parallel()
 				.flatMap(match -> service.retrieveMedia(match.type(), match.query(), isAdult))

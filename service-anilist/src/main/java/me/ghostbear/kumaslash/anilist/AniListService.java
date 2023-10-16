@@ -30,14 +30,16 @@ public class AniListService {
 	}
 
 	@NotNull
-	public Mono<Media> retrieveMedia(@NotNull Type type, @Nullable String query, @Nullable Boolean isAdult) {
+	public Mono<AniListResult> retrieveMedia(@NotNull Type type, @Nullable String query, @Nullable Boolean isAdult) {
 		return graphQlClient.documentName(DOCUMENT_NAME)
 				.operationName(type.operationName())
 				.variables(AniListService.Type.buildVariables(query, isAdult))
 				.retrieve("Media")
 				.toEntity(Media.class)
 				.doOnError(GraphQlTransportException.class, throwable -> LOG.error("Failed to retrieve media, 404 Not Found means that AniList can't find a title with the provided search query and can safely be ignored", throwable))
-				.onErrorComplete();
+				.map(media -> (AniListResult) new AniListResult.Success(media))
+				.defaultIfEmpty(new AniListResult.NotFound(query))
+				.onErrorResume(throwable -> Mono.just(new AniListResult.UnknownError(query, throwable)));
 	}
 
 	public enum Type {

@@ -50,7 +50,7 @@ public class AniListPatternMatcher {
 
 	@NotNull
 	@Contract(pure = true)
-	private static  Callable<Matcher> getSupplier(@NotNull String value, @NotNull AniListPattern aniListPattern) {
+	private static Callable<Matcher> getSupplier(@NotNull String value, @NotNull AniListPattern aniListPattern) {
 		return () -> aniListPattern.getPattern().matcher(value);
 	}
 
@@ -61,7 +61,7 @@ public class AniListPatternMatcher {
 			boolean found = m.find();
 			if (!found) sink.complete();
 			try {
-				sink.next(m.group());
+				sink.next(m.group(1));
 				return m;
 			} catch (IllegalStateException e) {
 				sink.error(e);
@@ -91,7 +91,7 @@ public class AniListPatternMatcher {
 
 		@NotNull
 		@Contract(" -> new")
-		public  Pattern getPattern() {
+		public Pattern getPattern() {
 			return Pattern.compile(getRawPattern());
 		}
 	}
