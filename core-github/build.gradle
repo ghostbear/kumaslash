@@ -11,5 +11,7 @@ dependencyManagement {
 }
 
 dependencies {
+    compileOnly libs.annotations
+    
     api libs.spring.boot.starter.webflux
 }

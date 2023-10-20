@@ -1,5 +1,6 @@
 package me.ghostbear.kumaslash.github;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class GitHubConfiguration {
 
+	@NotNull
 	@Bean("githubWebClient")
 	WebClient githubWebClient() {
 		return WebClient.builder()
@@ -17,6 +19,7 @@ public class GitHubConfiguration {
 				.build();
 	}
 
+	@NotNull
 	@Bean("gitHubService")
 	GitHubService gitHubService(@Qualifier("githubWebClient") WebClient githubWebClient) {
 		HttpServiceProxyFactory httpServiceProxyFactory = HttpServiceProxyFactory
