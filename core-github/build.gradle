@@ -12,6 +12,4 @@ dependencyManagement {
 
 dependencies {
     api libs.spring.boot.starter.webflux
-
-    api project(":core-discord4j")
 }

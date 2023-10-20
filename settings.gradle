@@ -11,9 +11,9 @@ dependencyResolutionManagement {
 
 include "core-discord4j"
 include "core-sentry"
+include "core-github"
 include "service-anilist"
 include "service-core"
-include "service-github"
 include "service-guild"
 include "service-tachiyomi"
 include "kumaslash"
