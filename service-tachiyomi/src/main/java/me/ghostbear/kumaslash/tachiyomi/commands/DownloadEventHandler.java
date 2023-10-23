@@ -6,6 +6,7 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.entity.Message;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -32,8 +33,8 @@ public class DownloadEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public String commandProperties() {
-		return "commands/download.json";
+	public DiscordInteractionPropertySupplier commandProperties() {
+		return () -> "commands/download.json";
 	}
 
 	@DiscordInteractionHandler(name = "download")

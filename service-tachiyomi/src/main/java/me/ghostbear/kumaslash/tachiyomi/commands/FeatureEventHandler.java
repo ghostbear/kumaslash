@@ -6,6 +6,7 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.spec.EmbedCreateSpec;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -24,8 +25,8 @@ public class FeatureEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public String commandProperties() {
-		return "commands/feature.json";
+	public DiscordInteractionPropertySupplier commandProperties() {
+		return () -> "commands/feature.json";
 	}
 
 	@DiscordInteractionHandler(name = "feature.app")

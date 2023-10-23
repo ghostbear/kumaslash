@@ -2,6 +2,7 @@ package me.ghostbear.discord.bot;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.UserInteractionEvent;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -13,9 +14,9 @@ import java.time.Instant;
 public class MyDiscordUserComponent {
 
 	@DiscordInteractionProperties
-	public String properties() {
+	public DiscordInteractionPropertySupplier commandProperties() {
 		// language=json
-		return """
+		return () -> """
 				{
 				  "name": "Timeout User",
 				  "type": 2

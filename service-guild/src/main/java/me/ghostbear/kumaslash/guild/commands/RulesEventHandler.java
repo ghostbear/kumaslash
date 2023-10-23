@@ -11,6 +11,7 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionCallbackSpecDeferReplyMono;
 import discord4j.discordjson.possible.Possible;
 import discord4j.rest.util.Color;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -34,8 +35,8 @@ public class RulesEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public String getName() {
-		return "commands/rules.json";
+	public DiscordInteractionPropertySupplier commandProperties() {
+		return () -> "commands/rules.json";
 	}
 
 	@DiscordInteractionHandler(name = "rules")

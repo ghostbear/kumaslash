@@ -7,6 +7,7 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -26,8 +27,8 @@ public class SocialEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public String applicationProperties() {
-		return "commands/social.json";
+	public DiscordInteractionPropertySupplier commandProperties() {
+		return () -> "commands/social.json";
 	}
 
 	@DiscordInteractionHandler(name = "social")

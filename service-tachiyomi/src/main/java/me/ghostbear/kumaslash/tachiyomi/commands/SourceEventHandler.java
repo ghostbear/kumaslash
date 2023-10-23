@@ -7,6 +7,7 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -29,8 +30,8 @@ public class SourceEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public String getName() {
-		return "commands/source.json";
+	public DiscordInteractionPropertySupplier commandProperties() {
+		return () -> "commands/source.json";
 	}
 
 	@DiscordInteractionHandler(name = "source")

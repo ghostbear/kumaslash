@@ -9,6 +9,7 @@ import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.discordjson.possible.Possible;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -20,8 +21,8 @@ import java.util.Optional;
 public class UserEventHandler {
 
 	@DiscordInteractionProperties
-	public String getName() {
-		return "commands/user.json";
+	public DiscordInteractionPropertySupplier commandProperties() {
+		return () -> "commands/user.json";
 	}
 
 	@DiscordInteractionHandler(name = "user.avatar")

@@ -35,7 +35,7 @@ public class DiscordEventHandlerBeanProcessor implements BeanPostProcessor {
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+	public Object postProcessBeforeInitialization(Object bean, String beanName) {
 		if (AnnotationUtils.isAnnotationDeclaredLocally(DiscordComponent.class, bean.getClass())) {
 			LOG.debug("Class is annotated with DiscordComponent: {}", bean.getClass().getSimpleName());
 			ReflectionUtils.doWithMethods(bean.getClass(), method -> {

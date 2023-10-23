@@ -12,6 +12,7 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.component.TextInput;
 import discord4j.core.object.entity.User;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
@@ -31,9 +32,9 @@ public class MyDiscordComponent {
 
 
 	@DiscordInteractionProperties
-	public String applicationCommandRaw() {
+	public DiscordInteractionPropertySupplier commandProperties() {
 		// language=json
-		return """
+		return () -> """
 				{
 				  "name": "test",
 				  "description": "This is a test command",

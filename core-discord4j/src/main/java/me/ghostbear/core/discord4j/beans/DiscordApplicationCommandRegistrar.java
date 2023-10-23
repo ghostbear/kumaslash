@@ -6,6 +6,7 @@ import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
 import jakarta.annotation.PostConstruct;
+import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import org.slf4j.Logger;
@@ -57,10 +58,14 @@ public class DiscordApplicationCommandRegistrar {
 
 
 	private void doDiscordApplicationCommandProperties(Method method, Object bean) throws Exception {
+		if (!method.getReturnType().isAssignableFrom(DiscordInteractionPropertySupplier.class)) {
+			throw new IllegalArgumentException("Return type for method %s in %s isn't assignable from %s".formatted(method.getName(), bean.getClass().getName(), DiscordInteractionPropertySupplier.class.getName()));
+		}
 		if (method.getParameterCount() == 0) {
 			String s = Optional.ofNullable(ReflectionUtils.invokeMethod(method, bean))
-					.filter(o -> o instanceof String)
-					.map(o -> (String) o)
+					.filter(o -> o instanceof DiscordInteractionPropertySupplier)
+					.map(o -> (DiscordInteractionPropertySupplier) o)
+					.map(DiscordInteractionPropertySupplier::get)
 					.orElseThrow();
 			final var mapper = JacksonResources.create();
 			if (s.endsWith(".json")) {
