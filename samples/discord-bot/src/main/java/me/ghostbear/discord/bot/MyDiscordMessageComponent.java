@@ -1,7 +1,7 @@
 package me.ghostbear.discord.bot;
 
 import discord4j.core.event.domain.interaction.MessageInteractionEvent;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Raw;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -11,7 +11,7 @@ import reactor.core.publisher.Mono;
 public class MyDiscordMessageComponent {
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier commandProperties() {
+	public Raw commandProperties() {
 		// language=json
 		return () -> """
 				{

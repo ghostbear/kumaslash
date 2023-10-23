@@ -8,10 +8,9 @@ import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
-import discord4j.core.spec.InteractionCallbackSpecDeferReplyMono;
 import discord4j.discordjson.possible.Possible;
 import discord4j.rest.util.Color;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -35,8 +34,8 @@ public class RulesEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier commandProperties() {
-		return () -> "commands/rules.json";
+	public Resources commandProperties() {
+		return Resources.of("commands/rules.json");
 	}
 
 	@DiscordInteractionHandler(name = "rules")

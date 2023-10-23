@@ -1,7 +1,7 @@
 package me.ghostbear.kumaslash.core.commands;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -29,8 +29,8 @@ public class VersionEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier properties() {
-		return () -> "commands/version.json";
+	public Resources properties() {
+		return Resources.of("commands/version.json");
 	}
 
 	@NotNull

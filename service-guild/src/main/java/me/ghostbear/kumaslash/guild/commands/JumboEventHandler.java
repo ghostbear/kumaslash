@@ -6,7 +6,7 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.MessageCreateFields;
 import discord4j.rest.util.Image;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -37,8 +37,8 @@ public class JumboEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier commandProperties() {
-		return () -> "commands/jumbo.json";
+	public Resources commandProperties() {
+		return Resources.of("commands/jumbo.json");
 	}
 
 	@DiscordInteractionHandler(name = "jumbo")

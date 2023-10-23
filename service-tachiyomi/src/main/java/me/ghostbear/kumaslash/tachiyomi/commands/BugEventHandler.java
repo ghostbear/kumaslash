@@ -7,7 +7,7 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.discordjson.possible.Possible;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -26,8 +26,8 @@ public class BugEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier commandProperties() {
-		return () -> "commands/bug.json";
+	public Resources commandProperties() {
+		return Resources.of("commands/bug.json");
 	}
 
 	@DiscordInteractionHandler(name = "bug.app")

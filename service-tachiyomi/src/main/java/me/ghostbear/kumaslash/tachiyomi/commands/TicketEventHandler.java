@@ -9,7 +9,7 @@ import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionFollowupCreateMono;
 import discord4j.rest.util.Color;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -35,8 +35,8 @@ public class TicketEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier commandProperties() {
-		return () -> "commands/ticket.json";
+	public Resources commandProperties() {
+		return Resources.of("commands/ticket.json");
 	}
 
 	@DiscordInteractionHandler(name = "ticket")

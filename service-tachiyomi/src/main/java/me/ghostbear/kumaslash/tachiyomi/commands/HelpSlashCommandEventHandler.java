@@ -13,7 +13,7 @@ import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -30,13 +30,8 @@ public class HelpSlashCommandEventHandler {
 	private static final String MODAL_ID = "help_slash_command";
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier commandProperties() {
-		return () -> "commands/help.json";
-	}
-
-	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier modalProperties() {
-		return () -> "commands/help_context.json";
+	public Resources commandProperties() {
+		return Resources.of("commands/help.json", "commands/help_context.json");
 	}
 
 	@DiscordInteractionHandler(name = "help")

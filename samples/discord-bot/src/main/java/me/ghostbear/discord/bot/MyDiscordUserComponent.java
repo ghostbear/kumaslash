@@ -2,7 +2,7 @@ package me.ghostbear.discord.bot;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.UserInteractionEvent;
-import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Raw;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
@@ -14,7 +14,7 @@ import java.time.Instant;
 public class MyDiscordUserComponent {
 
 	@DiscordInteractionProperties
-	public DiscordInteractionPropertySupplier commandProperties() {
+	public Raw commandProperties() {
 		// language=json
 		return () -> """
 				{

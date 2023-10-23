@@ -1,12 +1,13 @@
 package me.ghostbear.core.discord4j.beans;
 
 import discord4j.common.JacksonResources;
-import discord4j.core.GatewayDiscordClient;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
 import jakarta.annotation.PostConstruct;
 import me.ghostbear.core.discord4j.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.Raw;
+import me.ghostbear.core.discord4j.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ReflectionUtils;
-import reactor.core.publisher.FluxOperator;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -58,29 +58,35 @@ public class DiscordApplicationCommandRegistrar {
 
 
 	private void doDiscordApplicationCommandProperties(Method method, Object bean) throws Exception {
-		if (!method.getReturnType().isAssignableFrom(DiscordInteractionPropertySupplier.class)) {
+		if (!DiscordInteractionPropertySupplier.class.isAssignableFrom(method.getReturnType())) {
+			System.out.println(method.getReturnType().getName());
 			throw new IllegalArgumentException("Return type for method %s in %s isn't assignable from %s".formatted(method.getName(), bean.getClass().getName(), DiscordInteractionPropertySupplier.class.getName()));
 		}
 		if (method.getParameterCount() == 0) {
-			String s = Optional.ofNullable(ReflectionUtils.invokeMethod(method, bean))
+			DiscordInteractionPropertySupplier<?> supplier = Optional.ofNullable(ReflectionUtils.invokeMethod(method, bean))
 					.filter(o -> o instanceof DiscordInteractionPropertySupplier)
-					.map(o -> (DiscordInteractionPropertySupplier) o)
-					.map(DiscordInteractionPropertySupplier::get)
+					.map(o -> (DiscordInteractionPropertySupplier<?>) o)
 					.orElseThrow();
 			final var mapper = JacksonResources.create();
-			if (s.endsWith(".json")) {
-				var matcher = new PathMatchingResourcePatternResolver();
-				var commands = new ArrayList<ApplicationCommandRequest>();
-				for (var resource : matcher.getResources(s)) {
+			switch (supplier) {
+				case Raw raw -> {
 					var request = mapper.getObjectMapper()
-							.readValue(resource.getInputStream(), ApplicationCommandRequest.class);
+							.readValue(raw.get(), ApplicationCommandRequest.class);
 					commands.add(request);
 				}
-				this.commands.addAll(commands);
-			} else {
-				var request = mapper.getObjectMapper()
-						.readValue(s, ApplicationCommandRequest.class);
-				commands.add(request);
+				case Resources resources -> {
+					var matcher = new PathMatchingResourcePatternResolver();
+					var commands = new ArrayList<ApplicationCommandRequest>();
+					String[] locations = resources.get();
+					for (String location : locations) {
+						for (var resource : matcher.getResources(location)) {
+							var request = mapper.getObjectMapper()
+									.readValue(resource.getInputStream(), ApplicationCommandRequest.class);
+							commands.add(request);
+						}
+					}
+					this.commands.addAll(commands);
+				}
 			}
 		}
 	}
