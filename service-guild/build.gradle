@@ -11,6 +11,8 @@ dependencyManagement {
 }
 
 dependencies {
+    api libs.annotations
+
     api libs.spring.boot.starter.webflux
     api libs.spring.boot.starter.data.r2dbc
 
