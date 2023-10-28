@@ -11,7 +11,10 @@ dependencyManagement {
 }
 
 dependencies {
+    compileOnly libs.annotations
+
     api libs.discord4j
     api libs.spring.boot.starter
+
     testImplementation libs.spring.boot.starter.test
 }

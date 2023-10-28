@@ -7,7 +7,7 @@ import discord4j.core.object.entity.Member;
 import discord4j.core.object.entity.Message;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.rest.util.Color;
-import me.ghostbear.core.discord4j.Resources;
+import me.ghostbear.core.discord4j.utils.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;

@@ -1,4 +1,4 @@
-package me.ghostbear.core.discord4j;
+package me.ghostbear.core.discord4j.utils;
 
 import java.util.function.Supplier;
 

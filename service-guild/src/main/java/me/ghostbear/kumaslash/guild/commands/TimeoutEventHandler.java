@@ -4,7 +4,7 @@ import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.entity.channel.Channel;
-import me.ghostbear.core.discord4j.Resources;
+import me.ghostbear.core.discord4j.utils.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;

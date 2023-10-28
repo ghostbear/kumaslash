@@ -12,7 +12,7 @@ import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.object.component.TextInput;
 import discord4j.core.object.entity.User;
-import me.ghostbear.core.discord4j.Raw;
+import me.ghostbear.core.discord4j.utils.Raw;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
