@@ -2,11 +2,14 @@ package me.ghostbear.core.discord4j.beans;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import discord4j.common.JacksonResources;
+import discord4j.common.util.Snowflake;
 import discord4j.discordjson.json.ApplicationCommandRequest;
 import discord4j.rest.RestClient;
 import discord4j.rest.service.ApplicationService;
 import jakarta.annotation.PostConstruct;
+import me.ghostbear.core.discord4j.DiscordApplicationCommandRequest;
 import me.ghostbear.core.discord4j.utils.DiscordInteractionPropertySupplier;
+import me.ghostbear.core.discord4j.utils.Publisher;
 import me.ghostbear.core.discord4j.utils.Raw;
 import me.ghostbear.core.discord4j.utils.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
@@ -47,16 +50,22 @@ public class DiscordApplicationCommandRegistrar {
 		Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(DiscordComponent.class);
 		Flux.fromIterable(beansWithAnnotation.values())
 				.flatMap(DiscordApplicationCommandRegistrar.this::processBean)
-				.buffer()
-				.flatMap(l -> {
-					LOG.debug("{} commands detected", l.size());
-					return applicationService.bulkOverwriteGlobalApplicationCommand(applicationId.get(), l);
-				})
-				.onErrorContinue((throwable, object) -> LOG.error("Failed to register commands", throwable))
+				.groupBy(discordApplicationCommandRequest -> discordApplicationCommandRequest.guildId().orElse(Snowflake.of(0)))
+				.flatMap(grouping -> grouping.buffer()
+						.flatMap(l -> {
+							LOG.debug("{} commands detected", l.size());
+							if (grouping.key().equals(Snowflake.of(0))) {
+								return applicationService.bulkOverwriteGlobalApplicationCommand(applicationId.get(), l.stream().map(DiscordApplicationCommandRequest::asImmutable).toList());
+							} else {
+								return applicationService.bulkOverwriteGuildApplicationCommand(applicationId.get(), grouping.key().asLong(), l.stream().map(DiscordApplicationCommandRequest::asImmutable).toList());
+							}
+						})
+						.onErrorContinue((throwable, object) -> LOG.error("Failed to register commands", throwable)))
+
 				.subscribe();
 	}
 
-	public Flux<ApplicationCommandRequest> processBean(Object bean) throws BeansException {
+	public Flux<DiscordApplicationCommandRequest> processBean(Object bean) throws BeansException {
 		return Flux.just(bean)
 				.filter(o -> AnnotationUtils.isAnnotationDeclaredLocally(DiscordComponent.class, o.getClass()))
 				.flatMapIterable(o -> Arrays.asList(ReflectionUtils.getDeclaredMethods(o.getClass())))
@@ -64,7 +73,7 @@ public class DiscordApplicationCommandRegistrar {
 				.flatMap(m -> doDiscordApplicationCommandProperties(m, bean));
 	}
 
-	private Flux<ApplicationCommandRequest> doDiscordApplicationCommandProperties(Method method, Object bean) {
+	private Flux<DiscordApplicationCommandRequest> doDiscordApplicationCommandProperties(Method method, Object bean) {
 		if (!DiscordInteractionPropertySupplier.class.isAssignableFrom(method.getReturnType())) {
 			return Flux.error(new IllegalArgumentException("Return type for method %s in %s isn't assignable from %s".formatted(method.getName(), bean.getClass().getName(), DiscordInteractionPropertySupplier.class.getName())));
 		}
@@ -86,14 +95,15 @@ public class DiscordApplicationCommandRegistrar {
 		return switch (supplier) {
 			case Raw raw -> doRawSupplier(mapper.getObjectMapper(), raw);
 			case Resources resources -> doResourcesSupplier(mapper.getObjectMapper(), resources);
+			case Publisher publisher -> Flux.from(publisher.get());
 		};
 	}
 
-	private Flux<ApplicationCommandRequest> doRawSupplier(ObjectMapper objectMapper, Raw raw) {
+	private Flux<DiscordApplicationCommandRequest> doRawSupplier(ObjectMapper objectMapper, Raw raw) {
 		return Flux.generate(sink -> {
 			try {
 				ApplicationCommandRequest applicationCommandRequest = objectMapper.readValue(raw.get(), ApplicationCommandRequest.class);
-				sink.next(applicationCommandRequest);
+				sink.next(new DiscordApplicationCommandRequest(applicationCommandRequest));
 			} catch (Exception e) {
 				sink.error(e);
 			}
@@ -101,13 +111,14 @@ public class DiscordApplicationCommandRegistrar {
 		});
 	}
 
-	private Flux<ApplicationCommandRequest> doResourcesSupplier(ObjectMapper objectMapper, Resources resources) {
+	private Flux<DiscordApplicationCommandRequest> doResourcesSupplier(ObjectMapper objectMapper, Resources resources) {
 		var matcher = new PathMatchingResourcePatternResolver();
 		return Flux.just(resources.get())
 				.handle((location, sink) -> {
 					try {
 						Resource resource = matcher.getResource(location);
-						sink.next(objectMapper.readValue(resource.getInputStream(), ApplicationCommandRequest.class));
+						ApplicationCommandRequest applicationCommandRequest = objectMapper.readValue(resource.getInputStream(), ApplicationCommandRequest.class);
+						sink.next(new DiscordApplicationCommandRequest(applicationCommandRequest));
 					} catch (Exception e) {
 						sink.error(e);
 					}

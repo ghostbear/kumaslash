@@ -4,12 +4,16 @@ import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.command.ApplicationCommandOption;
 import discord4j.core.object.entity.Message;
 import discord4j.core.object.entity.User;
 import discord4j.core.spec.EmbedCreateFields;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.discordjson.json.ApplicationCommandOptionChoiceData;
+import discord4j.discordjson.json.ApplicationCommandOptionData;
 import discord4j.discordjson.possible.Possible;
 import discord4j.rest.util.Color;
+import me.ghostbear.core.discord4j.DiscordApplicationCommandRequest;
 import me.ghostbear.core.discord4j.utils.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
@@ -34,8 +38,32 @@ public class RulesEventHandler {
 	}
 
 	@DiscordInteractionProperties
-	public Resources commandProperties() {
-		return Resources.of("commands/rules.json");
+	public me.ghostbear.core.discord4j.utils.Publisher commandProperties() {
+		return () -> ruleRepository.findAll()
+				.groupBy(guildRule -> guildRule.guildSnowflake())
+				.flatMap(longGuildRuleGroupedFlux -> longGuildRuleGroupedFlux
+						.buffer()
+						.map(guildRules -> DiscordApplicationCommandRequest.withName("rules")
+								.withGuildId(Snowflake.of(longGuildRuleGroupedFlux.key()))
+								.withDescription("Rules for %s".formatted(longGuildRuleGroupedFlux.key()))
+								.withOptions(List.of(
+										ApplicationCommandOptionData.builder()
+												.type(ApplicationCommandOption.Type.USER.getValue())
+												.name("user")
+												.description("The user")
+												.build(),
+										ApplicationCommandOptionData.builder()
+												.type(ApplicationCommandOption.Type.STRING.getValue())
+												.name("index")
+												.addAllChoices(guildRules.stream()
+														.map(guildRule -> (ApplicationCommandOptionChoiceData) ApplicationCommandOptionChoiceData.builder()
+																.name(String.valueOf( guildRule.index()))
+																.value(String.valueOf( guildRule.index()))
+																.build())
+														.toList())
+												.description("The rule to display")
+												.build()
+								))));
 	}
 
 	@DiscordInteractionHandler(name = "rules")
@@ -43,7 +71,8 @@ public class RulesEventHandler {
 		Snowflake snowflake = event.getInteraction().getGuildId().orElseThrow();
 		Optional<Long> index = event.getOption("index")
 				.flatMap(ApplicationCommandInteractionOption::getValue)
-				.map(ApplicationCommandInteractionOptionValue::asLong);
+				.map(ApplicationCommandInteractionOptionValue::asString)
+				.map(Long::valueOf);
 		Mono<User> user = event.getOption("user")
 				.flatMap(ApplicationCommandInteractionOption::getValue)
 				.map(ApplicationCommandInteractionOptionValue::asUser)
