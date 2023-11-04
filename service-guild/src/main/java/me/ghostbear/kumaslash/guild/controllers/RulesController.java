@@ -17,8 +17,8 @@ import me.ghostbear.core.discord4j.DiscordApplicationCommandRequest;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
-import me.ghostbear.kumaslash.guild.repositories.RuleRepository;
 import me.ghostbear.kumaslash.guild.domain.Rule;
+import me.ghostbear.kumaslash.guild.repositories.RuleRepository;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -61,8 +61,8 @@ public class RulesController {
 																.name("index")
 																.addAllChoices(guildRules.stream()
 																		.map(rule -> (ApplicationCommandOptionChoiceData) ApplicationCommandOptionChoiceData.builder()
-																				.name(String.valueOf( rule.index()))
-																				.value(String.valueOf( rule.index()))
+																				.name(String.valueOf(rule.index()))
+																				.value(String.valueOf(rule.index()))
 																				.build())
 																		.toList())
 																.description("The rule to display")
@@ -116,7 +116,7 @@ public class RulesController {
 					if (tuple.getT1().size() > 1) {
 						return rulesReply(event, tuple.getT1(), tuple.getT2());
 					}
-					return ruleReply(event,  tuple.getT1().get(0), tuple.getT2());
+					return ruleReply(event, tuple.getT1().get(0), tuple.getT2());
 				});
 	}
 

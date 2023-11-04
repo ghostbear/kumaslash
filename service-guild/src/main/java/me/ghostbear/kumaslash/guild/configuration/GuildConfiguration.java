@@ -13,15 +13,12 @@ import org.springframework.boot.autoconfigure.flyway.FlywayConnectionDetails;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
 import org.springframework.boot.autoconfigure.flyway.FlywayProperties;
-import org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryOptionsBuilderCustomizer;
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcConnectionDetails;
 import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.r2dbc.core.DefaultReactiveDataAccessStrategy;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -96,7 +93,7 @@ public class GuildConfiguration {
 	}
 
 
-	public ConnectionFactory createConnectionFactory( R2dbcProperties r2dbcProperties) {
+	public ConnectionFactory createConnectionFactory(R2dbcProperties r2dbcProperties) {
 		ConnectionFactoryOptions options = ConnectionFactoryOptions.parse(r2dbcProperties.getUrl());
 		ConnectionFactoryOptions.Builder builder = ConnectionFactoryOptions.builder().from(options);
 		builder.option(ConnectionFactoryOptions.USER, r2dbcProperties.getUsername());

@@ -9,6 +9,6 @@ import reactor.core.publisher.Mono;
 public interface GuildRepository extends R2dbcRepository<Guild, Long> {
 
 	@Query("INSERT INTO guild VALUES (:snowflake) ON CONFLICT DO NOTHING")
- 	Mono<Void> saveOrDoNothing(@Param("snowflake") long snowflake);
+	Mono<Void> saveOrDoNothing(@Param("snowflake") long snowflake);
 
 }

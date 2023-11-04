@@ -16,5 +16,5 @@ public interface ChannelRepository extends R2dbcRepository<Channel, Long> {
 			""")
 	Mono<Void> insert(@Param("channel") Channel channel);
 
-    Mono<Channel> findByGuildSnowflake(long guildSnowflake);
+	Mono<Channel> findByGuildSnowflake(long guildSnowflake);
 }

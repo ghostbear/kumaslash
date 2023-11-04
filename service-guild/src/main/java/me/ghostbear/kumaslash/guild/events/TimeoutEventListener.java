@@ -112,9 +112,9 @@ public class TimeoutEventListener {
 				.orElse("No reason provided");
 
 		return getGuildLogChannel(event.getGuildId().asLong())
-				.flatMap(channel -> createTimeoutChannelMessage(channel, targetUser, duration,  change.getCurrentValue().orElse(Instant.now()), reason, responsibleUser))
+				.flatMap(channel -> createTimeoutChannelMessage(channel, targetUser, duration, change.getCurrentValue().orElse(Instant.now()), reason, responsibleUser))
 				.then(Mono.defer(() -> new User(gateway, targetUser.get()).getPrivateChannel()
-						.flatMap(privateChannel -> createPrivateChannelMessage(event.getGuild().block(), privateChannel, change.getCurrentValue().orElse(Instant.now()),reason))));
+						.flatMap(privateChannel -> createPrivateChannelMessage(event.getGuild().block(), privateChannel, change.getCurrentValue().orElse(Instant.now()), reason))));
 	}
 
 	@DiscordEventHandler

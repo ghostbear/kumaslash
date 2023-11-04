@@ -20,7 +20,6 @@ public record Social(
 ) {
 
 
-
 	public enum Action {
 		BITE,
 		HUG,
