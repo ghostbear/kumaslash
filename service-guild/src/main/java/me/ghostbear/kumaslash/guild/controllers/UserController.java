@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.guild.commands;
+package me.ghostbear.kumaslash.guild.controllers;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 
 @DiscordComponent
-public class UserEventHandler {
+public class UserController {
 
 	@DiscordInteractionProperties
 	public Resources commandProperties() {

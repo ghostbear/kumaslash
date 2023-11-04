@@ -1,10 +1,10 @@
-package me.ghostbear.kumaslash.guild.commands;
+package me.ghostbear.kumaslash.guild.events;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.event.domain.guild.GuildCreateEvent;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
-import me.ghostbear.kumaslash.guild.GuildRepository;
+import me.ghostbear.kumaslash.guild.repositories.GuildRepository;
 import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -14,15 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Objects;
 
 @DiscordComponent
-public class GuildCreatedEventHandler {
+public class GuildCreatedEventListener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(GuildCreatedEventHandler.class);
+	private static final Logger LOG = LoggerFactory.getLogger(GuildCreatedEventListener.class);
 
 	@NotNull
 	private final GuildRepository guildRepository;
 
 	@Autowired
-	public GuildCreatedEventHandler(@NotNull GuildRepository guildRepository) {
+	public GuildCreatedEventListener(@NotNull GuildRepository guildRepository) {
 		this.guildRepository = Objects.requireNonNull(guildRepository);
 	}
 

@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.guild.commands;
+package me.ghostbear.kumaslash.guild.controllers;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
@@ -11,18 +11,18 @@ import me.ghostbear.core.discord4j.utils.Resources;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionHandler;
 import me.ghostbear.core.discord4j.annotations.DiscordInteractionProperties;
-import me.ghostbear.kumaslash.guild.GuildSocialRepository;
-import me.ghostbear.kumaslash.guild.model.GuildSocial;
+import me.ghostbear.kumaslash.guild.repositories.SocialRepository;
+import me.ghostbear.kumaslash.guild.domain.Social;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
 @DiscordComponent
-public class SocialEventHandler {
-	private final GuildSocialRepository socialRepository;
+public class SocialController {
+	private final SocialRepository socialRepository;
 
 	@Autowired
-	public SocialEventHandler(GuildSocialRepository socialRepository) {
+	public SocialController(SocialRepository socialRepository) {
 		this.socialRepository = socialRepository;
 	}
 
@@ -50,13 +50,13 @@ public class SocialEventHandler {
 				.flatMap(user -> user.asMember(guildId))
 				.zipWith(Mono.defer(() -> interactor.asMember(guildId)))
 				.zipWith(
-						Mono.defer(() -> socialRepository.findByGuildSnowflakeAndAction(guildId.asLong(), GuildSocial.Action.valueOf(action))),
+						Mono.defer(() -> socialRepository.findByGuildSnowflakeAndAction(guildId.asLong(), Social.Action.valueOf(action))),
 						(tuple, social) -> Tuples.of(tuple.getT2(), tuple.getT1(), social))
 				.flatMap(tuple -> successReply(event, tuple.getT1(), tuple.getT2(), tuple.getT3()))
 				.switchIfEmpty(Mono.defer(() -> targetSelfReply(event)));
 	}
 
-	Mono<Message> successReply(ChatInputInteractionEvent event, Member interactor, Member target, GuildSocial social) {
+	Mono<Message> successReply(ChatInputInteractionEvent event, Member interactor, Member target, Social social) {
 		return event.createFollowup()
 				.withEmbeds(EmbedCreateSpec.builder()
 						.color(Color.PINK)

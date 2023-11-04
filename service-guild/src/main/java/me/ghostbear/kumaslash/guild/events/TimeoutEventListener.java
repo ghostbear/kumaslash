@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.guild.commands;
+package me.ghostbear.kumaslash.guild.events;
 
 import discord4j.common.util.Snowflake;
 import discord4j.core.GatewayDiscordClient;
@@ -27,7 +27,7 @@ import discord4j.rest.service.AuditLogService;
 import discord4j.rest.service.ChannelService;
 import me.ghostbear.core.discord4j.annotations.DiscordComponent;
 import me.ghostbear.core.discord4j.annotations.DiscordEventHandler;
-import me.ghostbear.kumaslash.guild.GuildLogChannelRepository;
+import me.ghostbear.kumaslash.guild.repositories.ChannelRepository;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,18 +40,18 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @DiscordComponent
-public class TimeoutEventAdapter {
+public class TimeoutEventListener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(TimeoutEventAdapter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TimeoutEventListener.class);
 
 	private final Function<Id, String> asMention = value -> "<@%s>".formatted(value.asString());
 
 	private final GatewayDiscordClient gateway;
 	private final AuditLogService auditLogService;
 	private final ChannelService channelService;
-	private final GuildLogChannelRepository channelRepository;
+	private final ChannelRepository channelRepository;
 
-	public TimeoutEventAdapter(GatewayDiscordClient client, GuildLogChannelRepository channelRepository) {
+	public TimeoutEventListener(GatewayDiscordClient client, ChannelRepository channelRepository) {
 		gateway = client;
 		auditLogService = client.getRestClient()
 				.getAuditLogService();

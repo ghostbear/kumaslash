@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.guild.model;
+package me.ghostbear.kumaslash.guild.domain;
 
 import discord4j.common.util.Snowflake;
 import org.springframework.data.annotation.Id;

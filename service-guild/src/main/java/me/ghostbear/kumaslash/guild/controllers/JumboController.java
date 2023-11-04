@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.guild.commands;
+package me.ghostbear.kumaslash.guild.controllers;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
@@ -25,14 +25,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @DiscordComponent
-public class JumboEventHandler {
+public class JumboController {
 
 	private final Pattern pattern = Pattern.compile("<(a)?:(.*):(.*)>", Pattern.CASE_INSENSITIVE);
 	private final String template = "https://cdn.discordapp.com/emojis/%s.%s?v=1";
 
 	private final WebClient webClient;
 
-	public JumboEventHandler(WebClient webClient) {
+	public JumboController(WebClient webClient) {
 		this.webClient = webClient;
 	}
 
@@ -47,7 +47,7 @@ public class JumboEventHandler {
 				.flatMap(ApplicationCommandInteractionOption::getValue)
 				.map(ApplicationCommandInteractionOptionValue::asString);
 		return Mono.justOrEmpty(option)
-				.flatMap(JumboEventHandler.this::findAndGetEmojiOrEmpty)
+				.flatMap(JumboController.this::findAndGetEmojiOrEmpty)
 				.flatMap(s -> event.deferReply().thenReturn(s))
 				.flatMap(t -> getEmojiAsInputStream(t.getT2()).map(is -> Tuples.of(t.getT1(), is)))
 				.flatMap(t -> successReply(event, t.getT1(), t.getT2()))

@@ -1,12 +1,12 @@
-package me.ghostbear.kumaslash.guild;
+package me.ghostbear.kumaslash.guild.repositories;
 
-import me.ghostbear.kumaslash.guild.model.GuildLogChannel;
+import me.ghostbear.kumaslash.guild.domain.Channel;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.repository.query.Param;
 import reactor.core.publisher.Mono;
 
-public interface GuildLogChannelRepository extends R2dbcRepository<GuildLogChannel, Long> {
+public interface ChannelRepository extends R2dbcRepository<Channel, Long> {
 
 	@Query("""
 			INSERT INTO guild_log_channel(channel_snowflake, fk_guild_snowflake, type)
@@ -14,7 +14,7 @@ public interface GuildLogChannelRepository extends R2dbcRepository<GuildLogChann
 			ON CONFLICT
 			DO NOTHING;
 			""")
-	Mono<Void> insert(@Param("channel") GuildLogChannel channel);
+	Mono<Void> insert(@Param("channel") Channel channel);
 
-    Mono<GuildLogChannel> findByGuildSnowflake(long guildSnowflake);
+    Mono<Channel> findByGuildSnowflake(long guildSnowflake);
 }

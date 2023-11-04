@@ -1,4 +1,4 @@
-package me.ghostbear.kumaslash.guild.model;
+package me.ghostbear.kumaslash.guild.domain;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -7,7 +7,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.UUID;
 
 @Table("guild")
-public record GuildSocial(
+public record Social(
 		@Id
 		@Column("uuid")
 		UUID id,

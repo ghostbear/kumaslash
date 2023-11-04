@@ -1,11 +1,11 @@
-package me.ghostbear.kumaslash.guild.model;
+package me.ghostbear.kumaslash.guild.domain;
 
 import discord4j.common.util.Snowflake;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("guild_log_channel")
-public record GuildLogChannel(
+public record Channel(
 		@Column("channel_snowflake")
 		Long channelSnowflake,
 		@Column("fk_guild_snowflake")
@@ -14,7 +14,7 @@ public record GuildLogChannel(
 		Type type
 ) {
 
-	public GuildLogChannel(Snowflake channelSnowflake, Snowflake guildSnowflake, Type type) {
+	public Channel(Snowflake channelSnowflake, Snowflake guildSnowflake, Type type) {
 		this(channelSnowflake.asLong(), guildSnowflake.asLong(), type);
 	}
 
