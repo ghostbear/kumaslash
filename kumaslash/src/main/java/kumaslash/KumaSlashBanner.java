@@ -16,6 +16,11 @@ public class KumaSlashBanner implements Banner {
 
 	private static final String[] BANNER =
 			new String[] {
+				"       .                      *      |  ",
+				"  *                 .               -O- ",
+				"            o                        |  ",
+				"      .                          .      ",
+				"                       *              o ",
 				" _  __                        __  __  __",
 				"| |/ /   _ _ __ ___   __ _   / / / / / /",
 				"| ' / | | | '_ ` _ \\ / _` | / / / / / /",
