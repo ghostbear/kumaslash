@@ -1,0 +1,6 @@
+{
+  "name": "about",
+  "description": "Display version information",
+  "default_member_permissions": 0,
+  "dm_permission": false
+}

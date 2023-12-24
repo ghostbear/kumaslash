@@ -1,0 +1,10 @@
+---
+spring:
+  jda:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/mydatabase"
+    username: "myuser"
+    password: "secret"
+  sql:
+    init:
+      mode: "always"

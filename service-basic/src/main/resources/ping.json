@@ -1,0 +1,6 @@
+{
+  "name": "ping",
+  "description": "Measure bot delay",
+  "default_member_permissions": 0,
+  "dm_permission": false
+}

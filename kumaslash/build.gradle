@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+dependencies {
+    implementation(project(':service-basic'))
+    implementation(project(':service-guild'))
+
+    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
