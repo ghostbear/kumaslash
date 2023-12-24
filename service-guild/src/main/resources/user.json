@@ -1,0 +1,30 @@
+{
+  "name": "user",
+  "description": "User related commands",
+  "dm_permission": false,
+  "options": [ {
+    "name": "avatar",
+    "description": "Get the avatar of a user",
+    "type": 1,
+    "options": [ {
+      "name": "target",
+      "description": "The user to get the avatar from",
+      "type": 6,
+      "required": true
+    }, {
+      "name": "guild",
+      "description": "Get the guild avatar if user has one",
+      "type": 5
+    } ]
+  }, {
+    "name": "banner",
+    "description": "The user to get the banner from",
+    "type": 1,
+    "options": [ {
+      "name": "target",
+      "description": "The user to get the avatar from",
+      "type": 6,
+      "required": true
+    } ]
+  } ]
+}
