@@ -2,34 +2,81 @@
 
 ## Slash Commands
 
-### /user avatar :target :guild?
+`:name` is a required option.
+
+`:name?` is an optional option.
+
+### User
+
+```
+/user avatar :target :guild?
+```
 
 Get the avatar of the targeted user.
 
-### /user banner :target
+---
+
+```
+/user banner :target
+```
 
 Get the banner of the targeted user.
 
-### /rule :id? :target?
+### Rule
 
-Get the rules of the guild. 
-If id is provided only that rule with be shown and/or a target is provided they will get mentioned.
+```
+/rule :rule_id :target?
+```
 
-#### /guild rule view
+Get a rule of the guild.
+`rule_id` is choices which is guild specific.
+`target` is an optional to mention a user, used to notify them that they aren't following the rule.
 
-View the rules in the guild.
+---
 
-#### /guild rule add :id :title :description:
+```
+/rules :target?
+```
+
+Get the rules of the guild.
+`target` is an optional to mention a user, used to notify them that they aren't following the rules.
+
+#### Managing Rules
+
+KumaSlash provides a way to add/delete/modify rules for the guild.
+
+---
+
+```
+/guild rule add :number :short :long
+```
 
 Add a new rule to the guild.
+`number` is the number/index of the rule.
+`short` is the short version of the rule.
+`long` is the long version of the rule.
 
-#### /guild rule delete :id
+---
 
-Delete an existing rule from the guild.
+```
+/guild rule delete :rule_id
+```
 
-#### /guild rule modify :id :title? :description?
+Delete an existing rule from the guild
+`rule_id` is the automatically generated id of the rule (this option is autocomplete).
+
+---
+
+
+```
+/guild rule modify :rule_id :number? :title? :description?
+```
 
 Modify an existing rule in the guild.
+`rule_id` is the automatically generated id of the rule (this option is autocomplete).
+`number?` is the number/index of the rule (use decimals to insert a rule between two rules).
+`short?` is the short version of the rule.
+`long?` is the long version of the rule.
 
 ### /jumbo :emoji
 

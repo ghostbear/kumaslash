@@ -22,9 +22,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.utils.ImageProxy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
@@ -48,7 +45,10 @@ public class UserController {
 		Member targetMember = aTarget.getAsMember();
 		ImageProxy avatar;
 		if (aGuild) {
-			avatar = targetMember.getEffectiveAvatar() != null ? targetMember.getEffectiveAvatar() : targetUser.getEffectiveAvatar();
+			avatar =
+					targetMember.getEffectiveAvatar() != null
+							? targetMember.getEffectiveAvatar()
+							: targetUser.getEffectiveAvatar();
 		} else {
 			avatar = targetUser.getEffectiveAvatar();
 		}
@@ -60,7 +60,8 @@ public class UserController {
 					.flatMap(Message::delete)
 					.queue();
 		} else {
-			Color accentColor = targetUser.retrieveProfile().map(User.Profile::getAccentColor).complete();
+			Color accentColor =
+					targetUser.retrieveProfile().map(User.Profile::getAccentColor).complete();
 			interactionHook
 					.sendMessageEmbeds(
 							new EmbedBuilder()
@@ -91,7 +92,8 @@ public class UserController {
 					.flatMap(Message::delete)
 					.queue();
 		} else {
-			Color accentColor = targetUser.retrieveProfile().map(User.Profile::getAccentColor).complete();
+			Color accentColor =
+					targetUser.retrieveProfile().map(User.Profile::getAccentColor).complete();
 			interactionHook
 					.sendMessageEmbeds(
 							new EmbedBuilder()

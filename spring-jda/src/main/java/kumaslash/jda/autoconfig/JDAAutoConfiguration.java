@@ -8,6 +8,7 @@
 package kumaslash.jda.autoconfig;
 
 import java.util.List;
+import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.configuration.JDAProperties;
 import kumaslash.jda.events.CommandSupplier;
 import net.dv8tion.jda.api.JDA;
@@ -19,10 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.event.EventListener;
 
 @AutoConfiguration
 @EnableConfigurationProperties(JDAProperties.class)
@@ -38,14 +38,21 @@ public class JDAAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public JDA jda(JDABuilder jdaBuilder) {
-		return jdaBuilder.build();
+	public JDA jda(JDABuilder jdaBuilder) throws InterruptedException {
+		return jdaBuilder.build().awaitReady();
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	public JDABuilder jdaBuilder(IEventManager eventManager) {
-		return JDABuilder.createDefault(jdaProperties.getToken()).setEventManager(eventManager);
+	public JDABuilder jdaBuilder(
+			ApplicationContext applicationContext, IEventManager eventManager) {
+		return JDABuilder.createDefault(jdaProperties.getToken())
+				.setEventManager(eventManager)
+				.addEventListeners(
+						applicationContext
+								.getBeansWithAnnotation(JDAController.class)
+								.values()
+								.toArray());
 	}
 
 	@Bean
@@ -62,11 +69,5 @@ public class JDAAutoConfiguration {
 															.map(Command::getName)
 															.toList()));
 		};
-	}
-
-	@EventListener
-	public void onApplicationReady(ApplicationReadyEvent event) throws InterruptedException {
-		JDA jda = event.getApplicationContext().getBean(JDA.class);
-		jda.awaitReady();
 	}
 }

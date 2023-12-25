@@ -1,0 +1,66 @@
+{
+  "name": "guild",
+  "description": "Allows you to dynamically change the command",
+  "default_member_permissions": 0,
+  "dm_permission": false,
+  "options": [ {
+    "name": "rule",
+    "description": "Manage the rules in the guild",
+    "type": 2,
+    "options": [ {
+      "name": "add",
+      "description": "Add a new rule to the guild",
+      "type": 1,
+      "options": [ {
+        "name": "number",
+        "description": "Where to place the rule (use decimals to place it between existing rule numbers)",
+        "type": 10,
+        "required": true
+      }, {
+        "name": "short",
+        "description": "A brief summary of the rule",
+        "type": 3,
+        "required": true
+      }, {
+        "name": "long",
+        "description": "A deeper explanation of the rule",
+        "type": 3,
+        "required": true
+      } ]
+    }, {
+      "name": "delete",
+      "description": "Delete a existing rule from the guild",
+      "type": 1,
+      "options": [ {
+        "name": "rule",
+        "description": "The rule to delete",
+        "type": 4,
+        "required": true,
+        "autocomplete": true
+      } ]
+    }, {
+      "name": "modify",
+      "description": "Modify a existing rule in the guild",
+      "type": 1,
+      "options": [ {
+        "name": "rule",
+        "description": "The rule to modify",
+        "type": 4,
+        "required": true,
+        "autocomplete": true
+      }, {
+        "name": "number",
+        "description": "Where to place the rule (use decimals to place it between existing rule numbers)",
+        "type": 10
+      }, {
+        "name": "short",
+        "description": "A brief summary of the rule",
+        "type": 3
+      }, {
+        "name": "long",
+        "description": "A deeper explanation of the rule",
+        "type": 3
+      } ]
+    } ]
+  } ]
+}

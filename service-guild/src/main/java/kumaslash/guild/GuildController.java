@@ -11,7 +11,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import kumaslash.jda.annotations.EventMapping;
 import kumaslash.jda.annotations.JDAController;
+import kumaslash.jda.events.CommandSupplier;
+import kumaslash.jda.events.ResourceCommandSupplier;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 
 @JDAController
 public class GuildController {
@@ -34,5 +38,10 @@ public class GuildController {
 					guildRepository.save(new Guild(snowflake, !isNotNew));
 					notifierService.notify(snowflake);
 				});
+	}
+
+	@Bean
+	public CommandSupplier dynamicCommandSupplier() {
+		return new ResourceCommandSupplier(new ClassPathResource("guild.json"));
 	}
 }

@@ -11,8 +11,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import kumaslash.jda.annotations.AutoCompleteMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
+import kumaslash.jda.events.AutoCompleteMappingDecorator;
 import kumaslash.jda.events.EventMappingProxy;
 import kumaslash.jda.events.SlashCommandMappingDecorator;
 import kumaslash.jda.utils.JDAUtils;
@@ -83,6 +85,12 @@ public class SpringEventManager implements IEventManager {
 					method.getAnnotation(SlashCommandMapping.class);
 			eventMappingProxy =
 					new SlashCommandMappingDecorator(slashCommandMapping.name(), eventMappingProxy);
+		} else if (method.isAnnotationPresent(AutoCompleteMapping.class)) {
+			AutoCompleteMapping autoCompleteMapping =
+					method.getAnnotation(AutoCompleteMapping.class);
+			eventMappingProxy =
+					new AutoCompleteMappingDecorator(
+							autoCompleteMapping.value(), eventMappingProxy);
 		}
 		return eventMappingProxy;
 	}
