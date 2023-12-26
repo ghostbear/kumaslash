@@ -78,7 +78,11 @@ Modify an existing rule in the guild.
 `short?` is the short version of the rule.
 `long?` is the long version of the rule.
 
-### /jumbo :emoji
+### Jumbo
+
+```
+/jumbo :emoji
+```
 
 Make a emoji jumbo sized.
 

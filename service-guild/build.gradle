@@ -8,6 +8,7 @@ dependencies {
     api(project(':spring-jda'))
     api 'org.springframework.boot:spring-boot-starter'
     api 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    api 'org.springframework:spring-web'
     api 'org.postgresql:postgresql'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

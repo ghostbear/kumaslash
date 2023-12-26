@@ -1,0 +1,10 @@
+{
+  "name": "jumbo",
+  "description": "Jumbofy a emoji",
+  "options": [ {
+    "name": "emoji",
+    "description": "Get the avatar of a user",
+    "type": 3,
+    "required": true
+  } ]
+}
