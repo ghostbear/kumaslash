@@ -7,14 +7,12 @@
  */
 package kumaslash;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableScheduling
 @SpringBootApplication
 public class KumaSlashApplication extends ListenerAdapter {
 
@@ -22,10 +20,5 @@ public class KumaSlashApplication extends ListenerAdapter {
 		SpringApplication application = new SpringApplication(KumaSlashApplication.class);
 		application.setBanner(new KumaSlashBanner());
 		application.run(args);
-	}
-
-	@Bean
-	public ApplicationRunner applicationRunner(JDA jda) {
-		return args -> jda.getPresence().setActivity(Activity.customStatus("Brushing fur!"));
 	}
 }

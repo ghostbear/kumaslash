@@ -14,20 +14,19 @@ import org.springframework.core.env.Environment;
 
 public class KumaSlashBanner implements Banner {
 
-	private static final String[] BANNER =
-			new String[] {
-				"       .                      *      |  ",
-				"  *                 .               -O- ",
-				"            o                        |  ",
-				"      .                          .      ",
-				"                       *              o ",
-				" _  __                        __  __  __",
-				"| |/ /   _ _ __ ___   __ _   / / / / / /",
-				"| ' / | | | '_ ` _ \\ / _` | / / / / / /",
-				"| . \\ |_| | | | | | | (_| |/ / / / / /",
-				"|_|\\_\\__,_|_| |_| |_|\\__,_/ / / / / /",
-				"=========================/_/=/_/=/_/",
-			};
+	private static final String[] BANNER = {
+		"       .                      *      |  ",
+		"  *                 .               -O- ",
+		"            o                        |  ",
+		"      .                          .      ",
+		"                       *              o ",
+		" _  __                        __  __  __",
+		"| |/ /   _ _ __ ___   __ _   / / / / / /",
+		"| ' / | | | '_ ` _ \\ / _` | / / / / / /",
+		"| . \\ |_| | | | | | | (_| |/ / / / / /",
+		"|_|\\_\\__,_|_| |_| |_|\\__,_/ / / / / /",
+		"=========================/_/=/_/=/_/",
+	};
 	private static final String SPRING_BOOT = ":: Spring Boot ::";
 
 	@Override
