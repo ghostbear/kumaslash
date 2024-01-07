@@ -1,0 +1,16 @@
+{
+  "name": "social",
+  "description": "Be social with another member",
+  "options": [ {
+    "name": "social_action_id",
+    "description": "The action to perform",
+    "type": 3,
+    "required": true,
+    "autocomplete": true
+  }, {
+    "name": "target",
+    "description": "The member to perform the action with",
+    "type": 6,
+    "required": true
+  } ]
+}

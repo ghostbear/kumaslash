@@ -9,24 +9,25 @@ package kumaslash.rules;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RuleRepository extends CrudRepository<Rule, Long> {
+public interface RuleRepository extends CrudRepository<Rule, UUID> {
 
 	List<Rule> findAllByGuildSnowflakeOrderByNumber(long guildSnowflake);
 
 	List<Rule> findAllByGuildSnowflakeAndShortDescriptionContainsIgnoreCase(
 			long guildSnowflake, String query);
 
-	Optional<Rule> findRuleByIdAndGuildSnowflake(long id, long guildSnowflake);
+	Optional<Rule> findRuleByIdAndGuildSnowflake(UUID id, long guildSnowflake);
 
 	@Modifying
 	@Query("DELETE FROM rules WHERE id = :id AND guild_snowflake = :guildSnowflake")
-	boolean deleteByIdAndGuildSnowflake(long id, long guildSnowflake);
+	boolean deleteByIdAndGuildSnowflake(UUID id, long guildSnowflake);
 
 	@Modifying
 	@Query(

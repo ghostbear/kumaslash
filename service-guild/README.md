@@ -29,8 +29,8 @@ Get the banner of the targeted user.
 ```
 
 Get a rule of the guild.
-`rule_id` is choices which is guild specific.
-`target` is an optional to mention a user, used to notify them that they aren't following the rule.
+- `rule_id` is choices which is guild specific.
+- `target` is an optional to mention a user, used to notify them that they aren't following the rule.
 
 ---
 
@@ -39,7 +39,7 @@ Get a rule of the guild.
 ```
 
 Get the rules of the guild.
-`target` is an optional to mention a user, used to notify them that they aren't following the rules.
+- `target` is an optional to mention a user, used to notify them that they aren't following the rules.
 
 #### Managing Rules
 
@@ -52,9 +52,9 @@ KumaSlash provides a way to add/delete/modify rules for the guild.
 ```
 
 Add a new rule to the guild.
-`number` is the number/index of the rule.
-`short` is the short version of the rule.
-`long` is the long version of the rule.
+- `number` is the number/index of the rule.
+- `short` is the short version of the rule.
+- `long` is the long version of the rule.
 
 ---
 
@@ -63,7 +63,7 @@ Add a new rule to the guild.
 ```
 
 Delete an existing rule from the guild
-`rule_id` is the automatically generated id of the rule (this option is autocomplete).
+- `rule_id` is the automatically generated id of the rule (this option is autocomplete).
 
 ---
 
@@ -73,10 +73,10 @@ Delete an existing rule from the guild
 ```
 
 Modify an existing rule in the guild.
-`rule_id` is the automatically generated id of the rule (this option is autocomplete).
-`number?` is the number/index of the rule (use decimals to insert a rule between two rules).
-`short?` is the short version of the rule.
-`long?` is the long version of the rule.
+- `rule_id` is the automatically generated id of the rule (this option is autocomplete).
+- `number?` is the number/index of the rule (use decimals to insert a rule between two rules).
+- `short?` is the short version of the rule.
+- `long?` is the long version of the rule.
 
 ### Jumbo
 
@@ -86,34 +86,68 @@ Modify an existing rule in the guild.
 
 Make a emoji jumbo sized.
 
-### /social :action :target
+### Social
 
-Do a social interaction with the target.
-The target can't be yourself.
+```
+/social :action_id :target
+```
 
-#### /guild social action view
+Do a social action on a user.
+- `action_id` an UUID of the social action to use. This is auto complete which mean that the name of the social action can be used.
+- `target` an user you want to be social with, can't be yourself.
 
-View the social actions in the guild.
+#### Managing Social
 
-#### /guild social action add :action
+> A social action need to be created before one can add images to that social action.
 
-Add a new action to the guild.
+```
+/guild social-action add :name :template
+```
 
-#### /guild social action delete :action
+Add a new social action to the guild. A social action works like a group for images.
+- `name`  is the name of the social action.
+- `template` is the template which will be used when using the social action.
 
-Delete an existing action from the guild.
+---
 
-#### /guild social view :action
+```
+/guild social-action modify :action_id :name? :template?
+```
 
-View the social images for an action in the guild.
+Modify an existing social action in the guild.
+- `action_id` is the UUID of the social action. This is auto complete which mean that the name of the social action can be used.
+- `name?` is the name of the social action.
+- `template?` is the template which will be used when using the social action.
 
-#### /guild social add :action :url
+---
 
-Add a social image to an action in the guild.
+```
+/guild social-action delete :action_id 
+```
 
-#### /guild social delete :auto_id
+Delete an existing social action from the guild.
+- `action_id` is the UUID of the social action. This is auto complete which mean that the name of the social action can be used.
 
-Delete a social image from an action in the guild.
+---
+
+```
+/guild social add :action_id :url
+```
+
+Add an image to a social action.
+- `action_id` is the UUID of the social action. This is auto complete which mean that the name of the social action can be used.
+- `url` is the url of the image to be added to the social action
+
+---
+
+```
+/guild social delete :social_id
+```
+
+Add an image to a social action.
+- `social_id` is the UUID of the social action. This is auto complete which mean that the name of the social action or url can be used.
+
+---
 
 ### /guild moderation_channel :message_channel
 

@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ import kumaslash.guild.GuildNotifierService;
 import kumaslash.jda.annotations.AutoCompleteMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
+import kumaslash.jda.utils.OptionMappingUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -69,7 +71,7 @@ public class RuleController {
 		event.deferReply().queue();
 
 		User user = event.getOption("target", OptionMapping::getAsUser);
-		Long ruleId = event.getOption("rule", OptionMapping::getAsLong);
+		UUID ruleId = event.getOption("rule", OptionMappingUtils::asUUID);
 
 		Optional<Rule> optionalRule =
 				ruleService.findOneByIdAndGuildSnowflake(ruleId, event.getGuild().getIdLong());
@@ -113,7 +115,7 @@ public class RuleController {
 		event.deferReply().queue();
 
 		long guildSnowflake = event.getGuild().getIdLong();
-		Long ruleId = event.getOption("rule").getAsLong();
+		UUID ruleId = event.getOption("rule", OptionMappingUtils::asUUID);
 		Optional<Rule> optionalRule =
 				ruleService.findOneByIdAndGuildSnowflake(ruleId, guildSnowflake);
 		if (optionalRule.isEmpty()) {
@@ -148,7 +150,7 @@ public class RuleController {
 		event.deferReply().queue();
 
 		long guildSnowflake = event.getGuild().getIdLong();
-		Long ruleId = event.getOption("rule", OptionMapping::getAsLong);
+		UUID ruleId = event.getOption("rule", OptionMappingUtils::asUUID);
 		Double number = event.getOption("number", OptionMapping::getAsDouble);
 		String shortDescription = event.getOption("short", OptionMapping::getAsString);
 		String longDescription = event.getOption("long", OptionMapping::getAsString);
@@ -190,7 +192,11 @@ public class RuleController {
 										event.getGuild().getIdLong(),
 										event.getFocusedOption().getValue())
 								.stream()
-								.map(rule -> new Command.Choice(rule.shortDescription(), rule.id()))
+								.map(
+										rule ->
+												new Command.Choice(
+														rule.shortDescription(),
+														String.valueOf(rule.id())))
 								.toList())
 				.queue();
 	}
@@ -204,7 +210,7 @@ public class RuleController {
 							.toList();
 			return Commands.slash("rule", "Display a rule of the guild")
 					.addOptions(
-							new OptionData(OptionType.INTEGER, "rule", "A rule to display", true)
+							new OptionData(OptionType.STRING, "rule", "A rule to display", true)
 									.addChoices(choices),
 							new OptionData(
 									OptionType.USER, "target", "Someone didn't read the rules"));
@@ -257,6 +263,6 @@ public class RuleController {
 	}
 
 	Command.Choice asChoice(Rule rule) {
-		return new Command.Choice(rule.shortDescription(), rule.id());
+		return new Command.Choice(rule.shortDescription(), String.valueOf(rule.id()));
 	}
 }

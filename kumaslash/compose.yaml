@@ -7,3 +7,7 @@ services:
       - 'POSTGRES_USER=myuser'
       - 'POSTGRES_DB=mydatabase'
       - 'POSTGRES_PASSWORD=secret'
+  adminer:
+    image: adminer
+    ports:
+      - 8888:8080

@@ -64,7 +64,7 @@ public class JDAAutoConfiguration {
 					.queue(
 							commands ->
 									LOG.info(
-											"Registered commands: "
+											"Registered global commands: "
 													+ commands.stream()
 															.map(Command::getName)
 															.toList()));

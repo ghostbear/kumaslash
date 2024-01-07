@@ -7,10 +7,7 @@
  */
 package kumaslash.rules;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,7 +51,7 @@ public class RuleService {
 				snowflake, query);
 	}
 
-	public Optional<Rule> findOneByIdAndGuildSnowflake(Long ruleId, long guildSnowflake) {
+	public Optional<Rule> findOneByIdAndGuildSnowflake(UUID ruleId, long guildSnowflake) {
 		if (Objects.isNull(ruleId)) {
 			return Optional.empty();
 		}
@@ -62,7 +59,7 @@ public class RuleService {
 	}
 
 	@Transactional
-	public boolean deleteByIdAndGuildSnowflake(Long ruleId, long guildSnowflake) {
+	public boolean deleteByIdAndGuildSnowflake(UUID ruleId, long guildSnowflake) {
 		if (Objects.isNull(ruleId)) {
 			return false;
 		}

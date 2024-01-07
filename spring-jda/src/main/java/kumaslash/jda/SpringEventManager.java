@@ -79,6 +79,11 @@ public class SpringEventManager implements IEventManager {
 							.formatted(method.getName()));
 		}
 
+		return getGenericEventThrowingConsumer(o, method);
+	}
+
+	private static ThrowingConsumer<GenericEvent> getGenericEventThrowingConsumer(
+			Object o, Method method) {
 		ThrowingConsumer<GenericEvent> eventMappingProxy = new EventMappingProxy(o, method);
 		if (method.isAnnotationPresent(SlashCommandMapping.class)) {
 			SlashCommandMapping slashCommandMapping =
@@ -103,11 +108,15 @@ public class SpringEventManager implements IEventManager {
 	@Override
 	public void handle(GenericEvent genericEvent) {
 		Class<? extends GenericEvent> eventClass = genericEvent.getClass();
-		if (methods.containsKey(eventClass)) {
-			for (Consumer<GenericEvent> consumer :
-					methods.getOrDefault(eventClass, Collections.emptyList())) {
-				if (Objects.nonNull(consumer)) consumer.accept(genericEvent);
+		if (!methods.containsKey(eventClass)) {
+			return;
+		}
+		for (Consumer<GenericEvent> consumer :
+				methods.getOrDefault(eventClass, Collections.emptyList())) {
+			if (!Objects.nonNull(consumer)) {
+				continue;
 			}
+			consumer.accept(genericEvent);
 		}
 	}
 

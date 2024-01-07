@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package kumaslash.rules;
+package kumaslash.socials;
 
 import java.util.UUID;
 import org.springframework.data.annotation.Id;
@@ -15,24 +15,18 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table(name = "rules")
-public record Rule(
+@Table("socials_action")
+public record SocialAction(
 		@Id UUID id,
 		@Column("guild_snowflake") Long guildSnowflake,
-		Double number,
-		@Column("short") String shortDescription,
-		@Column("long") String longDescription,
+		@Column("action") String action,
+		@Column("template") String template,
 		@Transient boolean isNew)
 		implements Persistable<UUID> {
 
 	@PersistenceCreator
-	public Rule(
-			UUID id,
-			Long guildSnowflake,
-			Double number,
-			String shortDescription,
-			String longDescription) {
-		this(id, guildSnowflake, number, shortDescription, longDescription, false);
+	public SocialAction(UUID id, Long guildSnowflake, String action, String template) {
+		this(id, guildSnowflake, action, template, false);
 	}
 
 	@Override
