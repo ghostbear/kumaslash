@@ -9,6 +9,7 @@ springBoot {
 }
 
 dependencies {
+    api(project(':core'))
     api(project(':spring-jda'))
     api 'org.springframework.boot:spring-boot-starter'
 

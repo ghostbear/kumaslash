@@ -1,0 +1,37 @@
+{
+  "name": "embed",
+  "description": "Create or modify embed",
+  "default_member_permissions": 0,
+  "dm_permission": false,
+  "options": [ {
+    "name": "create",
+    "description": "Create a new embed in a channel",
+    "type": 1,
+    "options": [ {
+      "name": "json",
+      "description": "JSON representation of the embed",
+      "type": 11,
+      "required": true
+    }, {
+      "name": "channel",
+      "description": "The channel to send the embed in",
+      "type": 7,
+      "required": true
+    } ]
+  }, {
+    "name": "modify",
+    "description": "Modify an existing embed from the bot",
+    "type": 1,
+    "options": [ {
+      "name": "json",
+      "description": "JSON representation of the embed",
+      "type": 11,
+      "required": true
+    }, {
+      "name": "message",
+      "description": "Message id (channel_id-message_id)",
+      "type": 3,
+      "required": true
+    } ]
+  } ]
+}

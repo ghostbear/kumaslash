@@ -7,11 +7,11 @@
  */
 package kumaslash.socials;
 
+import kumaslash.core.Duad;
 import kumaslash.jda.annotations.AutoCompleteMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.utils.OptionMappingUtils;
-import kumaslash.utils.Duad;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -197,10 +197,10 @@ public class SocialModerationController {
 										.stream()
 										.map(social -> new Duad<>(social, socialAction)))
 								.map(duad -> new Command.Choice(
-										duad.left(SocialAction::action)
+										duad.right(SocialAction::action)
 												+ ": "
-												+ duad.right(Social::url),
-										String.valueOf(duad.right(Social::id))))
+												+ duad.left(Social::url),
+										String.valueOf(duad.left(Social::id))))
 								.toList())
 				.queue();
 	}
