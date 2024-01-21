@@ -7,14 +7,11 @@
  */
 package kumaslash.user;
 
-import java.awt.*;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.events.CommandSupplier;
 import kumaslash.jda.events.ResourceCommandSupplier;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -23,8 +20,14 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.ImageProxy;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+
+import java.awt.Color;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @JDAController
 public class UserController {
@@ -36,19 +39,17 @@ public class UserController {
 		OptionMapping aTarget = event.getOption("target");
 		assert aTarget != null;
 
-		boolean aGuild =
-				Optional.ofNullable(event.getOption("guild"))
-						.map(OptionMapping::getAsBoolean)
-						.orElse(false);
+		boolean aGuild = Optional.ofNullable(event.getOption("guild"))
+				.map(OptionMapping::getAsBoolean)
+				.orElse(false);
 
 		User targetUser = aTarget.getAsUser();
 		Member targetMember = aTarget.getAsMember();
 		ImageProxy avatar;
 		if (aGuild) {
-			avatar =
-					targetMember.getEffectiveAvatar() != null
-							? targetMember.getEffectiveAvatar()
-							: targetUser.getEffectiveAvatar();
+			avatar = targetMember.getEffectiveAvatar() != null
+					? targetMember.getEffectiveAvatar()
+					: targetUser.getEffectiveAvatar();
 		} else {
 			avatar = targetUser.getEffectiveAvatar();
 		}
@@ -60,15 +61,16 @@ public class UserController {
 					.flatMap(Message::delete)
 					.queue();
 		} else {
-			Color accentColor =
-					targetUser.retrieveProfile().map(User.Profile::getAccentColor).complete();
+			Color accentColor = targetUser
+					.retrieveProfile()
+					.map(User.Profile::getAccentColor)
+					.complete();
 			interactionHook
-					.sendMessageEmbeds(
-							new EmbedBuilder()
-									.setImage(avatar.getUrl(2048))
-									.setColor(accentColor)
-									.setFooter("Avatar for " + targetMember.getEffectiveName())
-									.build())
+					.sendMessageEmbeds(new EmbedBuilder()
+							.setImage(avatar.getUrl(2048))
+							.setColor(accentColor)
+							.setFooter("Avatar for " + targetMember.getEffectiveName())
+							.build())
 					.queue();
 		}
 	}
@@ -82,7 +84,8 @@ public class UserController {
 
 		User targetUser = aTarget.getAsUser();
 		Member targetMember = aTarget.getAsMember();
-		String bannerUrl = targetUser.retrieveProfile().map(User.Profile::getBannerUrl).complete();
+		String bannerUrl =
+				targetUser.retrieveProfile().map(User.Profile::getBannerUrl).complete();
 
 		InteractionHook interactionHook = event.getHook();
 		if (Objects.isNull(bannerUrl)) {
@@ -92,15 +95,16 @@ public class UserController {
 					.flatMap(Message::delete)
 					.queue();
 		} else {
-			Color accentColor =
-					targetUser.retrieveProfile().map(User.Profile::getAccentColor).complete();
+			Color accentColor = targetUser
+					.retrieveProfile()
+					.map(User.Profile::getAccentColor)
+					.complete();
 			interactionHook
-					.sendMessageEmbeds(
-							new EmbedBuilder()
-									.setImage(bannerUrl)
-									.setColor(accentColor)
-									.setFooter("Banner for " + targetMember.getEffectiveName())
-									.build())
+					.sendMessageEmbeds(new EmbedBuilder()
+							.setImage(bannerUrl)
+							.setColor(accentColor)
+							.setFooter("Banner for " + targetMember.getEffectiveName())
+							.build())
 					.queue();
 			interactionHook.sendMessage(bannerUrl).queue();
 		}

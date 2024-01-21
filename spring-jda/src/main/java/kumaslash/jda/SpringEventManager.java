@@ -7,10 +7,6 @@
  */
 package kumaslash.jda;
 
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 import kumaslash.jda.annotations.AutoCompleteMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
@@ -18,13 +14,25 @@ import kumaslash.jda.events.AutoCompleteMappingDecorator;
 import kumaslash.jda.events.EventMappingProxy;
 import kumaslash.jda.events.SlashCommandMappingDecorator;
 import kumaslash.jda.utils.JDAUtils;
+
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.IEventManager;
+
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.function.ThrowingConsumer;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 @Component
 public class SpringEventManager implements IEventManager {
@@ -40,24 +48,19 @@ public class SpringEventManager implements IEventManager {
 		}
 		registeredListeners.add(o);
 
-		ReflectionUtils.doWithMethods(
-				o.getClass(),
-				method -> {
-					if (!JDAUtils.isEventMapping(method)) {
-						return;
-					}
-					Class<? extends GenericEvent> parameterType =
-							(Class<? extends GenericEvent>) method.getParameterTypes()[0];
-					Consumer<GenericEvent> consumer =
-							getGenericEventConsumer(o, method, parameterType);
-					methods.compute(
-							parameterType,
-							(aClass, consumers) -> {
-								if (consumers == null) consumers = new ArrayList<>();
-								consumers.add(consumer);
-								return consumers;
-							});
-				});
+		ReflectionUtils.doWithMethods(o.getClass(), method -> {
+			if (!JDAUtils.isEventMapping(method)) {
+				return;
+			}
+			Class<? extends GenericEvent> parameterType =
+					(Class<? extends GenericEvent>) method.getParameterTypes()[0];
+			Consumer<GenericEvent> consumer = getGenericEventConsumer(o, method, parameterType);
+			methods.compute(parameterType, (aClass, consumers) -> {
+				if (consumers == null) consumers = new ArrayList<>();
+				consumers.add(consumer);
+				return consumers;
+			});
+		});
 	}
 
 	private Consumer<GenericEvent> getGenericEventConsumer(
@@ -93,9 +96,8 @@ public class SpringEventManager implements IEventManager {
 		} else if (method.isAnnotationPresent(AutoCompleteMapping.class)) {
 			AutoCompleteMapping autoCompleteMapping =
 					method.getAnnotation(AutoCompleteMapping.class);
-			eventMappingProxy =
-					new AutoCompleteMappingDecorator(
-							autoCompleteMapping.value(), eventMappingProxy);
+			eventMappingProxy = new AutoCompleteMappingDecorator(
+					autoCompleteMapping.value(), eventMappingProxy);
 		}
 		return eventMappingProxy;
 	}

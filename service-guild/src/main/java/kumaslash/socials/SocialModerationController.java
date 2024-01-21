@@ -7,21 +7,23 @@
  */
 package kumaslash.socials;
 
-import java.awt.*;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.UUID;
 import kumaslash.jda.annotations.AutoCompleteMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.utils.OptionMappingUtils;
 import kumaslash.utils.Duad;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+
+import java.awt.Color;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.UUID;
 
 @JDAController
 public class SocialModerationController {
@@ -51,16 +53,14 @@ public class SocialModerationController {
 					.queue();
 			return;
 		}
-		SocialAction saved =
-				socialActionService.save(
-						new SocialAction(null, guildSnowflake, actionName, template));
-		event.replyEmbeds(
-						new EmbedBuilder()
-								.setTitle("Action Saved")
-								.setColor(Color.GREEN)
-								.setDescription(saved.template().formatted(names))
-								.setImage("https://picsum.photos/300/170")
-								.build())
+		SocialAction saved = socialActionService.save(
+				new SocialAction(null, guildSnowflake, actionName, template));
+		event.replyEmbeds(new EmbedBuilder()
+						.setTitle("Action Saved")
+						.setColor(Color.GREEN)
+						.setDescription(saved.template().formatted(names))
+						.setImage("https://picsum.photos/300/170")
+						.build())
 				.queue();
 	}
 
@@ -84,21 +84,18 @@ public class SocialModerationController {
 		}
 
 		SocialAction oldAction = oldActionOrEmpty.get();
-		SocialAction newAction =
-				socialActionService.save(
-						new SocialAction(
-								actionId,
-								guildSnowflake,
-								actionOrEmpty.orElse(oldAction.action()),
-								templateOrEmpty.orElse(oldAction.template())));
+		SocialAction newAction = socialActionService.save(new SocialAction(
+				actionId,
+				guildSnowflake,
+				actionOrEmpty.orElse(oldAction.action()),
+				templateOrEmpty.orElse(oldAction.template())));
 
-		event.replyEmbeds(
-						new EmbedBuilder()
-								.setTitle("Action Modified")
-								.setColor(Color.GREEN)
-								.setDescription(newAction.template().formatted(names))
-								.setImage("https://picsum.photos/300/170")
-								.build())
+		event.replyEmbeds(new EmbedBuilder()
+						.setTitle("Action Modified")
+						.setColor(Color.GREEN)
+						.setDescription(newAction.template().formatted(names))
+						.setImage("https://picsum.photos/300/170")
+						.build())
 				.queue();
 	}
 
@@ -136,13 +133,12 @@ public class SocialModerationController {
 
 		SocialAction socialAction = socialActionOrEmpty.get();
 		Social newSocial = socialService.save(new Social(null, actionId, socialUrl, true));
-		event.replyEmbeds(
-						new EmbedBuilder()
-								.setTitle("Social Saved")
-								.setColor(Color.GREEN)
-								.setDescription(socialAction.template().formatted(names))
-								.setImage(newSocial.url())
-								.build())
+		event.replyEmbeds(new EmbedBuilder()
+						.setTitle("Social Saved")
+						.setColor(Color.GREEN)
+						.setDescription(socialAction.template().formatted(names))
+						.setImage(newSocial.url())
+						.build())
 				.queue();
 	}
 
@@ -164,35 +160,27 @@ public class SocialModerationController {
 
 	@AutoCompleteMapping(value = "guild social-action (modify|delete)")
 	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
-		event.replyChoices(
-						socialActionService
-								.findByGuildSnowflakeAndStartWith(
-										event.getGuild().getIdLong(),
-										event.getFocusedOption().getValue())
-								.stream()
-								.map(
-										socialAction ->
-												new Command.Choice(
-														socialAction.action(),
-														String.valueOf(socialAction.id())))
-								.toList())
+		event.replyChoices(socialActionService
+						.findByGuildSnowflakeAndStartWith(
+								event.getGuild().getIdLong(),
+								event.getFocusedOption().getValue())
+						.stream()
+						.map(socialAction -> new Command.Choice(
+								socialAction.action(), String.valueOf(socialAction.id())))
+						.toList())
 				.queue();
 	}
 
 	@AutoCompleteMapping(value = "guild social add")
 	public void onCommandAutoCompleteInteractionA(CommandAutoCompleteInteractionEvent event) {
-		event.replyChoices(
-						socialActionService
-								.findByGuildSnowflakeAndStartWith(
-										event.getGuild().getIdLong(),
-										event.getFocusedOption().getValue())
-								.stream()
-								.map(
-										socialAction ->
-												new Command.Choice(
-														socialAction.action(),
-														String.valueOf(socialAction.id())))
-								.toList())
+		event.replyChoices(socialActionService
+						.findByGuildSnowflakeAndStartWith(
+								event.getGuild().getIdLong(),
+								event.getFocusedOption().getValue())
+						.stream()
+						.map(socialAction -> new Command.Choice(
+								socialAction.action(), String.valueOf(socialAction.id())))
+						.toList())
 				.queue();
 	}
 
@@ -202,25 +190,17 @@ public class SocialModerationController {
 						socialActionService
 								.findAllByGuildSnowflake(event.getGuild().getIdLong())
 								.stream()
-								.flatMap(
-										socialAction ->
-												socialService
-														.findAllBySocialActionIdAndUrl(
-																socialAction.id(),
-																event.getFocusedOption().getValue())
-														.stream()
-														.map(
-																social ->
-																		new Duad<>(
-																				social,
-																				socialAction)))
-								.map(
-										duad ->
-												new Command.Choice(
-														duad.left(SocialAction::action)
-																+ ": "
-																+ duad.right(Social::url),
-														String.valueOf(duad.right(Social::id))))
+								.flatMap(socialAction -> socialService
+										.findAllBySocialActionIdAndUrl(
+												socialAction.id(),
+												event.getFocusedOption().getValue())
+										.stream()
+										.map(social -> new Duad<>(social, socialAction)))
+								.map(duad -> new Command.Choice(
+										duad.left(SocialAction::action)
+												+ ": "
+												+ duad.right(Social::url),
+										String.valueOf(duad.right(Social::id))))
 								.toList())
 				.queue();
 	}

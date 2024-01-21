@@ -7,11 +7,13 @@
  */
 package kumaslash;
 
-import java.util.Random;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.Random;
 
 @Component
 public class KumaSlashActivityStatus {

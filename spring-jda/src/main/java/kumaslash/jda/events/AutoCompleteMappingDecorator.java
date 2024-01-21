@@ -7,10 +7,12 @@
  */
 package kumaslash.jda.events;
 
-import java.util.regex.Pattern;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+
 import org.springframework.util.function.ThrowingConsumer;
+
+import java.util.regex.Pattern;
 
 public class AutoCompleteMappingDecorator implements ThrowingConsumer<GenericEvent> {
 	private final Pattern pattern;

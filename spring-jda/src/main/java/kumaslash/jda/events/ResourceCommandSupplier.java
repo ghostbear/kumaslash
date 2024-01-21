@@ -7,12 +7,14 @@
  */
 package kumaslash.jda.events;
 
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.utils.data.DataObject;
+
+import org.springframework.core.io.Resource;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
-import net.dv8tion.jda.api.utils.data.DataObject;
-import org.springframework.core.io.Resource;
 
 public class ResourceCommandSupplier implements CommandSupplier {
 

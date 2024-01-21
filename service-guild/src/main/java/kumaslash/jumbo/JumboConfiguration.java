@@ -19,13 +19,13 @@ public class JumboConfiguration {
 
 	@Bean
 	EmojiService emojiService() {
-		RestClient restClient =
-				RestClient.builder()
-						.baseUrl("https://cdn.discordapp.com")
-						.defaultStatusHandler(HttpStatusCode::isError, (request, response) -> {})
-						.build();
+		RestClient restClient = RestClient.builder()
+				.baseUrl("https://cdn.discordapp.com")
+				.defaultStatusHandler(HttpStatusCode::isError, (request, response) -> {})
+				.build();
 		RestClientAdapter adapter = RestClientAdapter.create(restClient);
-		HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(adapter).build();
+		HttpServiceProxyFactory factory =
+				HttpServiceProxyFactory.builderFor(adapter).build();
 		return factory.createClient(EmojiService.class);
 	}
 }

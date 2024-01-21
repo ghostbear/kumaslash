@@ -7,20 +7,23 @@
  */
 package kumaslash.jumbo;
 
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.events.CommandSupplier;
 import kumaslash.jda.events.ResourceCommandSupplier;
+
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @JDAController
 public class JumboController {

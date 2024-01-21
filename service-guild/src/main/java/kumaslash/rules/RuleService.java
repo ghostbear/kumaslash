@@ -7,9 +7,14 @@
  */
 package kumaslash.rules;
 
-import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class RuleService {
@@ -23,14 +28,13 @@ public class RuleService {
 	@Transactional
 	public Rule save(Rule aRule) {
 		boolean exists = Objects.nonNull(aRule.getId()) && ruleRepository.existsById(aRule.id());
-		Rule rule =
-				new Rule(
-						aRule.getId(),
-						aRule.guildSnowflake(),
-						aRule.number(),
-						aRule.shortDescription(),
-						aRule.longDescription(),
-						!exists);
+		Rule rule = new Rule(
+				aRule.getId(),
+				aRule.guildSnowflake(),
+				aRule.number(),
+				aRule.shortDescription(),
+				aRule.longDescription(),
+				!exists);
 		Rule saved = ruleRepository.save(rule);
 		ruleRepository.reorderNumber(aRule.guildSnowflake());
 		return ruleRepository.findById(saved.id()).orElseThrow();

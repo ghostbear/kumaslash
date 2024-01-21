@@ -7,7 +7,8 @@
  */
 package kumaslash.guild;
 
-import java.util.function.Function;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+
+import java.util.function.Function;
 
 public interface GuildCommandSupplier extends Function<Long, CommandData> {}

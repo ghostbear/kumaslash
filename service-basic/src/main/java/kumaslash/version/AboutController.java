@@ -7,16 +7,19 @@
  */
 package kumaslash.version;
 
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.events.CommandSupplier;
 import kumaslash.jda.events.ResourceCommandSupplier;
+
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 
 @JDAController
 public class AboutController {

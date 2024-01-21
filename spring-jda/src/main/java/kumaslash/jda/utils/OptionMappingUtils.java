@@ -7,12 +7,17 @@
  */
 package kumaslash.jda.utils;
 
+import net.dv8tion.jda.api.entities.IMentionable;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
-import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 public final class OptionMappingUtils {
 

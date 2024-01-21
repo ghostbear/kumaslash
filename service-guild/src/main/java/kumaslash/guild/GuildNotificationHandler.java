@@ -7,15 +7,17 @@
  */
 package kumaslash.guild;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.interactions.commands.Command;
+
 import org.postgresql.PGNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 @Component
 public class GuildNotificationHandler implements Consumer<PGNotification> {
@@ -49,18 +51,12 @@ public class GuildNotificationHandler implements Consumer<PGNotification> {
 
 		Objects.requireNonNull(jda.getGuildById(snowflake), "Guild not found!")
 				.updateCommands()
-				.addCommands(
-						guildCommandSuppliers.stream()
-								.map(supplier -> supplier.apply(snowflake))
-								.toList())
-				.queue(
-						commands ->
-								LOG.info(
-										"Registered guild ("
-												+ snowflake
-												+ ") commands: "
-												+ commands.stream()
-														.map(Command::getName)
-														.toList()));
+				.addCommands(guildCommandSuppliers.stream()
+						.map(supplier -> supplier.apply(snowflake))
+						.toList())
+				.queue(commands -> LOG.info("Registered guild ("
+						+ snowflake
+						+ ") commands: "
+						+ commands.stream().map(Command::getName).toList()));
 	}
 }

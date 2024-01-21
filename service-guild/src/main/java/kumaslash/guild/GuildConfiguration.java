@@ -8,25 +8,26 @@
 package kumaslash.guild;
 
 import com.zaxxer.hikari.util.DriverDataSource;
-import java.util.Properties;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.Properties;
+
 @Configuration
 public class GuildConfiguration {
 
 	@Bean
 	GuildNotifierService guildNotifierService(DataSourceProperties properties) {
-		DriverDataSource dataSource =
-				new DriverDataSource(
-						properties.determineUrl(),
-						properties.determineDriverClassName(),
-						new Properties(),
-						properties.determineUsername(),
-						properties.determinePassword());
+		DriverDataSource dataSource = new DriverDataSource(
+				properties.determineUrl(),
+				properties.determineDriverClassName(),
+				new Properties(),
+				properties.determineUsername(),
+				properties.determinePassword());
 
 		JdbcTemplate template = new JdbcTemplate(dataSource);
 

@@ -7,9 +7,10 @@
  */
 package kumaslash.socials;
 
+import org.springframework.data.repository.CrudRepository;
+
 import java.util.List;
 import java.util.UUID;
-import org.springframework.data.repository.CrudRepository;
 
 public interface SocialRepository extends CrudRepository<Social, UUID> {
 

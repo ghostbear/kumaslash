@@ -7,12 +7,13 @@
  */
 package kumaslash.socials;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SocialActionService {
@@ -32,16 +33,14 @@ public class SocialActionService {
 
 	@Transactional
 	public SocialAction save(SocialAction aSocialAction) {
-		boolean exists =
-				socialActionRepository.existsByIdAndGuildSnowflake(
-						aSocialAction.id(), aSocialAction.guildSnowflake());
-		SocialAction socialAction =
-				new SocialAction(
-						aSocialAction.id(),
-						aSocialAction.guildSnowflake(),
-						aSocialAction.action(),
-						aSocialAction.template(),
-						!exists);
+		boolean exists = socialActionRepository.existsByIdAndGuildSnowflake(
+				aSocialAction.id(), aSocialAction.guildSnowflake());
+		SocialAction socialAction = new SocialAction(
+				aSocialAction.id(),
+				aSocialAction.guildSnowflake(),
+				aSocialAction.action(),
+				aSocialAction.template(),
+				!exists);
 		return socialActionRepository.save(socialAction);
 	}
 

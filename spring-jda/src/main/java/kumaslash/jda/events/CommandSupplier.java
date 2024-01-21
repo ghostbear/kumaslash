@@ -7,7 +7,8 @@
  */
 package kumaslash.jda.events;
 
-import java.util.function.Supplier;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+
+import java.util.function.Supplier;
 
 public interface CommandSupplier extends Supplier<CommandData> {}

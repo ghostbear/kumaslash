@@ -7,13 +7,15 @@
  */
 package kumaslash.jumbo;
 
-import java.io.InputStream;
-import java.util.Optional;
 import net.dv8tion.jda.api.utils.FileUpload;
+
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.function.ThrowingSupplier;
+
+import java.io.InputStream;
+import java.util.Optional;
 
 @Service
 public class JumboService {
@@ -31,17 +33,13 @@ public class JumboService {
 		}
 		String extension = animated ? "gif" : "png";
 		String filename = name + "." + extension;
-		FileUpload fileUpload =
-				FileUpload.fromStreamSupplier(
-						filename,
-						ThrowingSupplier.of(
-								() -> {
-									if (!responseEntity.hasBody()) {
-										return InputStream.nullInputStream();
-									}
-									assert responseEntity.getBody() != null;
-									return responseEntity.getBody().getInputStream();
-								}));
+		FileUpload fileUpload = FileUpload.fromStreamSupplier(filename, ThrowingSupplier.of(() -> {
+			if (!responseEntity.hasBody()) {
+				return InputStream.nullInputStream();
+			}
+			assert responseEntity.getBody() != null;
+			return responseEntity.getBody().getInputStream();
+		}));
 		return Optional.of(fileUpload);
 	}
 }

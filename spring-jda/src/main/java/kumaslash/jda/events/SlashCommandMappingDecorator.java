@@ -9,6 +9,7 @@ package kumaslash.jda.events;
 
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
 import org.springframework.util.function.ThrowingConsumer;
 
 public class SlashCommandMappingDecorator implements ThrowingConsumer<GenericEvent> {

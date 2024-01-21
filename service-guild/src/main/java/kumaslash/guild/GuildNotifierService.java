@@ -7,16 +7,17 @@
  */
 package kumaslash.guild;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.function.Consumer;
 import org.postgresql.PGConnection;
 import org.postgresql.PGNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.function.Consumer;
 
 public class GuildNotifierService {
 
@@ -37,28 +38,27 @@ public class GuildNotifierService {
 
 	public Runnable createNotificationHandler(Consumer<PGNotification> consumer) {
 		return () -> {
-			template.execute(
-					(Connection con) -> {
-						try (Statement statement = con.createStatement()) {
-							statement.execute("LISTEN " + TABLE_NAME);
+			template.execute((Connection con) -> {
+				try (Statement statement = con.createStatement()) {
+					statement.execute("LISTEN " + TABLE_NAME);
 
-							PGConnection pgCon = con.unwrap(PGConnection.class);
-							while (!Thread.interrupted()) {
-								PGNotification[] notifications = pgCon.getNotifications();
-								if (notifications == null) {
-									continue;
-								}
-								for (PGNotification notification : notifications) {
-									consumer.accept(notification);
-								}
-							}
-
-							return 0;
-						} catch (SQLException e) {
-							LOG.error("Error executing SQL statement", e);
-							return 0;
+					PGConnection pgCon = con.unwrap(PGConnection.class);
+					while (!Thread.interrupted()) {
+						PGNotification[] notifications = pgCon.getNotifications();
+						if (notifications == null) {
+							continue;
 						}
-					});
+						for (PGNotification notification : notifications) {
+							consumer.accept(notification);
+						}
+					}
+
+					return 0;
+				} catch (SQLException e) {
+					LOG.error("Error executing SQL statement", e);
+					return 0;
+				}
+			});
 		};
 	}
 }

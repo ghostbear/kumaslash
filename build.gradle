@@ -37,8 +37,7 @@ subprojects {
             spotless.java {
                 importOrder()
                 removeUnusedImports()
-                googleJavaFormat('1.19.1')
-                    .aosp()
+                palantirJavaFormat().style("AOSP")
 
                 formatAnnotations()
                 indentWithTabs()

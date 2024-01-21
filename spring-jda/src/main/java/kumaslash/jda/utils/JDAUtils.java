@@ -7,18 +7,19 @@
  */
 package kumaslash.jda.utils;
 
-import java.lang.reflect.Method;
 import kumaslash.jda.annotations.EventMapping;
+
 import org.springframework.core.annotation.MergedAnnotations;
+
+import java.lang.reflect.Method;
 
 public final class JDAUtils {
 
 	private JDAUtils() {}
 
 	public static boolean isEventMapping(Method method) {
-		MergedAnnotations mergedAnnotations =
-				MergedAnnotations.from(
-						method, MergedAnnotations.SearchStrategy.INHERITED_ANNOTATIONS);
+		MergedAnnotations mergedAnnotations = MergedAnnotations.from(
+				method, MergedAnnotations.SearchStrategy.INHERITED_ANNOTATIONS);
 		return mergedAnnotations.isPresent(EventMapping.class)
 				|| mergedAnnotations.isDirectlyPresent(EventMapping.class);
 	}

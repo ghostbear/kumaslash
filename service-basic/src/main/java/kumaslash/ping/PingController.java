@@ -7,15 +7,18 @@
  */
 package kumaslash.ping;
 
-import java.time.Duration;
-import java.time.Instant;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.events.CommandSupplier;
 import kumaslash.jda.events.ResourceCommandSupplier;
+
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+
+import java.time.Duration;
+import java.time.Instant;
 
 @JDAController
 public class PingController {
@@ -25,11 +28,8 @@ public class PingController {
 		Instant now = Instant.now();
 		event.reply("Pong!")
 				.setEphemeral(true)
-				.flatMap(
-						interactionHook ->
-								interactionHook.editOriginalFormat(
-										"Pong! (%d ms)",
-										Duration.between(now, Instant.now()).toMillis()))
+				.flatMap(interactionHook -> interactionHook.editOriginalFormat(
+						"Pong! (%d ms)", Duration.between(now, Instant.now()).toMillis()))
 				.queue();
 	}
 

@@ -7,15 +7,18 @@
  */
 package kumaslash.guild;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import kumaslash.jda.annotations.EventMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.events.CommandSupplier;
 import kumaslash.jda.events.ResourceCommandSupplier;
+
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @JDAController
 public class GuildController {
@@ -31,13 +34,12 @@ public class GuildController {
 
 	@EventMapping
 	public void onGuildReadyEvent(GuildReadyEvent event) {
-		executor.execute(
-				() -> {
-					long snowflake = event.getGuild().getIdLong();
-					boolean isNotNew = guildRepository.existsById(snowflake);
-					guildRepository.save(new Guild(snowflake, !isNotNew));
-					notifierService.notify(snowflake);
-				});
+		executor.execute(() -> {
+			long snowflake = event.getGuild().getIdLong();
+			boolean isNotNew = guildRepository.existsById(snowflake);
+			guildRepository.save(new Guild(snowflake, !isNotNew));
+			notifierService.notify(snowflake);
+		});
 	}
 
 	@Bean

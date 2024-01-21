@@ -7,20 +7,13 @@
  */
 package kumaslash.rules;
 
-import java.awt.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import kumaslash.guild.GuildCommandSupplier;
 import kumaslash.guild.GuildNotifierService;
 import kumaslash.jda.annotations.AutoCompleteMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.utils.OptionMappingUtils;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -32,7 +25,17 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+
 import org.springframework.context.annotation.Bean;
+
+import java.awt.Color;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @JDAController
 public class RuleController {
@@ -73,8 +76,8 @@ public class RuleController {
 		User user = event.getOption("target", OptionMapping::getAsUser);
 		UUID ruleId = event.getOption("rule", OptionMappingUtils::asUUID);
 
-		Optional<Rule> optionalRule =
-				ruleService.findOneByIdAndGuildSnowflake(ruleId, event.getGuild().getIdLong());
+		Optional<Rule> optionalRule = ruleService.findOneByIdAndGuildSnowflake(
+				ruleId, event.getGuild().getIdLong());
 
 		if (optionalRule.isEmpty()) {
 			event.getHook()
@@ -99,9 +102,8 @@ public class RuleController {
 		Double number = event.getOption("number").getAsDouble();
 		String shortDescription = event.getOption("short").getAsString();
 		String longDescription = event.getOption("long").getAsString();
-		Rule newRule =
-				ruleService.save(
-						new Rule(null, snowflake, number, shortDescription, longDescription));
+		Rule newRule = ruleService.save(
+				new Rule(null, snowflake, number, shortDescription, longDescription));
 		notifierService.notify(newRule.guildSnowflake());
 		event.getHook()
 				.editOriginal("Rule was added")
@@ -138,9 +140,8 @@ public class RuleController {
 		} else {
 			event.getHook()
 					.editOriginal("Rule wasn't deleted")
-					.setEmbeds(
-							asMessageEmbed(
-									rule, embedBuilder -> embedBuilder.setColor(Color.orange)))
+					.setEmbeds(asMessageEmbed(
+							rule, embedBuilder -> embedBuilder.setColor(Color.orange)))
 					.queue();
 		}
 	}
@@ -166,48 +167,41 @@ public class RuleController {
 		}
 
 		Rule oldRule = optionalRule.get();
-		Rule newRule =
-				new Rule(
-						oldRule.id(),
-						oldRule.guildSnowflake(),
-						Objects.requireNonNullElse(number, oldRule.number()),
-						Objects.requireNonNullElse(shortDescription, oldRule.shortDescription()),
-						Objects.requireNonNullElse(longDescription, oldRule.longDescription()));
+		Rule newRule = new Rule(
+				oldRule.id(),
+				oldRule.guildSnowflake(),
+				Objects.requireNonNullElse(number, oldRule.number()),
+				Objects.requireNonNullElse(shortDescription, oldRule.shortDescription()),
+				Objects.requireNonNullElse(longDescription, oldRule.longDescription()));
 
 		Rule savedRule = ruleService.save(newRule);
 		notifierService.notify(newRule.guildSnowflake());
 		event.getHook()
 				.editOriginal("Rule was modified")
-				.setEmbeds(
-						asMessageEmbed(
-								savedRule, embedBuilder -> embedBuilder.setColor(Color.green)))
+				.setEmbeds(asMessageEmbed(
+						savedRule, embedBuilder -> embedBuilder.setColor(Color.green)))
 				.queue();
 	}
 
 	@AutoCompleteMapping(value = "guild rule (delete|modify)")
 	public void onCommandAutoCompleteInteraction(CommandAutoCompleteInteractionEvent event) {
-		event.replyChoices(
-						ruleService
-								.findAllByGuildSnowflakeAndStartWith(
-										event.getGuild().getIdLong(),
-										event.getFocusedOption().getValue())
-								.stream()
-								.map(
-										rule ->
-												new Command.Choice(
-														rule.shortDescription(),
-														String.valueOf(rule.id())))
-								.toList())
+		event.replyChoices(ruleService
+						.findAllByGuildSnowflakeAndStartWith(
+								event.getGuild().getIdLong(),
+								event.getFocusedOption().getValue())
+						.stream()
+						.map(rule -> new Command.Choice(
+								rule.shortDescription(), String.valueOf(rule.id())))
+						.toList())
 				.queue();
 	}
 
 	@Bean
 	GuildCommandSupplier ruleGuildCommandSupplier() {
 		return snowflake -> {
-			List<Command.Choice> choices =
-					ruleService.findAllByGuildSnowflake(snowflake).stream()
-							.map(RuleController.this::asChoice)
-							.toList();
+			List<Command.Choice> choices = ruleService.findAllByGuildSnowflake(snowflake).stream()
+					.map(RuleController.this::asChoice)
+					.toList();
 			return Commands.slash("rule", "Display a rule of the guild")
 					.addOptions(
 							new OptionData(OptionType.STRING, "rule", "A rule to display", true)
@@ -219,9 +213,8 @@ public class RuleController {
 
 	@Bean
 	GuildCommandSupplier rulesGuildCommandSupplier() {
-		return snowflake ->
-				Commands.slash("rules", "Display the rules of the guild")
-						.addOption(OptionType.USER, "target", "Slap someone with the rulebook");
+		return snowflake -> Commands.slash("rules", "Display the rules of the guild")
+				.addOption(OptionType.USER, "target", "Slap someone with the rulebook");
 	}
 
 	MessageEmbed asMessageEmbed(List<Rule> rules) {
@@ -229,19 +222,15 @@ public class RuleController {
 	}
 
 	MessageEmbed asMessageEmbed(List<Rule> rules, Consumer<EmbedBuilder> apply) {
-		EmbedBuilder embedBuilder =
-				new EmbedBuilder()
-						.setTitle("Rules")
-						.setDescription(
-								rules.stream()
-										.map(
-												rule ->
-														"%.0f **%s**. %s"
-																.formatted(
-																		rule.number(),
-																		rule.shortDescription(),
-																		rule.longDescription()))
-										.collect(Collectors.joining("\n")));
+		EmbedBuilder embedBuilder = new EmbedBuilder()
+				.setTitle("Rules")
+				.setDescription(rules.stream()
+						.map(rule -> "%.0f **%s**. %s"
+								.formatted(
+										rule.number(),
+										rule.shortDescription(),
+										rule.longDescription()))
+						.collect(Collectors.joining("\n")));
 		apply.accept(embedBuilder);
 		return embedBuilder.build();
 	}
@@ -251,13 +240,11 @@ public class RuleController {
 	}
 
 	MessageEmbed asMessageEmbed(Rule rule, Consumer<EmbedBuilder> apply) {
-		EmbedBuilder embedBuilder =
-				new EmbedBuilder()
-						.setTitle("Rule %.0f".formatted(rule.number()))
-						.setDescription(
-								"**%s**. %s"
-										.formatted(rule.shortDescription(), rule.longDescription()))
-						.setFooter("Full list of rules can be found in #rules or by using /rules.");
+		EmbedBuilder embedBuilder = new EmbedBuilder()
+				.setTitle("Rule %.0f".formatted(rule.number()))
+				.setDescription(
+						"**%s**. %s".formatted(rule.shortDescription(), rule.longDescription()))
+				.setFooter("Full list of rules can be found in #rules or by using /rules.");
 		apply.accept(embedBuilder);
 		return embedBuilder.build();
 	}

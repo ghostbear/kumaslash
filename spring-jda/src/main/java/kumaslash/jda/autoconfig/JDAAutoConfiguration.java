@@ -7,14 +7,15 @@
  */
 package kumaslash.jda.autoconfig;
 
-import java.util.List;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.configuration.JDAProperties;
 import kumaslash.jda.events.CommandSupplier;
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.IEventManager;
 import net.dv8tion.jda.api.interactions.commands.Command;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -23,6 +24,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+import java.util.List;
 
 @AutoConfiguration
 @EnableConfigurationProperties(JDAProperties.class)
@@ -48,11 +51,10 @@ public class JDAAutoConfiguration {
 			ApplicationContext applicationContext, IEventManager eventManager) {
 		return JDABuilder.createDefault(jdaProperties.getToken())
 				.setEventManager(eventManager)
-				.addEventListeners(
-						applicationContext
-								.getBeansWithAnnotation(JDAController.class)
-								.values()
-								.toArray());
+				.addEventListeners(applicationContext
+						.getBeansWithAnnotation(JDAController.class)
+						.values()
+						.toArray());
 	}
 
 	@Bean
@@ -60,14 +62,10 @@ public class JDAAutoConfiguration {
 			JDA jda, List<CommandSupplier> commandSuppliers) {
 		return args -> {
 			jda.updateCommands()
-					.addCommands(commandSuppliers.stream().map(CommandSupplier::get).toList())
-					.queue(
-							commands ->
-									LOG.info(
-											"Registered global commands: "
-													+ commands.stream()
-															.map(Command::getName)
-															.toList()));
+					.addCommands(
+							commandSuppliers.stream().map(CommandSupplier::get).toList())
+					.queue(commands -> LOG.info("Registered global commands: "
+							+ commands.stream().map(Command::getName).toList()));
 		};
 	}
 }

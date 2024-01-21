@@ -7,17 +7,13 @@
  */
 package kumaslash.socials;
 
-import java.awt.*;
-import java.time.Duration;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import kumaslash.jda.annotations.AutoCompleteMapping;
 import kumaslash.jda.annotations.JDAController;
 import kumaslash.jda.annotations.SlashCommandMapping;
 import kumaslash.jda.events.CommandSupplier;
 import kumaslash.jda.events.ResourceCommandSupplier;
 import kumaslash.jda.utils.OptionMappingUtils;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -25,8 +21,16 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @JDAController
 public class SocialController {
@@ -76,33 +80,26 @@ public class SocialController {
 		}
 		Random random = new Random();
 		Social social = socials.get(random.nextInt(socials.size()));
-		event.replyEmbeds(
-						new EmbedBuilder()
-								.setDescription(
-										socialAction
-												.template()
-												.formatted(
-														target.getAsMention(),
-														event.getUser().getAsMention()))
-								.setImage(social.url())
-								.build())
+		event.replyEmbeds(new EmbedBuilder()
+						.setDescription(socialAction
+								.template()
+								.formatted(
+										target.getAsMention(), event.getUser().getAsMention()))
+						.setImage(social.url())
+						.build())
 				.queue();
 	}
 
 	@AutoCompleteMapping(value = "social")
 	public void onCommandAutoCompleteInteractionC(CommandAutoCompleteInteractionEvent event) {
-		event.replyChoices(
-						socialActionService
-								.findByGuildSnowflakeAndStartWith(
-										event.getGuild().getIdLong(),
-										event.getFocusedOption().getValue())
-								.stream()
-								.map(
-										socialAction ->
-												new Command.Choice(
-														socialAction.action(),
-														String.valueOf(socialAction.id())))
-								.toList())
+		event.replyChoices(socialActionService
+						.findByGuildSnowflakeAndStartWith(
+								event.getGuild().getIdLong(),
+								event.getFocusedOption().getValue())
+						.stream()
+						.map(socialAction -> new Command.Choice(
+								socialAction.action(), String.valueOf(socialAction.id())))
+						.toList())
 				.queue();
 	}
 

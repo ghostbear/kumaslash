@@ -7,10 +7,11 @@
  */
 package kumaslash;
 
-import java.io.PrintStream;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.core.env.Environment;
+
+import java.io.PrintStream;
 
 public class KumaSlashBanner implements Banner {
 

@@ -7,9 +7,11 @@
  */
 package kumaslash.jda.events;
 
-import java.lang.reflect.Method;
 import net.dv8tion.jda.api.events.GenericEvent;
+
 import org.springframework.util.function.ThrowingConsumer;
+
+import java.lang.reflect.Method;
 
 public class EventMappingProxy implements ThrowingConsumer<GenericEvent> {
 
