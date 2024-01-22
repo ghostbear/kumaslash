@@ -1,6 +1,7 @@
 ---
 spring:
-  jda:
+  main:
+    web-application-type: "none"
   datasource:
     url: "jdbc:postgresql://localhost:5432/mydatabase"
     username: "myuser"

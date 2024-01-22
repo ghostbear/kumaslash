@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.IEventManager;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class JDAAutoConfiguration {
 			ApplicationContext applicationContext, IEventManager eventManager) {
 		return JDABuilder.createDefault(jdaProperties.getToken())
 				.setEventManager(eventManager)
+				.enableIntents(GatewayIntent.MESSAGE_CONTENT)
 				.addEventListeners(applicationContext
 						.getBeansWithAnnotation(JDAController.class)
 						.values()
