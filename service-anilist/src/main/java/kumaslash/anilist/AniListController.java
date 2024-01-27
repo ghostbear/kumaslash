@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +65,9 @@ public class AniListController {
 										.sendMessageEmbeds(messageEmbedFactory.create(v.value()))
 										.queue();
 							}
-							case AniListProcessor.Result.NotFound<Media> v -> {
-								message.addReaction(Emoji.fromUnicode("U+2753")).queue();
-							}
+							case AniListProcessor.Result.NotFound<Media>
+							ignored -> message.addReaction(Emoji.fromUnicode("U+2753"))
+									.queue();
 						}
 
 						return;
