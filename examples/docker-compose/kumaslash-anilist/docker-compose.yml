@@ -1,0 +1,6 @@
+version: "3.8"
+services:
+  kumaslash-anilist:
+    image: kumaslash-anilist
+    environment:
+      - SPRING_JDA_TOKEN={YOUR_TOKEN}

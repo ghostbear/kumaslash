@@ -1,0 +1,20 @@
+services:
+  kumaslash:
+    image: kumaslash
+    environment:
+      - SPRING_JDA_TOKEN={YOUR_TOKEN}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/mydatabase
+      - SPRING_DATASOURCE_USERNAME=myuser
+      - SPRING_DATASOURCE_PASSWORD=secret
+  database:
+    image: 'postgres:15.2'
+    ports:
+      - '5432:5432'
+    environment:
+      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_PASSWORD=secret'
+  adminer:
+    image: adminer
+    ports:
+      - 8888:8080
