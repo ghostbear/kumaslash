@@ -6,5 +6,5 @@ RUN ./gradlew kumaslash-anilist:bootJar
 
 FROM azul/zulu-openjdk-alpine:21-jre-headless-latest AS kumaslash
 WORKDIR /deploy
-COPY --from=build /output/kumaslash/build/libs/*.jar kumaslash.jar
+COPY --from=build /output/kumaslash-anilist/build/libs/*.jar kumaslash.jar
 CMD ["java", "-jar", "kumaslash.jar"]
