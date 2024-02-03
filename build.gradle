@@ -72,3 +72,21 @@ subprojects {
         }
     }
 }
+
+tasks.register("kumaslashBuildImage", Exec) {
+    group = 'docker'
+    commandLine 'docker', 'build', '--tag=kumaslash', '-f', 'Dockerfile', '.'
+    standardOutput = new ByteArrayOutputStream()
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
+
+tasks.register("kumaslashAniListBuildImage", Exec) {
+    group = 'docker'
+    commandLine 'docker', 'build', '--tag=kumaslash-anilist', '-f', 'Dockerfile.anilist', '.'
+    standardOutput = new ByteArrayOutputStream()
+    ext.output = {
+        return standardOutput.toString()
+    }
+}
