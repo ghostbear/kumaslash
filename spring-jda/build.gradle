@@ -1,13 +1,13 @@
 plugins {
     id 'java-library'
-    id 'org.springframework.boot' version '3.2.0'
-    id 'io.spring.dependency-management' version '1.1.4'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
 }
 
 dependencies {
     api 'org.springframework.boot:spring-boot-starter'
 
-    api("net.dv8tion:JDA:5.0.0-beta.18") {
+    api(libs.jda) {
         exclude module: 'opus-java'
     }
 
