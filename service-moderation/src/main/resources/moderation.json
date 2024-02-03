@@ -1,0 +1,22 @@
+{
+  "name": "moderation",
+  "description": "Allows to configure moderation related actions",
+  "default_member_permissions": 0,
+  "dm_permission": false,
+  "options": [ {
+    "name": "channel",
+    "description": "Set the output for moderation logging",
+    "type": 2,
+    "options": [ {
+      "name": "set",
+      "description": "Add a new social action to the guild",
+      "type": 1,
+      "options": [ {
+        "name": "channel",
+        "description": "The channel to output log messages in",
+        "type": 7,
+        "required": true
+      } ]
+    } ]
+  } ]
+}
