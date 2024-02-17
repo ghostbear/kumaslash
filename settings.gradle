@@ -8,12 +8,12 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'kumaspring'
+include 'core'
 include 'spring-jda'
+include 'spring-sentry'
 include 'kumaslash'
+include 'kumaslash-anilist'
 include 'service-guild'
 include 'service-basic'
-include 'core'
 include 'service-anilist'
-include 'kumaslash-anilist'
-include 'core-preferences'
 include 'service-moderation'

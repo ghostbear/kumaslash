@@ -1,0 +1,4 @@
+---
+sentry:
+  environment: "production"
+  debug: false

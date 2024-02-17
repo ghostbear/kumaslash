@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(':spring-sentry'))
     implementation(project(':service-anilist'))
     implementation(project(':service-basic'))
     implementation(project(':service-guild'))

@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
+}
+
+processResources {
+    include("**/application*.yml")
+    expand(project.properties)
+}
+
+dependencies {
+    compileOnly project(":spring-jda")
+
+    implementation libs.sentry.spring.boot.starter
+    implementation libs.sentry.logback
+
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+}

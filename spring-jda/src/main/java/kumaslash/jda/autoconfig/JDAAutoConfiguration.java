@@ -52,6 +52,7 @@ public class JDAAutoConfiguration {
 			ApplicationContext applicationContext, IEventManager eventManager) {
 		return JDABuilder.createDefault(jdaProperties.getToken())
 				.setEventManager(eventManager)
+				.setEventPassthrough(true)
 				.enableIntents(
 						GatewayIntent.MESSAGE_CONTENT, GatewayIntent.AUTO_MODERATION_EXECUTION)
 				.addEventListeners(applicationContext

@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(':spring-sentry'))
     implementation(project(':service-anilist'))
 
     developmentOnly 'org.springframework.boot:spring-boot-starter-actuator'

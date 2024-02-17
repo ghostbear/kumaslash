@@ -19,6 +19,8 @@ import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.IEventManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
@@ -26,6 +28,7 @@ import org.springframework.util.function.ThrowingConsumer;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +37,12 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
+import static org.springframework.util.ClassUtils.CGLIB_CLASS_SEPARATOR;
+
 @Component
 public class SpringEventManager implements IEventManager {
+
+	private static final Logger LOG = LoggerFactory.getLogger(SpringEventManager.class);
 
 	private final Set<Object> registeredListeners = ConcurrentHashMap.newKeySet();
 	private final Map<Class<? extends GenericEvent>, List<Consumer<GenericEvent>>> methods =
@@ -43,8 +50,12 @@ public class SpringEventManager implements IEventManager {
 
 	@Override
 	public void register(Object o) {
-		if (!AnnotationUtils.isAnnotationDeclaredLocally(JDAController.class, o.getClass())) {
-			throw new IllegalArgumentException("Class must be annotated with JDAController");
+
+		if (o.getClass().getName().contains(CGLIB_CLASS_SEPARATOR) &&
+			o.getClass().getSuperclass().getAnnotation(JDAController.class) == null) {
+			throw new IllegalArgumentException("CGLIB Class, %s, must be annotated with JDAController".formatted(o.getClass().getName()));
+		} else if (!o.getClass().getName().contains(CGLIB_CLASS_SEPARATOR) && !AnnotationUtils.isAnnotationDeclaredLocally(JDAController.class, o.getClass())) {
+			throw new IllegalArgumentException("Class, %s, must be annotated with JDAController".formatted(o.getClass().getName()));
 		}
 		registeredListeners.add(o);
 

@@ -1,0 +1,4 @@
+---
+sentry:
+  environment: "development"
+  debug: true

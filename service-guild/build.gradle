@@ -7,7 +7,6 @@ plugins {
 dependencies {
     api(project(':core'))
     api(project(':spring-jda'))
-    api(project(':core-preferences'))
     api 'org.springframework.boot:spring-boot-starter'
     api 'org.springframework.boot:spring-boot-starter-data-jdbc'
     api 'org.springframework:spring-web'

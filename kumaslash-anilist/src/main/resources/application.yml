@@ -2,3 +2,5 @@
 spring:
   main:
     web-application-type: "none"
+  profiles:
+    include: "sentry"

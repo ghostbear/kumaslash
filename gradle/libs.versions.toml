@@ -2,10 +2,13 @@
 jda = "5.0.0-beta.20"
 spring-gradle = "3.2.2"
 spring-dependency-management-gradle = "1.1.4"
+sentry = "7.3.0"
 junit = "5.10.1"
 
 [libraries]
 jda = { module = "net.dv8tion:JDA", version.ref = "jda" }
+sentry-spring-boot-starter = { module = "io.sentry:sentry-spring-boot-starter-jakarta", version.ref = "sentry" }
+sentry-logback = { module = "io.sentry:sentry-logback", version.ref = "sentry" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit"}
 
 [bundles]

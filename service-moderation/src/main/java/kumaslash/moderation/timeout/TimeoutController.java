@@ -106,7 +106,8 @@ public class TimeoutController {
 			LOG.error("Couldn't find guild member ({})", entry.getTargetId());
 			return;
 		}
-		guildMember.getUser()
+		guildMember
+				.getUser()
 				.openPrivateChannel()
 				.flatMap(privateChannel -> {
 					if (privateChannel.canTalk()) {
