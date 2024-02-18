@@ -131,7 +131,6 @@ public class TimeoutController {
 	@EventMapping
 	public void onAutoModExecutionEvent(AutoModExecutionEvent event) {
 		AutoModResponse response = event.getResponse();
-		System.out.println("event = " + event);
 		if (!Objects.equals(response.getType(), AutoModResponse.Type.TIMEOUT)) {
 			return;
 		}

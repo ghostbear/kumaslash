@@ -115,7 +115,7 @@ public class SpringEventManager implements IEventManager {
 
 	@Override
 	public void unregister(Object o) {
-		System.out.println(o);
+		LOG.debug("Unregistered: {}", o);
 	}
 
 	@Override

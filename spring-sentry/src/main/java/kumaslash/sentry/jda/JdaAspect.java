@@ -62,7 +62,6 @@ public class JdaAspect {
 	}
 
 	String getOperationName(Method method) {
-		System.out.println(method.getName());
 		if (Objects.nonNull(method.getAnnotation(EventMapping.class))) {
 			return EVENT_OPERATION;
 		} else if (Objects.nonNull(method.getAnnotation(SlashCommandMapping.class))) {

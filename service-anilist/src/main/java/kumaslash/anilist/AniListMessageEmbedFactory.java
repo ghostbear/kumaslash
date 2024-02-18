@@ -10,6 +10,7 @@ package kumaslash.anilist;
 import kumaslash.anilist.model.FuzzyDate;
 import kumaslash.anilist.model.Media;
 
+import kumaslash.anilist.model.MediaStatus;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -18,6 +19,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 public class AniListMessageEmbedFactory {
 
 	private static final String ELLIPSES = Character.toString(0x2026);
+	public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
 	public MessageEmbed create(Media media) {
 		EmbedBuilder builder = new EmbedBuilder();
@@ -104,7 +108,17 @@ public class AniListMessageEmbedFactory {
 					}
 					return o;
 				})
-				.map(Object::toString)
+				.map(object -> switch (object) {
+					case LocalDate localDate -> DATE_FORMAT.format(localDate);
+					case MediaStatus status -> switch (status) {
+						case FINISHED -> "Finished";
+						case RELEASING -> "Releasing";
+						case NOT_YET_RELEASED -> "Not Yet Released";
+						case CANCELLED -> "Cancelled";
+						case HIATUS -> "Hiatus";
+					};
+					default -> String.valueOf(object);
+				})
 				.filter(Predicate.not(String::isEmpty))
 				.collect(Collectors.joining(" - "));
 		builder.setFooter(footer);

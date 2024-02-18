@@ -84,7 +84,7 @@ public class AniListController {
 								(AniListProcessor.Result.Found<Media>) mediaResult;
 						Media media = found.value();
 						stringBuilder.append(
-								"- [%s](<%s>)".formatted(media.title().romaji(), media.siteUrl()));
+								"- [%s](<%s>)%n".formatted(media.title().romaji(), media.siteUrl()));
 					}
 
 					if (map.containsKey(AniListProcessor.Result.NotFound.class)) {
