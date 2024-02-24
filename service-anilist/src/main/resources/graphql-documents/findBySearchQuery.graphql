@@ -2,6 +2,7 @@ fragment Media on Media {
   id
   type
   format
+  isAdult
   title {
     romaji
     english
@@ -22,20 +23,20 @@ fragment Media on Media {
   siteUrl
 }
 
-query FindAnimeBySearchQuery($searchQuery: String, $isAdult: Boolean) {
-  Media(search: $searchQuery, type: ANIME, isAdult: $isAdult) {
+query FindAnimeBySearchQuery($searchQuery: String) {
+  Media(search: $searchQuery, type: ANIME) {
     ...Media
   }
 }
 
-query FindMangaBySearchQuery($searchQuery: String, $isAdult: Boolean) {
-  Media(search: $searchQuery, type: MANGA, format_not: NOVEL, isAdult: $isAdult) {
+query FindMangaBySearchQuery($searchQuery: String) {
+  Media(search: $searchQuery, type: MANGA, format_not: NOVEL) {
     ...Media
   }
 }
 
-query FindLightNovelBySearchQuery($searchQuery: String, $isAdult: Boolean) {
-  Media(search: $searchQuery, type: MANGA, format_in: NOVEL, isAdult: $isAdult) {
+query FindLightNovelBySearchQuery($searchQuery: String) {
+  Media(search: $searchQuery, type: MANGA, format_in: NOVEL) {
     ...Media
   }
 }

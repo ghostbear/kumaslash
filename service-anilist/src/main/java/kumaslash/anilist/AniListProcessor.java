@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,7 +31,7 @@ public class AniListProcessor {
 		this.client = client;
 	}
 
-	public void process(String message, boolean nsfw, Consumer<State> stateConsumer) {
+	public void process(String message, Consumer<State> stateConsumer) {
 		stateConsumer.accept(State.None.INSTANCE);
 
 		if (!shouldProcess(message)) {
@@ -51,7 +52,7 @@ public class AniListProcessor {
 							};
 					return client.documentName("findBySearchQuery")
 							.operationName(operationName)
-							.variables(Map.of("searchQuery", matchResult.match(), "isAdult", nsfw))
+							.variables(Map.of("searchQuery", matchResult.match()))
 							.retrieve("Media")
 							.toEntity(Media.class)
 							.<Result<Media>>map(Result.Found::new)
@@ -83,7 +84,24 @@ public class AniListProcessor {
 			INSTANCE
 		}
 
-		record Done(List<Result<Media>> results) implements State {}
+		record Done(List<Result<Media>> results) implements State {
+
+			public Done {
+				results = Objects.requireNonNullElseGet(results, Collections::emptyList);
+			}
+
+			public int size() {
+				return results.size();
+			}
+
+			public boolean isEmpty() {
+				return results.isEmpty();
+			}
+
+			public Result<Media> getFirst() {
+				return results.getFirst();
+			}
+		}
 
 		enum Skipped implements State {
 			INSTANCE

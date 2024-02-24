@@ -13,6 +13,7 @@ public record Media(
 		Long id,
 		Type type,
 		Format format,
+		Boolean isAdult,
 		MediaTitle title,
 		String description,
 		FuzzyDate startDate,
